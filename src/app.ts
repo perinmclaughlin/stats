@@ -17,13 +17,17 @@ export class App {
   public configureRoutes(config: RouterConfiguration): RouterConfiguration {
     config.map([
         {
-            route: [""], name: "mainpage", moduleId: PLATFORM.moduleName("mainpage"), 
+            route: ["event/:eventCode/team/:teamNumber/match/:matchNumber"], name: "match-team", moduleId: PLATFORM.moduleName("match-team"), 
             nav: false, title: "Big Honking Page", adminRoute: false,
         },
-        {
-            route: ["page1"], name: "page1", moduleId: PLATFORM.moduleName("page1"), 
+		{
+			route: [""], name: "event-teams", moduleId: PLATFORM.moduleName("event-teams"), 
             nav: false, title: "Smaller Honking Page", adminRoute: false,
-        },
+		},
+		{
+			route: ["event/:eventCode/team/:teamNumber"], name: "event-team", moduleId: PLATFORM.moduleName("event-team"), 
+            nav: false, title: "Smaller Honking Page", adminRoute: false,
+		},
     ]);
 
     return config;
