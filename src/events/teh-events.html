@@ -1,0 +1,42 @@
+<template>
+  <h1>Events</h1>
+
+  <p> Maybe implement import event match schedule? <p>
+
+  <p> Maybe implement import from file? <p>
+
+  <p> Maybe implement export to file? </p>
+
+  <div class='container'>
+
+    <div class='row'>
+      <div class='col'>
+        <div class='btn-group float-right'>
+          <button class='btn btn-secondary' click.delegate='tbaImport()'>
+            Import from TBA
+  <img src="../imgs/tba.png" />
+          </button>
+          <button class='btn btn-primary'>
+            Import from file
+          </button>
+          <button class='btn btn-primary'>
+            Export to file
+          </button>
+        </div>
+      </div>
+    </div>
+    <table class='table table-hover'>
+      <tr>
+        <th>Event</th>
+        <th>Game</th>
+        <th>Year</th>
+      </tr>
+
+      <tr repeat.for="event of events">
+        <td> ${event.name} </td>
+        <td> ${games[event.year].name} </td>
+        <td> ${event.year} </td>
+      </tr>
+    </table>
+  </div>
+</template>

@@ -1,24 +1,30 @@
 <template>
-	<table class="table table-hover">
-		<tr>
-			<th>Team Number</th>
-			<th>Match Participation Count</th>
-			<th>Robot Failures</th>
-			<th>Scale Capable?</th>
-			<th>Switch Capable?</th>
-			<th>Vault Capable?</th>
-			<th>Foul Count</th>
-			<th>Average Cubes Transported</th>
-		</tr>
-		<tr repeat.for="team of teams">
-			<td><a route-href="route.bind:'event-team'; params.bind: {eventCode: team.eventCode, teamNumber: team.teamNumber}">${team.teamNumber}</a></td>
-			<td>${team.matchCount}</td>
-			<td>${team.failureCount}</td>
-			<td>${team.scale}</td>
-			<td>${team.switch_cap}</td>
-			<td>${team.vault}</td>
-			<td>${team.foulCount}</td>
-			<td>${team.cubeAverage}</td>
-		</tr>
-	</table>
+  <h1> ${event.name} (${event.year}) </h1>
+
+  <p> Maybe populate below table from db? </p>
+  
+  <p> Maybe make a tab for match schedule, and make a tab for team list? </p>
+
+  <table class="table table-hover">
+    <tr>
+      <th>Team Number</th>
+      <th>Match Participation Count</th>
+      <th>Robot Failures</th>
+      <th>Scale Capable?</th>
+      <th>Switch Capable?</th>
+      <th>Vault Capable?</th>
+      <th>Foul Count</th>
+      <th>Average Cubes Transported</th>
+    </tr>
+    <tr repeat.for="team of teams">
+      <td><a route-href="route.bind:'event-team'; params.bind: {eventCode: team.eventCode, teamNumber: team.teamNumber}">${team.teamNumber}</a></td>
+      <td>${team.matchCount}</td>
+      <td>${team.failureCount}</td>
+      <td>${team.scale}</td>
+      <td>${team.switch_cap}</td>
+      <td>${team.vault}</td>
+      <td>${team.foulCount}</td>
+      <td>${team.cubeAverage}</td>
+    </tr>
+  </table>
 </template>

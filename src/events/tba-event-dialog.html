@@ -1,0 +1,32 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+    </ux-dialog-header>
+    <ux-dialog-body>
+
+      <table class='table'>
+        <tr>
+          <th>Name</th>
+          <th></th>
+        </tr>
+        <tr repeat.for="event of events">
+          <td>
+            ${event.name}
+          </td>
+          <td>
+            <button class='btn btn-sm btn-primary' click.delegate='importEvent(event)'>
+              Import
+            </button>
+          </td>
+        </tr>
+      </table>
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <!--
+      <button class='btn btn-default' click.delegate='controller.ok()'>
+        Done
+      </button>
+      -->
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

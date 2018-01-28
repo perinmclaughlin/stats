@@ -1,5 +1,9 @@
 export class MatchData {
+	public year: string;
+	public eventCode: string;
 	public teamNumber: string;
+	public matchNumber: string;
+
 	public isFailure: boolean;
 	public failureReason: string;
 	public isSwitch: boolean;
@@ -9,14 +13,13 @@ export class MatchData {
 	public foulCount: string;
 	public foulReason: string;
 	public cubeCount: string;
-	public matchNumber: string;
-	
-	public eventCode: string;
-	public year: string;
 }
 
 export class EventTeamData {
+	public year: string;
+	public eventCode: string;
 	public teamNumber: string;
+
 	public matchCount: number;
 	public failureCount: number;
 	public scale: boolean;
@@ -24,6 +27,4 @@ export class EventTeamData {
 	public vault: boolean;
 	public foulCount: number;
 	public cubeAverage: number;
-	public eventCode: string;
-	public year: string;
 }
