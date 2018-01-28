@@ -11,6 +11,14 @@
     <% if (htmlWebpackPlugin.options.metadata.server) { %>
     <!-- Webpack Dev Server reload -->
     <script src="/webpack-dev-server.js"></script>
+    <% } else { %>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('<%- htmlWebpackPlugin.options.metadata.baseUrl %>sw.js').then(function() {
+          //console.log("Service Worker Registered");
+        });
+      }
+    </script>
     <% } %>
   </body>
 </html>

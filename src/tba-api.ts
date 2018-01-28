@@ -16,7 +16,7 @@ export class TbaApi {
     this.base = 'https://www.thebluealliance.com/api/v3/';
   }
 
-  /* boo hoo
+  /* boo hoo https://github.com/the-blue-alliance/the-blue-alliance/issues/2065
   callAPI(uri) {
     return this.http.fetch(this.base + uri, {
       method: "GET",

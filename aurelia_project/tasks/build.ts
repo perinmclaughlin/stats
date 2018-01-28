@@ -40,10 +40,24 @@ function clearDist() {
   return del([config.output.path]);
 }
 
+gulp.task('generate-service-worker', function (callback) {
+  var path = require('path');
+  var swPrecache = require('sw-precache');
+  var rootDir = 'dist';
+
+  swPrecache.write(path.join(rootDir, 'sw.js'), {
+    staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif}'],
+    stripPrefix: rootDir,
+    // todo: centralize with baseUrl in webpack.config.js
+    replacePrefix: '/stats',
+  }, callback);
+});
+
 const build = gulp.series(
   clearDist,
   configureEnvironment,
-  buildWebpack
+  buildWebpack,
+  'generate-service-worker',
 );
 
 export {
