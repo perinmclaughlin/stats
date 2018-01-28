@@ -17,13 +17,14 @@ const title = 'Aurelia Navigation Skeleton';
 const outDir = path.resolve(__dirname, project.platform.output);
 const srcDir = path.resolve(__dirname, 'src');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
-const baseUrl = '/';
 
 const cssRules = [
   { loader: 'css-loader' },
 ];
 
-module.exports = ({production, server, extractCss, coverage} = {}) => ({
+module.exports = ({production, server, extractCss, coverage} = {}) => {
+  let baseUrl = production ? '/stats/' : '/';
+  return ({
   resolve: {
     extensions: ['.ts', '.js'],
     modules: [srcDir, 'node_modules'],
@@ -124,3 +125,4 @@ module.exports = ({production, server, extractCss, coverage} = {}) => ({
     }))
   ]
 });
+};
