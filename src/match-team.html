@@ -1,0 +1,59 @@
+<template>
+	<!--Use for team statistics per match-->
+	<h1 style="size:10"><b><u>Match Team Statistics</u></b></h1>
+	<br>
+	<br>
+	<h3><b>Team Number</b></h3>
+	<!--form action=""-->
+		<label><input type="text" value.bind="model.teamNumber"></label><br>
+	<!--/form-->
+	<br>
+	<h3><b>Match Number</b></h3>
+	<!--form action=""-->
+		<label><input type="text" value.bind="model.matchNumber"></label><br>
+	<!--/form-->
+	<br>
+	<h3><em><b>Robot Failure?</b></em></h3>
+	<!--form action=""-->
+		<label><input type="radio" name="robot_failure" checked.bind="model.isFailure" model.bind="true"> Yes</label><br>
+		<label><input type="radio" name="robot_failure" checked.bind="model.isFailure" model.bind="false"> No</label><br>
+		<h4><b>Reason:</b></h4>
+		<textarea name="failure_reason" style="width:50%; height:250px" value.bind="model.failureReason"></textarea>
+	<!--/form-->
+	<br>
+	<h3><em><strong>Score in...</strong></em></h3>
+	<h4><b>Switch?</b></h4>
+	<!--form action=""-->
+		<label><input type="radio" name="switch" checked.bind="model.isSwitch" model.bind="true"> Yes</label><br>
+		<label><input type="radio" name="switch" checked.bind="model.isSwitch" model.bind="false"> No</label><br>
+	<!--/form-->
+	<h4><b>Scale?</b></h4>
+	<!--form action=""-->
+		<label><input type="radio" name="scale" checked.bind="model.isScale" model.bind="true"> Yes</label><br>
+		<label><input type="radio" name="scale" checked.bind="model.isScale" model.bind="false"> No</label><br>
+	<!--/form-->
+	<h4><b>Vault?</b></h4>
+	<!--form action=""-->
+		<label><input type="radio" name="vault" checked.bind="model.isVault" model.bind="true"> Yes</label><br>
+		<label><input type="radio" name="vault" checked.bind="model.isVault" model.bind="false"> No</label><br>
+	<!--/form-->
+	<br>
+	<h3><em><b>Fouls?</b></em></h3>
+	<!--form action=""-->
+		<label><input type="radio" name="fouls" checked.bind="model.isFoul" model.bind="true"> Yes</label><br>
+		<label><input type="radio" name="fouls" checked.bind="model.isFoul" model.bind="false"> No</label><br>
+	<!--/form-->
+	<h4><b>How Many Fouls?</b></h4>
+	<!--form action=""-->
+		<label><input type="text" value.bind="model.foulCount"></label><br>
+		<h5><b>Reason(s):</b></h5>
+		<textarea name="foul_reason" style="width:50%; height:100px" value.bind="model.foulReason"></textarea>
+	<!--/form-->
+	<br>
+	<h3><b>Cubes Transported In This Match</b></h3>
+	<!--form action=""-->
+		<textarea name="cube_speed" style="width:50%; height:50px" value.bind="model.cubeCount"></textarea>
+	<!--/form-->
+	<br>
+	<button click.delegate="click()">Click Me</button>
+</template>
