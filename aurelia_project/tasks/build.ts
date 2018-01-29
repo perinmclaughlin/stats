@@ -49,7 +49,7 @@ gulp.task('generate-service-worker', function (callback) {
     staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif}'],
     stripPrefix: rootDir,
     // todo: centralize with baseUrl in webpack.config.js
-    replacePrefix: '/stats',
+    replacePrefix: '/aws-website-stage-rpfg4/stats',
   }, callback);
 });
 

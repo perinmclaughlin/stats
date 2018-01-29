@@ -1,6 +1,6 @@
 # stats
 
-staging environment: http://aws-website-stage-rpfg4.s3-website-us-east-1.amazonaws.com/stats/
+staging environment: https://s3.amazonaws.com/aws-website-stage-rpfg4/stats/index.html
 
 tba swagger: https://www.thebluealliance.com/apidocs/v3
 

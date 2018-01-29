@@ -23,7 +23,7 @@ const cssRules = [
 ];
 
 module.exports = ({production, server, extractCss, coverage} = {}) => {
-  let baseUrl = production ? '/stats/' : '/';
+  let baseUrl = production ? '/aws-website-stage-rpfg4/stats' : '/';
   return ({
   resolve: {
     extensions: ['.ts', '.js'],
