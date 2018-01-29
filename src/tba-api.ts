@@ -8,48 +8,27 @@ import { HttpClient } from "aurelia-fetch-client";
 export class TbaApi {
   private auth_key: string;
   private base: string;
-  private header: string;
   
   constructor(private http: HttpClient) {
     this.auth_key = "3jjSND0FVNOyI2kJjj00seaIIw5fjz4FAb0iSjSmR5sYeRkDE38u2TnixIPj8cs2";
-    this.header = '?X-TBA-Auth-Key=' + this.auth_key;
     this.base = 'https://www.thebluealliance.com/api/v3/';
+
+    this.http.configure(c => {
+        delete c.defaults.headers['content-type'];
+        c.defaults.headers['X-TBA-Auth-Key'] = this.auth_key;
+        c.defaults.mode = "cors";
+    });
   }
 
-  /* boo hoo https://github.com/the-blue-alliance/the-blue-alliance/issues/2065
   callAPI(uri) {
     return this.http.fetch(this.base + uri, {
       method: "GET",
-      mode: "cors",
-      headers: {
-        'X-TBA-Auth-Key': this.auth_key,
-      },
     }).then(response => {
       if(response.status != 200) {
         throw response;
       }
 
       return response.json();
-    });
-  }
-  */
-
-  callAPI(uri) {
-    return new Promise((resolve, reject) => {
-      let content = '';
-      https.get(this.base + uri + this.header, res => {
-        if (res.statusCode != 200) {
-          reject(res.statusCode + ': ' + res.statusMessage);
-        }
-
-        res.on('data', data => {
-          content += data;
-        });
-
-        res.on('end', data => {
-          if (res.statusCode == 200) resolve(JSON.parse(content));
-        });
-      });
     });
   }
 
