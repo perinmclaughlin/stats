@@ -57,7 +57,7 @@ const build = gulp.series(
   clearDist,
   configureEnvironment,
   buildWebpack,
-  'generate-service-worker',
+  //'generate-service-worker',
 );
 
 export {
