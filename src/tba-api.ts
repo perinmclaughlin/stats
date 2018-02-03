@@ -187,7 +187,7 @@ export class TbaApi {
     return this.callAPI('event/' + eventKey + '/teams/keys');
   }
 
-  getEventMatches(eventKey) {
+  getEventMatches(eventKey): Promise<Match[]> {
     return this.callAPI('event/' + eventKey + '/matches');
   }
   
@@ -281,4 +281,22 @@ export interface Team {
   city: string;
   state_prov: string;
   country: string;
+  key: string;
+}
+
+export interface Match {
+	comp_level: string;
+	alliances: Alliances;
+	key: string;
+	match_number: number;
+}
+
+export interface Alliances {
+	red: Alliance;
+	blue: Alliance;
+	
+}
+
+export interface Alliance {
+	team_keys: string[];
 }

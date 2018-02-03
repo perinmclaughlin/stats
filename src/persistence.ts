@@ -8,18 +8,20 @@ export class FrcStatsContext extends Dexie {
   eventTeams: Dexie.Table<EventTeamEntity, number>;
   games: Dexie.Table<GameEntity, number>;
   userPrefs: Dexie.Table<UserStateEntity, number>;
+  eventMatches: Dexie.Table<EventMatchEntity, number>;
 
   constructor() {
     super('FrcStats')
 
     this.version(1).stores({
       teamMatches2018: '++id, eventCode, teamNumber, matchNumber, &[eventCode+teamNumber+matchNumber]',
-      teams: '++id, &teamNumber, districtCode',
+      teams: '++id, &teamNumber, districtCode, tbaKey',
       eventTeams: '++id, year, eventCode, teamNumber, [year+eventCode], &[year+eventCode+teamNumber]',
-      districts: '++id, &code',
-      events: '++id, &code',
+      districts: '++id, &districtCode',
+      events: '++id, &eventCode, &[year+eventCode]',
       games: '++id, &year',
       userPrefs: '++id',
+	    eventMatches: '++id, [year+eventCode], &[year+eventCode+matchNumber]',
     });
 
 
@@ -75,13 +77,13 @@ export interface TeamEntity {
 
 export interface DistrictEntity {
   id?: number;
-  code: string;
+  districtCode: string;
   name: string;
 }
 
 export interface EventEntity {
   id?: number;
-  code: string;
+  eventCode: string;
   name: string;
   districtCode: string;
   year: string;
@@ -101,4 +103,14 @@ export interface UserStateEntity {
   currentEventId: number;
   currentYear: string;
   lastMatchNumber: number;
+}
+
+export interface EventMatchEntity {
+	id?: number;
+	
+	year: string;
+	eventCode: string;
+	matchNumber: number;
+	teamNumbers_red: string[];
+	teamNumbers_blue: string[];
 }

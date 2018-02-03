@@ -33,7 +33,7 @@
       </tr>
 
       <tr repeat.for="event of events">
-        <td> ${event.name} </td>
+        <td><a route-href="route.bind:'event-teams'; params.bind: {year: 2018, eventCode: event.eventCode}">${event.name}</a></td>
         <td> ${games[event.year].name} </td>
         <td> ${event.year} </td>
       </tr>

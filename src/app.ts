@@ -22,12 +22,12 @@ export class App {
         nav: false, title: "Big Honking Page", adminRoute: false,
       },
       {
-        route: ["events"], 
+        route: ["events", ""], 
         name: "events", moduleId: PLATFORM.moduleName("events/teh-events"), 
         nav: false, title: "Smaller Honking Page", adminRoute: false,
       },
       {
-        route: ["year/{year}/event/{eventCode}", ""], 
+        route: ["year/:year/event/:eventCode"], 
         name: "event-teams", moduleId: PLATFORM.moduleName("event-teams"), 
         nav: false, title: "Smaller Honking Page", adminRoute: false,
       },
