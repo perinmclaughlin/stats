@@ -14,7 +14,7 @@
         <div class='btn-group float-right'>
           <button class='btn btn-secondary' click.delegate='tbaImport()'>
             Import from TBA
-  <img src="../imgs/tba.png" />
+  <img src="../static/tba.png" />
           </button>
           <button class='btn btn-primary'>
             Import from file
@@ -33,7 +33,7 @@
       </tr>
 
       <tr repeat.for="event of events">
-        <td> ${event.name} </td>
+        <td><a route-href="route.bind:'event-teams'; params.bind: {year: 2018, eventCode: event.eventCode}">${event.name}</a></td>
         <td> ${games[event.year].name} </td>
         <td> ${event.year} </td>
       </tr>

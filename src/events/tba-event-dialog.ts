@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { DialogController } from "aurelia-dialog";
 import { TbaApi, District, tbaEvent } from "../tba-api";
-import { FrcStatsContext } from "../persistence";
+import { FrcStatsContext, EventMatchEntity } from "../persistence";
 
 @autoinject
 export class TbaEventDialog {
@@ -22,7 +22,7 @@ export class TbaEventDialog {
   }
 
   load() {
-    this.tbaApi.getEventList('2018').then(events => {
+    this.tbaApi.getEventList('2017').then(events => {
       this.events = [];
       for(var evnt of events) {
         if(evnt.district && evnt.district.abbreviation == "pnw") {
@@ -33,12 +33,47 @@ export class TbaEventDialog {
     });
   }
 
-  importEvent(evnt) {
+  importEvent(evnt: tbaEvent) {
     this.saveEvent(evnt).then(x => {
       return this.saveDistrict(evnt.district);
     }).then(x => {
       return this.saveTeams(evnt);
+    }).then(aValue => {
+      return this.saveMatchEvent(evnt);
     });
+  }
+
+  private saveMatchEvent(evnt: tbaEvent)
+  {
+    return this.tbaApi.getEventMatches(evnt.key).then(matches =>{
+      var someValue = 0;
+		  matches.forEach(match => {
+        if(match.comp_level == "qm"){
+          let localMatch: EventMatchEntity = {
+            year: "2018",
+            eventCode: evnt.event_code,
+            matchNumber: match.match_number,
+            teamNumbers_red: [],
+            teamNumbers_blue: [],
+          };
+          let promises1 = match.alliances.blue.team_keys.map(team_key => {
+            return this.dbContext.teams.where("tbaKey").equals(team_key).first().then(localTeam => {
+              localMatch.teamNumbers_blue.push(localTeam.teamNumber);
+            })
+          });
+          let promises2 = match.alliances.red.team_keys.map(team_key => {
+            return this.dbContext.teams.where("tbaKey").equals(team_key).first().then(localTeam => {
+              localMatch.teamNumbers_red.push(localTeam.teamNumber);
+            })
+          });
+          console.info(localMatch.eventCode, localMatch.matchNumber);
+          Promise.all(promises1.concat(promises2)).then(z => {
+            this.dbContext.eventMatches.put(localMatch);
+          });
+        }
+        
+      });
+	  });
   }
 
   private getDistrictCode(district: District) {
@@ -47,7 +82,7 @@ export class TbaEventDialog {
 
   private saveEvent(evnt: tbaEvent) {
     return this.dbContext.events.put({
-      code: evnt.event_code,
+      eventCode: evnt.event_code,
       name: evnt.name, 
       districtCode: this.getDistrictCode(evnt.district),
       tbaKey: evnt.key,
@@ -61,11 +96,11 @@ export class TbaEventDialog {
     let districtCode = district.abbreviation;
 
     return this.dbContext.districts
-      .where('code').equals(districtCode)
+      .where('districtCode').equals(districtCode)
       .first().then(localDistrict => {
         if(localDistrict == null) {
           this.dbContext.districts.put({
-            code: districtCode,
+            districtCode: districtCode,
             name: district.display_name,
           })
         }
@@ -85,15 +120,14 @@ export class TbaEventDialog {
       let localTeams = results[0];
       let importedTeams = results[1];
       // todo: maybe warn if local has extra teams?
-
-      importedTeams.forEach(team => {
+      let promises = importedTeams.map(team => {
         this.dbContext.eventTeams.put({
           year: '2018',
           eventCode: evnt.event_code,
           teamNumber: ""+team.team_number,
         });
 
-        this.dbContext.teams
+        return this.dbContext.teams
           .where("teamNumber").equals(""+team.team_number)
           .first().then(localTeam => {
             if(localTeam != null) return Promise.resolve(null);
@@ -106,12 +140,15 @@ export class TbaEventDialog {
               stateprov: team.state_prov,
               country: team.country,
               districtCode: this.getDistrictCode(evnt.district),
+			        tbaKey: team.key,
             });
           }).catch(error => {
             console.info('error saving team ', team);
             throw error;
           });
       });
+
+      return Promise.all(promises);
     });
   }
 }

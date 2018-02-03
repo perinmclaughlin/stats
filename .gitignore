@@ -1,5 +1,5 @@
 package-lock.json
-dist/
+imgs/
 # You may want to customise this file depending on your Operating System
 # and the editor that you use.
 #
@@ -27,3 +27,4 @@ node_modules
 
 # Compiled files
 scripts
+sw.js

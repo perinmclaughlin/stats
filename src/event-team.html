@@ -1,6 +1,6 @@
 <template>
 	<h1>${team.teamNumber}</h1>
-
+	<p><b>${team.teamName}</b></p>
   <p> Maybe add a summary showing team's cumulative stats? </p>
 
   <p> Maybe add a notes field for overall impressions? </p>
@@ -15,7 +15,7 @@
 			<th>Foul Count</th>
 		</tr>
 		<tr repeat.for="match of matches">
-			<td><a route-href="route.bind:'match-team'; params.bind: {year: team.year, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
+			<td><a route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
 			<td>${match.cubeCount}</td>
 			<td>${match.foulCount}</td>
 		</tr>

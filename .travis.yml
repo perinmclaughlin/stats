@@ -5,6 +5,11 @@ services:
   - docker
 script:
   - bash build-docker.sh
+  - mkdir -p dist
+  - cp index.html dist
+  - cp -r scripts dist
+  - cp -r static dist
+  - cp sw.js dist
 deploy: 
   provider: s3
   # travis-rock-deployer

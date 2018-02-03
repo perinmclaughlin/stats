@@ -1,5 +1,3 @@
-import "whatwg-fetch";
-import * as https from "https";
 import { autoinject } from "aurelia-framework";
 import { HttpClient } from "aurelia-fetch-client";
 
@@ -14,8 +12,9 @@ export class TbaApi {
     this.base = 'https://www.thebluealliance.com/api/v3/';
 
     this.http.configure(c => {
-        delete c.defaults.headers['content-type'];
-        c.defaults.headers['X-TBA-Auth-Key'] = this.auth_key;
+        c.defaults.headers = {
+          'X-TBA-Auth-Key': this.auth_key 
+        };
         c.defaults.mode = "cors";
     });
   }
@@ -188,7 +187,7 @@ export class TbaApi {
     return this.callAPI('event/' + eventKey + '/teams/keys');
   }
 
-  getEventMatches(eventKey) {
+  getEventMatches(eventKey): Promise<Match[]> {
     return this.callAPI('event/' + eventKey + '/matches');
   }
   
@@ -282,4 +281,22 @@ export interface Team {
   city: string;
   state_prov: string;
   country: string;
+  key: string;
+}
+
+export interface Match {
+	comp_level: string;
+	alliances: Alliances;
+	key: string;
+	match_number: number;
+}
+
+export interface Alliances {
+	red: Alliance;
+	blue: Alliance;
+	
+}
+
+export interface Alliance {
+	team_keys: string[];
 }
