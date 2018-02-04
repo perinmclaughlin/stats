@@ -21,12 +21,14 @@ function configureEnvironment() {
 var typescriptCompiler = typescriptCompiler || null;
 
 function buildTypeScript() {
+  let env = CLIOptions.getEnvironment();
   typescriptCompiler = ts.createProject('tsconfig.json', {
     typescript: require('typescript')
   });
 
   let dts = gulp.src(project.transpiler.dtsSource);
 
+  let failed = false;
   let src = gulp.src(project.transpiler.source)
     .pipe(changedInPlace({firstPass: true}));
 
@@ -34,6 +36,12 @@ function buildTypeScript() {
     .pipe(plumber({ errorHandler: notify.onError('Error: <%= error.message %>') }))
     .pipe(sourcemaps.init())
     .pipe(typescriptCompiler())
+    .on("error", () => { failed = true; })
+    .on("finish", () => {
+      if(env != "dev" && failed) {
+        process.exit(1);
+      }
+    })
     .pipe(sourcemaps.write({ sourceRoot: 'src' }))
     .pipe(build.bundle());
 }

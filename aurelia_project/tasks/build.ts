@@ -29,16 +29,6 @@ gulp.task('touch-up-index', function(callback) {
   let env = CLIOptions.getEnvironment();
   var baseUrl = project.baseUrl[env] || project.baseUrl['default'] || "/";
   var rootDir = project.platform.output;
-  /*
-  var swPrecacheRegister = "<!-- sw-precache -->\n" + 
-    "    <script> \n" + 
-    "      if ('serviceWorker' in navigator && " + (env != "dev") + ") {\n" + 
-    "        navigator.serviceWorker.register('" + baseUrl + "sw.js').then(function() {\n" + 
-    "        });\n" +
-    "      } \n" + 
-    "    </script>\n" + 
-    "    <!-- end-sw-precache -->";
-  */
   var swPrecacheRegister = `<!-- sw-precache -->
     <script>
       if ('serviceWorker' in navigator && ${env != "dev"}) {
