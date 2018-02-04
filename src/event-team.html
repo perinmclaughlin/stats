@@ -8,16 +8,25 @@
   <p> Maybe add a button to manually add a match? </p>
 
   <p> Maybe add a button to manually remove a match? </p>
-	<table class="table table-hover">
-		<tr>
-			<th>Match Number</th>
-			<th>Cube Count</th>
-			<th>Foul Count</th>
-		</tr>
-		<tr repeat.for="match of matches">
-			<td><a route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
-			<td>${match.cubeCount}</td>
-			<td>${match.foulCount}</td>
-		</tr>
-	</table>
+
+  <aubs-tabset active.bind='activeTab'>
+    <aubs-tab header='Teams'>
+      <table class="table table-hover">
+        <tr>
+          <th>Match Number</th>
+          <th>Cube Count</th>
+          <th>Foul Count</th>
+        </tr>
+        <tr repeat.for="match of matches">
+          <td><a route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
+          <td>${match.cubeCount}</td>
+          <td>${match.foulCount}</td>
+        </tr>
+      </table>
+    </aubs-tab>
+    <aubs-tab header='Matches'>
+      Team match schedule goes here!
+    </aubs-tab>
+  </aubs-tabset>
+
 </template>

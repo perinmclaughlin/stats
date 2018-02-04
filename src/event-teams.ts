@@ -1,5 +1,4 @@
-import {autoinject} from "aurelia-framework"
-import {EventTeamData} from "./model";
+import { autoinject } from "aurelia-framework"
 import { EventEntity, FrcStatsContext, EventTeamEntity, TeamEntity, EventMatchEntity } from "./persistence";
 
 @autoinject
@@ -7,10 +6,12 @@ export class EventTeams {
   public event: EventEntity;
   public eventMatches: EventMatchEntity[];
   public teams: {team: TeamEntity, eventTeam: EventTeamEntity}[];
+  public activeTab: number;
 
   constructor(private dbContext: FrcStatsContext){
     this.teams = [];
     this.eventMatches = [];
+    this.activeTab = 0;
   }
    
   activate(params){

@@ -1,11 +1,13 @@
-import {EventTeamData, MatchData} from "./model";
-import {TeamEntity, FrcStatsContext} from "./persistence";
-import {autoinject} from "aurelia-framework";
+import { autoinject } from "aurelia-framework";
+import { MatchData } from "./model";
+import { TeamEntity, FrcStatsContext } from "./persistence";
 
 @autoinject
 export class EventTeam {
   public team: TeamEntity;
   public matches: MatchData[];
+  public activeTab: number = 0;
+
   constructor(private dbContext: FrcStatsContext){
     this.matches = [];
     var match = new MatchData();
@@ -21,23 +23,11 @@ export class EventTeam {
     match.foulReason = "No fouls.";
     match.cubeCount = "9001";
     match.matchNumber = "1";
-    /* var team = new EventTeamData();
-    team.teamNumber = "1234";
-    team.matchCount = 1;
-    team.failureCount = 2;
-    team.scale = true;
-    team.switch_cap = true;
-    team.vault = false;
-    team.foulCount = 3;
-    team.cubeAverage = 4;
-    team.year = "2018"; */
     this.matches.push(match);
-    //this.team = team;
   }
   
   activate(params){
-	  var i = 0;
-	  return this.dbContext.teams.where("teamNumber").equals(params.teamNumber).first().then(team =>{
+	  return this.dbContext.teams.where("teamNumber").equals(params.teamNumber).first().then(team => {
 		  this.team = team;
 	  });
   }

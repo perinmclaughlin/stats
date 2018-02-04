@@ -105,7 +105,17 @@
               "dist/css/bootstrap.css"
             ]
           },
-          "dexie"
+          "dexie",
+          "velocity-animate",
+          "tether",
+          {
+            "name": "aurelia-bootstrap",
+            "path": "../node_modules/aurelia-bootstrap/dist/amd",
+            "main": "index",
+            "resources": [
+              "**/*.html"
+            ]
+          }
         ]
       }
     ],

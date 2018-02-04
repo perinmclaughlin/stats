@@ -8,6 +8,7 @@ export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .feature(PLATFORM.moduleName('resources/index'))
+    .plugin(PLATFORM.moduleName('aurelia-bootstrap'))
     .plugin(PLATFORM.moduleName('aurelia-dialog'));
 
   // Uncomment the line below to enable animation.
