@@ -1,7 +1,7 @@
 <template>
 	<h1>${team.teamNumber}</h1>
 	<p><b>${team.teamName}</b></p>
-  <p> Maybe add a summary showing team's cumulative stats? </p>
+  <!--<p> Maybe add a summary showing team's cumulative stats? </p>-->
 
   <p> Maybe add a notes field for overall impressions? </p>
 
@@ -10,21 +10,31 @@
   <p> Maybe add a button to manually remove a match? </p>
 
   <aubs-tabset active.bind='activeTab'>
-    <aubs-tab header='Teams'>
+    <aubs-tab header='Matches'>
       <table class="table table-hover">
         <tr>
           <th>Match Number</th>
           <th>Cube Count</th>
           <th>Foul Count</th>
         </tr>
-        <tr repeat.for="match of matches">
-          <td><a route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
+        <tr repeat.for="match of testData">
+          <td><a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
           <td>${match.cubeCount}</td>
           <td>${match.foulCount}</td>
         </tr>
+        <tr>
+            <td><b>Total Number of Matches</b></td>
+            <td><b>Total Number of Cubes</b></td>
+            <td><b>Total Number of</b></td>
+          </tr>
+        <tr>
+          <td>${matchTotal}</td>
+          <td>${cubeTotal}</td>
+          <td>${foulTotal}</td>
+        </tr>
       </table>
     </aubs-tab>
-    <aubs-tab header='Matches'>
+    <aubs-tab header='Teams'>
       Team match schedule goes here!
     </aubs-tab>
   </aubs-tabset>
