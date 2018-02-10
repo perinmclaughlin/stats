@@ -1,5 +1,7 @@
 import { autoinject } from "aurelia-framework"
-import { EventEntity, FrcStatsContext, EventTeamEntity, TeamEntity, EventMatchEntity } from "./persistence";
+import { EventEntity, FrcStatsContext, EventTeamEntity, TeamEntity, EventMatchEntity } from "../persistence";
+import { DialogService } from "aurelia-dialog";
+import { MatchDialog } from "./match-dialog";
 
 @autoinject
 export class EventTeams {
@@ -8,7 +10,10 @@ export class EventTeams {
   public teams: {team: TeamEntity, eventTeam: EventTeamEntity}[];
   public activeTab: number;
 
-  constructor(private dbContext: FrcStatsContext){
+  constructor(
+    private dbContext: FrcStatsContext,
+    private dialogService: DialogService
+  ){
     this.teams = [];
     this.eventMatches = [];
     this.activeTab = 0;
@@ -29,5 +34,17 @@ export class EventTeams {
 			 });
 		  });
 	  });
+  }
+
+  
+  add()
+  {
+    this.dialogService.open({
+      viewModel: MatchDialog,
+      model: ({
+        eventCode: this.event.eventCode,
+      }),
+    });
+
   }
 }

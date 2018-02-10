@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
-import { MatchData } from "./model";
-import { TeamEntity, FrcStatsContext, TeamMatch2018Entity } from "./persistence";
+import { MatchData } from "../model";
+import { TeamEntity, FrcStatsContext, TeamMatch2018Entity } from "../persistence";
 
 @autoinject
 export class EventTeam {

@@ -28,11 +28,12 @@ export class App {
       },
       {
         route: ["year/:year/event/:eventCode"], 
-        name: "event-teams", moduleId: PLATFORM.moduleName("event-teams"), 
+        name: "event-teams", moduleId: PLATFORM.moduleName("event-team/event-teams"), 
         nav: false, title: "Smaller Honking Page", adminRoute: false,
       },
       {
-        route: ["event/:eventCode/team/:teamNumber"], name: "event-team", moduleId: PLATFORM.moduleName("event-team"), 
+        route: ["event/:eventCode/team/:teamNumber"],
+        name: "event-team", moduleId: PLATFORM.moduleName("event-team/event-team"), 
         nav: false, title: "Smaller Honking Page", adminRoute: false,
       },
     ]);
