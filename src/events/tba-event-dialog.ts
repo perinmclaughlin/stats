@@ -22,7 +22,7 @@ export class TbaEventDialog {
   }
 
   load() {
-    this.tbaApi.getEventList('2017').then(events => {
+    this.tbaApi.getEventList('2018').then(events => {
       this.events = [];
       for(var evnt of events) {
         if(evnt.district && evnt.district.abbreviation == "pnw") {

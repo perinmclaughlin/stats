@@ -1,0 +1,86 @@
+<template>
+    <ux-dialog>
+        <ux-dialog-header>
+            Add Match
+        </ux-dialog-header>
+        <ux-dialog-body>
+            <table class="table table-hover">
+                <tr>
+                    <th>
+                        Match Number
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <label><input type="text" value.bind="match.matchNumber"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Blue Alliance (1)
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <label><input type="text" value.bind="match.teamNumbers_blue[0]"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Blue Alliance (2)
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <label><input type="text" value.bind="match.teamNumbers_blue[1]"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Blue Alliance (3)
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <label><input type="text" value.bind="match.teamNumbers_blue[2]"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Red Alliance (1)
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <label><input type="text" value.bind="match.teamNumbers_red[0]"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Red Alliance (2)
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <label><input type="text" value.bind="match.teamNumbers_red[1]"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Red Alliance (3)
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <label><input type="text" value.bind="match.teamNumbers_red[2]"></label>
+                    </td>
+                </tr>
+            </table>
+        </ux-dialog-body>
+        <ux-dialog-footer>
+            <button class="btn btn-primary" click.delegate="save()">
+                Save
+            </button>
+        </ux-dialog-footer>
+    </ux-dialog>
+</template>

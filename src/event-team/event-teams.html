@@ -1,0 +1,58 @@
+<template>
+  <require from="aurelia-bootstrap/tabs/aubs-tab"></require>
+  <require from="aurelia-bootstrap/tabs/aubs-tabset"></require>
+
+  <h1> ${event.name} (${event.year}) Code: ${event.eventCode}</h1>
+
+  <!--<p> Maybe make a tab for match schedule, and make a tab for team list? </p>-->
+  <aubs-tabset active.bind='activeTab'>
+    <aubs-tab header='Matches'>
+      <button class="btn btn-primary" click.delegate="add()">Add a Match</button>
+      <button class="btn btn-primary">Remove a Match</button>
+      <table class="table table-hover">
+        <tr>
+          <th>Match Number</th>
+          <th>Blue Alliance (1)</th>
+          <th>Blue Alliance (2)</th>
+          <th>Blue Alliance (3)</th>
+          <th>Red Alliance (1)</th>
+          <th>Red Alliance (2)</th>
+          <th>Red Alliance (3)</th>      
+        </tr>
+        <tr repeat.for="eventMatch of eventMatches">
+          <td>${eventMatch.matchNumber}</td>
+          <td>${eventMatch.teamNumbers_blue[0]}</td>
+          <td>${eventMatch.teamNumbers_blue[1]}</td>
+          <td>${eventMatch.teamNumbers_blue[2]}</td>
+          <td>${eventMatch.teamNumbers_red[0]}</td>
+          <td>${eventMatch.teamNumbers_red[1]}</td>
+          <td>${eventMatch.teamNumbers_red[2]}</td>
+        </tr>
+      </table>
+    </aubs-tab>
+    <aubs-tab header='Teams'>
+      <table class="table table-hover">
+        <tr>
+          <th>Team Number</th>
+          <th>Match Participation Count</th>
+          <th>Robot Failures</th>
+          <th>Scale Capable?</th>
+          <th>Switch Capable?</th>
+          <th>Vault Capable?</th>
+          <th>Foul Count</th>
+          <th>Average Cubes Transported</th>
+        </tr>
+        <tr repeat.for="a of teams">
+          <td><a style="display: block;" route-href="route.bind:'event-team'; params.bind: {eventCode: a.eventTeam.eventCode, teamNumber: a.team.teamNumber}">${a.team.teamNumber}</a></td>
+          <td>${a.team.matchCount}</td>
+          <td>${a.team.failureCount}</td>
+          <td>${a.team.scale}</td>
+          <td>${a.team.switch_cap}</td>
+          <td>${a.team.vault}</td>
+          <td>${a.team.foulCount}</td>
+          <td>${a.team.cubeAverage}</td>
+        </tr>
+      </table>
+    </aubs-tab>
+  </aubs-tabset>
+</template>
