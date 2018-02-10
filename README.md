@@ -5,3 +5,5 @@ staging environment: https://s3.amazonaws.com/aws-website-stage-rpfg4/stats/inde
 tba swagger: https://www.thebluealliance.com/apidocs/v3
 
 dexie: http://dexie.org/docs/Tutorial/
+
+xlsx: https://www.npmjs.com/package/xlsx
