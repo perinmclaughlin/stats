@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { DialogService, DialogOpenResult } from "aurelia-dialog";
-
+import * as XLSX from 'xlsx';
 import { FrcStatsContext, EventEntity, GameEntity } from "../persistence";
 import { TbaEventDialog } from "./tba-event-dialog";
 
@@ -15,6 +15,27 @@ export class Events {
     this.events = [];
     this.games = new Map<string, GameEntity>();
   }
+
+  public download() {
+    var wb = (<any>XLSX).book_new();
+
+
+
+
+
+   var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent("hello"));
+    element.setAttribute('download', "robodata.xlsx");
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+
+ }
+
 
   public activate() {
     return Promise.all([

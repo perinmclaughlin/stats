@@ -20,7 +20,8 @@
     "lodash": "^4.17.4",
     "requirejs": "^2.3.2",
     "text": "github:requirejs/text#latest",
-    "whatwg-fetch": "^2.0.3"
+    "whatwg-fetch": "^2.0.3",
+    "xlsx": "^0.12.0"
   },
   "peerDependencies": {},
   "devDependencies": {
