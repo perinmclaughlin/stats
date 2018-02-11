@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { DialogService, DialogOpenResult } from "aurelia-dialog";
-import * as XLSX from 'xlsx';
+import 'xlsx';
 import { FrcStatsContext, EventEntity, GameEntity } from "../persistence";
 import { TbaEventDialog } from "./tba-event-dialog";
 
@@ -17,7 +17,7 @@ export class Events {
   }
 
   public download() {
-    var wb = (<any>XLSX).book_new();
+    var wb = window.XLSX.utils.book_new();
 
 
 

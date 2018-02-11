@@ -116,9 +116,12 @@
               "**/*.html"
             ]
           },
-          "xlsx"
-
-
+          {
+            "name": "xlsx",
+            "path": "../node_modules/xlsx/dist",
+            "main": "xlsx.full.min.js",
+            "exports": "XLSX"
+          }
         ]
       }
     ],
