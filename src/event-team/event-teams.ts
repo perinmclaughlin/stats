@@ -2,6 +2,7 @@ import { autoinject } from "aurelia-framework"
 import { EventEntity, FrcStatsContext, EventTeamEntity, TeamEntity, EventMatchEntity } from "../persistence";
 import { DialogService } from "aurelia-dialog";
 import { MatchDialog } from "./match-dialog";
+import { ConfirmDialog } from "./confirm-dialog";
 
 @autoinject
 export class EventTeams {
@@ -22,10 +23,9 @@ export class EventTeams {
   activate(params){
 	  this.dbContext.events.where(["year", "eventCode"]).equals([params.year, params.eventCode]).first().then(event => {
 		  this.event = event;
+    }).then(() => {
+      return this.getEventMatches();      
     });
-    this.dbContext.eventMatches.where(["year", "eventCode"]).equals([params.year, params.eventCode]).toArray().then(eventMatches => {
-		  this.eventMatches = eventMatches;
-	  });
 	  return this.dbContext.eventTeams.where(["year", "eventCode"]).equals([params.year, params.eventCode]).toArray().then(eventTeams => {
 		  eventTeams.forEach(eventTeam =>{
 			  var anotherLine = 0;
@@ -44,7 +44,28 @@ export class EventTeams {
       model: ({
         eventCode: this.event.eventCode,
       }),
+    }).whenClosed(() => {
+      this.getEventMatches()
     });
+  }
 
+  getEventMatches(){
+    var i = 0;
+    return this.dbContext.eventMatches.where(["year", "eventCode"]).equals([this.event.year, this.event.eventCode]).toArray().then(eventMatches => {
+      this.eventMatches = eventMatches;
+     });
+  }
+
+  remove(eventMatch){
+    this.dialogService.open({
+      viewModel: ConfirmDialog,
+      model: "Are you SURE that you want to delete that?",
+    }).whenClosed(dialogResult => {
+      if(! dialogResult.wasCancelled){
+        this.dbContext.eventMatches.delete(eventMatch.id).then(() => {
+          this.getEventMatches();
+        });
+      }
+    });
   }
 }

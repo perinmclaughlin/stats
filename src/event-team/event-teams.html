@@ -8,7 +8,6 @@
   <aubs-tabset active.bind='activeTab'>
     <aubs-tab header='Matches'>
       <button class="btn btn-primary" click.delegate="add()">Add a Match</button>
-      <button class="btn btn-primary">Remove a Match</button>
       <table class="table table-hover">
         <tr>
           <th>Match Number</th>
@@ -17,7 +16,8 @@
           <th>Blue Alliance (3)</th>
           <th>Red Alliance (1)</th>
           <th>Red Alliance (2)</th>
-          <th>Red Alliance (3)</th>      
+          <th>Red Alliance (3)</th>
+          <th>Options</th>  
         </tr>
         <tr repeat.for="eventMatch of eventMatches">
           <td>${eventMatch.matchNumber}</td>
@@ -27,6 +27,7 @@
           <td>${eventMatch.teamNumbers_red[0]}</td>
           <td>${eventMatch.teamNumbers_red[1]}</td>
           <td>${eventMatch.teamNumbers_red[2]}</td>
+          <td><button class='btn btn-hover btn-danger' click.delegate="remove(eventMatch)">Remove</button></td>
         </tr>
       </table>
     </aubs-tab>

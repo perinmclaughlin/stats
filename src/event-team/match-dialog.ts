@@ -34,5 +34,51 @@ export class MatchDialog {
 
     save() {
         console.info(this.match);
+        this.validate();
+        if(this.validate() == true){
+            this.dbContext.eventMatches.where(["year", "eventCode", "matchNumber"]).equals([this.match.year, this.match.eventCode, this.match.matchNumber]).first().then(savedMatch => {
+                if(savedMatch != null){
+                    this.match.id = savedMatch.id;
+                }
+            }).then(() => {
+                return this.dbContext.eventMatches.put(this.match);
+            }).then(() => {
+                console.info("dupr I saved");
+            });
+        }
+        else{
+            
+        }
+        
+        /*
+        this.match.toString();
+        TODO: actually write to a file 
+        */
+    }
+
+    setValues(){
+        this.match.matchNumber = null;
+        this.match.teamNumbers_blue[0] = null;
+        this.match.teamNumbers_blue[1] = null;
+        this.match.teamNumbers_blue[2] = null;
+        this.match.teamNumbers_red[0] = null;
+        this.match.teamNumbers_red[1] = null;
+        this.match.teamNumbers_red[2] = null;
+    }
+
+    validate(){
+        var dict = {};
+        for(var i = 0; i < 3; i++){
+            dict[this.match.teamNumbers_blue[i]] = i;
+        };
+        for(var p = 0; p < 3; p++){
+            dict[this.match.teamNumbers_red[p]] = 3 + p;
+        };
+        if(Object.keys(dict).length != 6){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }
