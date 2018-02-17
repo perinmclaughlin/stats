@@ -1,6 +1,8 @@
 import { autoinject } from "aurelia-framework";
 import { FrcStatsContext, EventTeamEntity, EventMatchEntity, EventEntity } from "../persistence";
 import { DialogController } from "aurelia-dialog";
+import { DialogService } from "aurelia-dialog";
+import { ConfirmDialog } from "./confirm-dialog";
 
 @autoinject
 export class MatchDialog {
@@ -12,10 +14,13 @@ export class MatchDialog {
     private dialog_teamNumbers_red0: string;
     private dialog_teamNumbers_red1: string;
     private dialog_teamNumbers_red2: string;
+    public teamExist: boolean;
     public match: EventMatchEntity;
+    public isNull: boolean = false;
     constructor(
         private dbContext: FrcStatsContext,
         private controller: DialogController,
+        private dialogService: DialogService
     ){
         
     }
@@ -33,6 +38,8 @@ export class MatchDialog {
     }
 
     save() {
+        
+        this.teamExist = true;
         console.info(this.match);
         this.validate();
         if(this.validate() == true){
@@ -41,19 +48,60 @@ export class MatchDialog {
                     this.match.id = savedMatch.id;
                 }
             }).then(() => {
-                return this.dbContext.eventMatches.put(this.match);
+                var promises = this.match.teamNumbers_blue.concat(this.match.teamNumbers_red).map(teamNumber => {
+                    return this.dbContext.eventTeams.where(["year", "eventCode", "teamNumber"])
+                    .equals([this.match.year,this.match.eventCode, teamNumber]).first().then(teamEvent => {
+                        if(teamEvent == null){
+                            this.teamExist = false;
+                            this.controller.ok();
+                            this.dialogService.open({
+                                viewModel: ConfirmDialog,
+                                model: ["Nonexistant Team Detected", "Team " + teamNumber + " is not in our database."]
+                            }).whenClosed(dialogResult => {
+                                if(! dialogResult.wasCancelled){
+                                    console.info("Team entered that did not exist.");
+                                }
+                            });
+                        }
+                    });
+                });
+                return Promise.all(promises).then(() => {
+                    if(this.teamExist == true){
+                        return Promise.all([
+                            this.dbContext.eventMatches.put(this.match),
+                        ]);
+                        //return promises;
+                    }
+                })
             }).then(() => {
                 console.info("dupr I saved");
+                this.controller.ok();
             });
         }
-        else{
-            
+        else if(this.validate() == false && this.isNull == false){
+            this.controller.ok();
+            this.dialogService.open({
+                viewModel: ConfirmDialog,
+                //Point out that you messed up by inputting a non-existant team as part of an alliance
+                model: ["Could Not Save Match!", "Duplicate Teams Found"]
+            }).whenClosed(dialogResult => {
+                if(! dialogResult.wasCancelled){
+                    console.info("Silly humans... duplicate entries...");
+                }
+            })
         }
-        
-        /*
-        this.match.toString();
-        TODO: actually write to a file 
-        */
+        else{
+            this.controller.ok();
+            this.dialogService.open({
+                viewModel: ConfirmDialog,
+                //Point out that you messed up by inputting non-number values into the match number area
+                model: ["Could Not Save Match!", "Improperly Assigned Values Detected"]
+            }).whenClosed(dialogResult => {
+                if(! dialogResult.wasCancelled){
+                    console.info("Silly humans... incomplete forms...");
+                }
+            })
+        }
     }
 
     setValues(){
@@ -67,18 +115,30 @@ export class MatchDialog {
     }
 
     validate(){
+        if(this.match.matchNumber <= 0 || isNaN(parseInt(<any>this.match.matchNumber))){ 
+            this.isNull = true;
+            return false;
+        }
         var dict = {};
         for(var i = 0; i < 3; i++){
             dict[this.match.teamNumbers_blue[i]] = i;
+            if(this.match.teamNumbers_blue[i] == ""){
+                this.isNull = true;
+            }
         };
         for(var p = 0; p < 3; p++){
             dict[this.match.teamNumbers_red[p]] = 3 + p;
+            if(this.match.teamNumbers_red[p] == ""){
+                this.isNull = true;
+            }
         };
-        if(Object.keys(dict).length != 6){
-            return false;
-        }
-        else{
-            return true;
+        for(var test = 0; test < 6; test++){
+            if(Object.keys(dict).length != 6){
+                return false;
+            }
+            else{
+                return true;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ import { EventEntity, FrcStatsContext, EventTeamEntity, TeamEntity, EventMatchEn
 import { DialogService } from "aurelia-dialog";
 import { MatchDialog } from "./match-dialog";
 import { ConfirmDialog } from "./confirm-dialog";
+import { AddTeam } from "./team-add-dialog";
 
 @autoinject
 export class EventTeams {
@@ -31,7 +32,7 @@ export class EventTeams {
 			  var anotherLine = 0;
 			 this.dbContext.teams.where("teamNumber").equals(eventTeam.teamNumber).first().then(team => {
 				this.teams.push({team: team, eventTeam: eventTeam});
-			 });
+       });
 		  });
 	  });
   }
@@ -49,6 +50,15 @@ export class EventTeams {
     });
   }
 
+  addTeam(){
+    /*
+      TODO: Add team adding capabilities here
+    */
+    this.dialogService.open({
+      viewModel: AddTeam
+    })
+  }
+
   getEventMatches(){
     var i = 0;
     return this.dbContext.eventMatches.where(["year", "eventCode"]).equals([this.event.year, this.event.eventCode]).toArray().then(eventMatches => {
@@ -59,7 +69,7 @@ export class EventTeams {
   remove(eventMatch){
     this.dialogService.open({
       viewModel: ConfirmDialog,
-      model: "Are you SURE that you want to delete that?",
+      model: ["Are you SURE that you want to delete that?", "Press 'OKAY' to confirm"],
     }).whenClosed(dialogResult => {
       if(! dialogResult.wasCancelled){
         this.dbContext.eventMatches.delete(eventMatch.id).then(() => {

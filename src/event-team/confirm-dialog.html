@@ -1,13 +1,16 @@
 <template>
     <ux-dialog>
         <ux-dialog-body>
-            <h1>
+            <h1 style="font-size: 300%">
                 ${dialogContext}
             </h1>
+            <p>
+                ${dialogMessage}
+            </p>
         </ux-dialog-body>
         <ux-dialog-footer>
             <button class="btn btn-primary" click.delegate="controller.ok()">
-                YES
+                OKAY
             </button>
         </ux-dialog-footer>
     </ux-dialog>
