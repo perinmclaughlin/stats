@@ -32,7 +32,7 @@ export class App {
         nav: false, title: "Smaller Honking Page", adminRoute: false,
       },
       {
-        route: ["event/:eventCode/team/:teamNumber"],
+        route: ["year/:year/event/:eventCode/team/:teamNumber"],
         name: "event-team", moduleId: PLATFORM.moduleName("event-team/event-team"), 
         nav: false, title: "Smaller Honking Page", adminRoute: false,
       },

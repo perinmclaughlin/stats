@@ -14,7 +14,7 @@ export class FrcStatsContext extends Dexie {
     super('FrcStats')
 
     this.version(1).stores({
-      teamMatches2018: '++id, eventCode, teamNumber, matchNumber, &[eventCode+teamNumber+matchNumber]',
+      teamMatches2018: '++id, eventCode, teamNumber, matchNumber, [eventCode+teamNumber], &[eventCode+teamNumber+matchNumber]',
       teams: '++id, &teamNumber, districtCode, tbaKey',
       eventTeams: '++id, year, eventCode, teamNumber, [year+eventCode], &[year+eventCode+teamNumber]',
       districts: '++id, &districtCode',
@@ -53,6 +53,24 @@ export interface TeamMatch2018Entity {
 	foulCount: number;
 	foulReason: string;
 	cubeCount: number;
+}
+
+export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018Entity {
+  return {
+    eventCode: eventCode,
+    teamNumber: teamNumber,
+    matchNumber: matchNumber,
+
+    isFailure: false,
+    failureReason: "",
+    isSwitch: false,
+    isScale: false,
+    isVault: false,
+    isFoul: false,
+    foulCount: 0,
+    foulReason: "",
+    cubeCount: 0,
+  };
 }
 
 export interface EventTeamEntity {

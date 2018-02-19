@@ -5,6 +5,7 @@ import { FrcStatsContext, EventMatchEntity } from "../persistence";
 
 @autoinject
 export class TbaEventDialog {
+  year = "2018";
   events: any[];
 
   constructor(
@@ -22,7 +23,7 @@ export class TbaEventDialog {
   }
 
   load() {
-    this.tbaApi.getEventList('2018').then(events => {
+    this.tbaApi.getEventList(this.year).then(events => {
       this.events = [];
       for(var evnt of events) {
         if(evnt.district && evnt.district.abbreviation == "pnw") {
@@ -31,6 +32,10 @@ export class TbaEventDialog {
       }
       this.events.sort((a, b) => a.week - b.week);
     });
+  }
+
+  yearChanged() {
+    this.load();
   }
 
   importEvent(evnt: tbaEvent) {
@@ -50,7 +55,7 @@ export class TbaEventDialog {
 		  matches.forEach(match => {
         if(match.comp_level == "qm"){
           let localMatch: EventMatchEntity = {
-            year: "2018",
+            year: this.year,
             eventCode: evnt.event_code,
             matchNumber: match.match_number,
             teamNumbers_red: [],
@@ -86,7 +91,7 @@ export class TbaEventDialog {
       name: evnt.name, 
       districtCode: this.getDistrictCode(evnt.district),
       tbaKey: evnt.key,
-      year: '2018',
+      year: this.year,
     });
   }
 
@@ -114,7 +119,7 @@ export class TbaEventDialog {
     return Promise.all([
       this.dbContext.eventTeams
       .where(["year", "eventCode"])
-      .equals(["2018", evnt.event_code]).toArray(),
+      .equals([this.year, evnt.event_code]).toArray(),
       this.tbaApi.getEventTeams(evnt.key),
     ]).then(results => {
       let localTeams = results[0];
@@ -122,7 +127,7 @@ export class TbaEventDialog {
       // todo: maybe warn if local has extra teams?
       let promises = importedTeams.map(team => {
         this.dbContext.eventTeams.put({
-          year: '2018',
+          year: this.year,
           eventCode: evnt.event_code,
           teamNumber: ""+team.team_number,
         });

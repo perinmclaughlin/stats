@@ -105,6 +105,7 @@
               "dist/css/bootstrap.css"
             ]
           },
+          "javascript-natural-sort",
           "dexie",
           "velocity-animate",
           "tether",

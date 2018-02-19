@@ -17,6 +17,7 @@
     "bluebird": "^3.4.1",
     "bootstrap": "^4.0.0-beta.3",
     "dexie": "^2.0.1",
+    "javascript-natural-sort": "^0.7.1",
     "lodash": "^4.17.4",
     "requirejs": "^2.3.2",
     "text": "github:requirejs/text#latest",
