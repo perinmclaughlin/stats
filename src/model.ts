@@ -22,9 +22,9 @@ export class EventTeamData {
 
 	public matchCount: number;
 	public failureCount: number;
-	public scale: boolean;
-	public switch_cap: boolean;
-	public vault: boolean;
+	public scale: string;
+	public switch_cap: string;
+	public vault: string;
 	public foulCount: number;
 	public cubeAverage: number;
 }

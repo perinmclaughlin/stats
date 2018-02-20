@@ -13,7 +13,7 @@ export class EventTeam {
   public cubeTotal: number = 0;
   public matchTotal: number = 0;
   public foulTotal: number = 0;
-  public testData : TeamMatch2018Entity[] = [
+  /*public testData : TeamMatch2018Entity[] = [
     {
       eventCode: "wayak",
       teamNumber: "3223",
@@ -42,21 +42,21 @@ export class EventTeam {
       foulReason: "No fouls.",
       cubeCount: 9001
     }
-  ];
+  ];*/
 
   constructor(private dbContext: FrcStatsContext){
     this.matches2018 = [];
-    this.calculate();
+    //this.calculate();
   }
   
-  calculate(){
+  /*calculate(){
     for(var i = 0; i < this.testData.length; i++)
     {
       this.cubeTotal += this.testData[i].cubeCount;
       this.matchTotal++;
       this.foulTotal += this.testData[i].foulCount;
     }
-  }
+  }*/
 
   activate(params){
 	  var gettingTeam = this.getTeam(params);

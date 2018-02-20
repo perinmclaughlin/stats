@@ -77,15 +77,16 @@
           <th>Foul Count</th>
           <th>Average Cubes Transported</th>
         </tr>
-        <tr repeat.for="a of teams">
-          <td><a style="display: block;" route-href="route.bind:'event-team'; params.bind: {year: a.eventTeam.year, eventCode: a.eventTeam.eventCode, teamNumber: a.team.teamNumber}">${a.team.teamNumber}</a></td>
-          <td>${a.team.matchCount}</td>
-          <td>${a.team.failureCount}</td>
-          <td>${a.team.scale}</td>
-          <td>${a.team.switch_cap}</td>
-          <td>${a.team.vault}</td>
-          <td>${a.team.foulCount}</td>
-          <td>${a.team.cubeAverage}</td>
+        <tr repeat.for="teamData of teamsData">
+          <td><a style="display: block;" route-href="route.bind:'event-team'; params.bind: {year: teamData.year, eventCode: teamData.eventCode, teamNumber: teamData.teamNumber}">
+            ${teamData.teamNumber}</a></td>
+          <td>${teamData.matchCount}</td>
+          <td>${teamData.failureCount}</td>
+          <td>${teamData.scale}</td>
+          <td>${teamData.switch_cap}</td>
+          <td>${teamData.vault}</td>
+          <td>${teamData.foulCount}</td>
+          <td>${teamData.cubeAverage}</td>
         </tr>
       </table>
     </aubs-tab>
