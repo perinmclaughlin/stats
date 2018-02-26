@@ -47,4 +47,61 @@ export class Events {
       }
     });
   }
+
+  public exportEvent(event: EventEntity) {
+    let json = {
+      teams: [],
+      eventTeams: [],
+      event: event,
+      eventMatches: [],
+      matches2018: [],
+    };
+
+    let teamsPromise = this.dbContext.eventTeams
+      .where(["year", "eventCode"])
+      .equals([event.year, event.eventCode]).toArray()
+      .then(eventTeams => {
+
+        json.eventTeams = eventTeams;
+        return Promise.all(eventTeams.map(eventTeam => this.dbContext.teams.where("teamNumber").equals(eventTeam.teamNumber).first()));
+      }).then(teams => {
+        json.teams = teams;
+      });
+
+    let eventMatchesPromise = this.dbContext.eventMatches
+      .where(["year", "eventCode"])
+      .equals([event.year, event.eventCode]).toArray()
+      .then(eventMatches => {
+        json.eventMatches = eventMatches;
+      });
+
+    let matches2018Promise = Promise.resolve("yup");
+    if(event.year == "2018") {
+      matches2018Promise = this.dbContext.teamMatches2018
+        .where("eventCode")
+        .equals(event.eventCode).toArray()
+        .then(matches2018 => {
+          json.matches2018 = matches2018;
+        }).then(() => "yup");
+    }
+
+    Promise.all([teamsPromise, eventMatchesPromise, matches2018Promise]).then(() => {
+      this.downloadJson(event, json);
+    });
+  }
+
+  private downloadJson(event, json) {
+    let name = `${event.year}-${event.eventCode}.json`
+    let file = new Blob([JSON.stringify(json)], {type: "application/json"});
+    let a = document.createElement("a");
+    let url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 0);
+  }
 }

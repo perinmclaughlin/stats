@@ -1,20 +1,74 @@
 import { autoinject } from "aurelia-framework";
+import { BindingEngine, Disposable } from "aurelia-binding";
 import { MatchData } from "./model";
-import { FrcStatsContext, TeamMatch2018Entity, make2018match } from "./persistence";
+import { 
+  FrcStatsContext, 
+  TeamMatch2018Entity, make2018match, 
+  TeamEntity, EventEntity, EventMatchEntity,
+} from "./persistence";
+
 
 @autoinject
 export class MatchTeamPage {
   public model: TeamMatch2018Entity;
+  public team: TeamEntity;
+  public event: EventEntity;
+  public eventMatch: EventMatchEntity;
+  public partner1: string;
+  public partner2: string;
+  public isBlue = false;
+  public isRed = false;
 
-  constructor(private dbContext: FrcStatsContext){
+  public liftedPartner1 = false;
+  public liftedPartner2 = false;
+
+  private observers: Disposable[];
+
+  constructor(
+    private bindingEngine: BindingEngine,
+    private dbContext: FrcStatsContext){
   }
 
   public activate(params) {
-    return this.load(params);
+    return this.load(params).then(() => {
+      this.observeFields();
+    });
+  }
+
+  public deactivate() {
+    this.unobserveFields();
+  }
+
+  private observeFields() {
+    this.observers = [];
+
+    this.observers.push(this.bindingEngine.propertyObserver(this, 'liftedPartner1').subscribe(liftedPartner1 => {
+      if(liftedPartner1 && this.model.lifted.indexOf(this.partner1) == -1) {
+        this.model.lifted.push(this.partner1);
+      }else if(!liftedPartner1 && this.model.lifted.indexOf(this.partner1) != -1) {
+        this.model.lifted = this.model.lifted.filter(teamNumber => teamNumber != this.partner1);
+      }
+    }));
+
+    this.observers.push(this.bindingEngine.propertyObserver(this, 'liftedPartner2').subscribe(liftedPartner2 => {
+      if(liftedPartner2 && this.model.lifted.indexOf(this.partner2) == -1) {
+        this.model.lifted.push(this.partner2);
+      }else if(!liftedPartner2 && this.model.lifted.indexOf(this.partner2) != -1) {
+        this.model.lifted = this.model.lifted.filter(teamNumber => teamNumber != this.partner2);
+      }
+    }));
+  }
+
+  private unobserveFields() {
+    for(var observer of this.observers) {
+      observer.dispose();
+    }
+    this.observers = [];
   }
 
   public load(params) {
-    this.dbContext.teamMatches2018.where(['eventCode', 'teamNumber', 'matchNumber'])
+
+    var matchPromise = this.dbContext.teamMatches2018.where(['eventCode', 'teamNumber', 'matchNumber'])
       .equals([params.eventCode, params.teamNumber, params.matchNumber]).first()
     .then(match => {
       if(match == null) {
@@ -23,10 +77,108 @@ export class MatchTeamPage {
 
       this.model = match;
     });
+
+    var teamPromise = this.dbContext.teams.where('teamNumber').equals(params.teamNumber).first().then(team => {
+      this.team = team;
+    });
+
+    var eventPromise = this.dbContext.events.where('eventCode').equals(params.eventCode).first().then(evnt => {
+      this.event = evnt;
+    });
+
+    var eventMatchPromise = this.dbContext.eventMatches
+      .where(["year", "eventCode", "matchNumber"])
+      .equals([params.year, params.eventCode, params.matchNumber]).first()
+      .then(eventMatch => {
+        this.eventMatch = eventMatch;
+      });
+
+    return Promise.all([matchPromise, teamPromise, eventPromise, eventMatchPromise]).then(() => {
+      var blues = [this.eventMatch.blue1, this.eventMatch.blue2, this.eventMatch.blue3];
+      var reds = [this.eventMatch.red1, this.eventMatch.red2, this.eventMatch.red3];
+      this.isBlue = blues.indexOf(this.team.teamNumber) != -1;
+      this.isRed = reds.indexOf(this.team.teamNumber) != -1;
+      if(this.isBlue) {
+        var others = blues.filter(teamNumber => teamNumber != this.team.teamNumber);
+        this.partner1 = others[0];
+        this.partner2 = others[1];
+      }else if(this.isRed) {
+        var others = reds.filter(teamNumber => teamNumber != this.team.teamNumber);
+        this.partner1 = others[0];
+        this.partner2 = others[1];
+      }
+
+      if(this.model.lifted == null) {
+        this.model.lifted = [];
+      }
+
+      if(this.model.lifted.indexOf(this.partner1) != -1) {
+        this.liftedPartner1 = true;
+      }
+      if(this.model.lifted.indexOf(this.partner2) != -1) {
+        this.liftedPartner2 = true;
+      }
+    });
+  }
+
+  public decrement(prop: string) {
+    let value = parseInt(<any>this.model[prop]);
+    if(value <= 0 || isNaN(value)) {
+      value = 0;
+    }else {
+      value--;
+    }
+
+    this.model[prop] = value;
+  }
+
+  public decrement5(prop: string) {
+    let value = parseInt(<any>this.model[prop]);
+    if(value <= 0 || isNaN(value)) {
+      value = 0;
+    }else {
+      value-=5;
+    }
+
+    this.model[prop] = value;
+  }
+
+  public increment(prop: string) {
+    let value = parseInt(<any>this.model[prop]);
+    if(value < 0 || isNaN(value)) {
+      value = 0;
+    }else {
+      value++;
+    }
+
+    this.model[prop] = value;
+  }
+
+  public increment5(prop: string) {
+    let value = parseInt(<any>this.model[prop]);
+    if(value < 0 || isNaN(value)) {
+      value = 0;
+    }else {
+      value+=5;
+    }
+
+    this.model[prop] = value;
   }
 
   public click() {
-    console.info(this.model);
+    var numericProperties = [
+      'scaleCount', 'scaleCycleTime', 
+      'allySwitchCount', 'allySwitchCycleTime', 
+      'oppoSwitchCount', 'oppoSwitchCycleTime', 
+      'vaultCount', 'vaultCycleTime'
+    ];
+    for (var prop of numericProperties) {
+      if(this.model[prop] == "Infinity") {
+        this.model[prop] = Infinity;
+      }else if(typeof this.model[prop] == "string") {
+        this.model[prop] = parseInt(this.model[prop]);
+      }
+    }
 
     this.dbContext.teamMatches2018.where(['eventCode', 'teamNumber', 'matchNumber'])
       .equals([this.model.eventCode, this.model.teamNumber, this.model.matchNumber]).first()
@@ -37,7 +189,12 @@ export class MatchTeamPage {
     }).then(() => {
       return this.dbContext.teamMatches2018.put(this.model);
     }).then(() => {
-      return this.load(this.model);
+      return this.load({
+        year: this.event.year,
+        eventCode: this.model.eventCode,
+        matchNumber: this.model.matchNumber,
+        teamNumber: this.model.teamNumber
+      });
     });
   }
 }

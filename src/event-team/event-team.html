@@ -1,44 +1,58 @@
 <template>
-	<h1>${team.teamNumber}</h1>
-	<p><b>${team.teamName}</b></p>
-  <!--<p> Maybe add a summary showing team's cumulative stats? </p>-->
+  <div class='container-fluid'>
+    <h1>
+      <b>
+          <a route-href='route: event-team; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode, teamNumber: team.teamNumber}'>
+            ${team.teamNumber} (${team.teamName}) 
+          </a>
+          at 
+          <a route-href='route: event-teams; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode }'>
+            ${event.name} (${event.year})
+          </a>
+      </b>
+    </h1>
 
-  <p> Maybe add a notes field for overall impressions? </p>
-
-  <p> Maybe add a button to manually add a match? </p>
-
-  <p> Maybe add a button to manually remove a match? </p>
-
-  <aubs-tabset active.bind='activeTab'>
-    <aubs-tab header='Matches'>
-      <table class="table table-hover">
-        <tr>
-          <th>Match Number</th>
-          <th>Cube Count</th>
-          <th>Foul Count</th>
-        </tr>
-        <tr repeat.for="match of testData">
-          <td><a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
-          <td>${match.cubeCount}</td>
-          <td>${match.foulCount}</td>
-        </tr>
-        <tr>
+    <aubs-tabset active.bind='activeTab'>
+      <aubs-tab header='Matches'>
+        <table class="table table-hover">
+          <tr>
+            <th>Match Number</th>
+            <th>Scale Count</th>
+            <th>Ally Switch Count</th>
+            <th>Opponent Switch Count</th>
+            <th>Vault Count</th>
+            <th>Climbed</th>
+            <th>Lift Count</th>
+            <th>Notes</th>
+          </tr>
+          <tr repeat.for="match of matches2018">
+            <td><a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
+            <td>${match.scaleCount}</td>
+            <td>${match.allySwitchCount}</td>
+            <td>${match.oppoSwitchCount}</td>
+            <td>${match.vaultCount}</td>
+            <td>${match.climbed}</td>
+            <td>${match.lifted.length}</td>
+            <td>${match.notes}</td>
+          </tr>
+          <tr>
             <td><b>Total Number of Matches</b></td>
             <td><b>Total Number of Cubes</b></td>
             <td><b>Total Number of Fouls</b></td>
           </tr>
-        <tr>
-          <td>${matchTotal}</td>
-          <td>${cubeTotal}</td>
-          <td>${foulTotal}</td>
-        </tr>
-      </table>
-    </aubs-tab>
-    <aubs-tab header='Schedule'>
-      Team match schedule goes here!
-    </aubs-tab>
-  </aubs-tabset>
-  <!--<textarea name="team_stats" style="width:50%; height:100px" value.bind="model.foulReason">-->
+          <tr>
+            <td>${matchTotal}</td>
+            <td>${cubeTotal}</td>
+            <td>${foulTotal}</td>
+          </tr>
+        </table>
+      </aubs-tab>
+      <aubs-tab header='Schedule'>
+        Team match schedule goes here!
+      </aubs-tab>
+    </aubs-tabset>
+    <!--<textarea name="team_stats" style="width:50%; height:100px" value.bind="model.foulReason">-->
 
-  </textarea>
+    </textarea>
+  </div>
 </template>

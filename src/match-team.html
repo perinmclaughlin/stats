@@ -1,49 +1,250 @@
 <template>
-  <!--Use for team statistics per match-->
-  <h1 style="size:10"><b><u>Match Team Statistics</u></b></h1>
-  <br>
-  <br>
-  <h3><em><b>Robot Failure?</b></em></h3>
-  <!--form action=""-->
-    <label><input type="radio" name="robot_failure" checked.bind="model.isFailure" model.bind="true"> Yes</label><br>
-    <label><input type="radio" name="robot_failure" checked.bind="model.isFailure" model.bind="false"> No</label><br>
-    <h4><b>Reason:</b></h4>
-    <textarea name="failure_reason" style="width:50%; height:250px" value.bind="model.failureReason"></textarea>
-  <!--/form-->
-  <br>
-  <h3><em><strong>Score in...</strong></em></h3>
-  <h4><b>Switch?</b></h4>
-  <!--form action=""-->
-    <label><input type="radio" name="switch" checked.bind="model.isSwitch" model.bind="true"> Yes</label><br>
-    <label><input type="radio" name="switch" checked.bind="model.isSwitch" model.bind="false"> No</label><br>
-  <!--/form-->
-  <h4><b>Scale?</b></h4>
-  <!--form action=""-->
-    <label><input type="radio" name="scale" checked.bind="model.isScale" model.bind="true"> Yes</label><br>
-    <label><input type="radio" name="scale" checked.bind="model.isScale" model.bind="false"> No</label><br>
-  <!--/form-->
-  <h4><b>Vault?</b></h4>
-  <!--form action=""-->
-    <label><input type="radio" name="vault" checked.bind="model.isVault" model.bind="true"> Yes</label><br>
-    <label><input type="radio" name="vault" checked.bind="model.isVault" model.bind="false"> No</label><br>
-  <!--/form-->
-  <br>
-  <h3><em><b>Fouls?</b></em></h3>
-  <!--form action=""-->
-    <label><input type="radio" name="fouls" checked.bind="model.isFoul" model.bind="true"> Yes</label><br>
-    <label><input type="radio" name="fouls" checked.bind="model.isFoul" model.bind="false"> No</label><br>
-  <!--/form-->
-  <h4><b>How Many Fouls?</b></h4>
-  <!--form action=""-->
-    <label><input type="text" value.bind="model.foulCount"></label><br>
-    <h5><b>Reason(s):</b></h5>
-    <textarea name="foul_reason" style="width:50%; height:100px" value.bind="model.foulReason"></textarea>
-  <!--/form-->
-  <br>
-  <h3><b>Cubes Transported In This Match</b></h3>
-  <!--form action=""-->
-    <textarea name="cube_speed" style="width:50%; height:50px" value.bind="model.cubeCount"></textarea>
-  <!--/form-->
-  <br>
-  <button click.delegate="click()">Save</button>
+  <div class='container-fluid'>
+    <h1><b><u>
+          <a route-href='route: event-team; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: team.teamNumber}'>
+          ${team.teamNumber} (${team.teamName}) 
+          </a>
+        </u></b></h1>
+    <h3>
+      <b>
+        <a route-href='route: event-teams; params.bind: {year: event.year, eventCode: event.eventCode }'>
+          ${event.name}
+        </a>
+      </b> 
+      match ${model.matchNumber}
+    </h3>
+    <div class='row'>
+      <div class='col-sm'>
+        <div class='row'>
+          <div class='col'>
+            <h3>Vault</h3>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='vaultCount'>Cubes deposited: </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement("vaultCount")'>-</button>
+              </div>
+              <input id='vaultCount' class='form-control' value.bind="model.vaultCount"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment("vaultCount")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='vaultCycleTime'>Cycle Time (seconds): </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement5("vaultCycleTime")'>-</button>
+              </div>
+              <input id='vaultCycleTime' class='form-control' value.bind="model.vaultCycleTime"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment5("vaultCycleTime")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='col-sm'>
+        <div class='row'>
+          <div class='col'>
+            <h3>Scale</h3>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='scaleCount'>Cubes deposited: </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement("scaleCount")'>-</button>
+              </div>
+              <input id='scaleCount' class='form-control' value.bind="model.scaleCount"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment("scaleCount")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='scaleCycleTime'>Cycle Time (seconds): </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement5("scaleCycleTime")'>-</button>
+              </div>
+              <input id='scaleCycleTime' class='form-control' value.bind="model.scaleCycleTime"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment5("scaleCycleTime")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col-sm'>
+        <div class='row'>
+          <div class='col'>
+            <h3>Allied Switch</h3>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='allySwitchCount'>Cubes deposited: </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement("allySwitchCount")'>-</button>
+              </div>
+              <input id='allySwitchCount' class='form-control' value.bind="model.allySwitchCount"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment("allySwitchCount")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='allySwitchCycleTime'>Cycle Time (seconds): </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement5("allySwitchCycleTime")'>-</button>
+              </div>
+              <input id='allySwitchCycleTime' class='form-control' value.bind="model.allySwitchCycleTime"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment5("allySwitchCycleTime")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='col-sm'>
+
+        <div class='row'>
+          <div class='col'>
+            <h3>Opponent Switch</h3>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='oppoSwitchCount'>Cubes deposited: </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement("oppoSwitchCount")'>-</button>
+              </div>
+              <input id='oppoSwitchCount' class='form-control' value.bind="model.oppoSwitchCount"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment("oppoSwitchCount")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='oppoSwitchCycleTime'>Cycle Time (seconds): </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement5("oppoSwitchCycleTime")'>-</button>
+              </div>
+              <input id='oppoSwitchCycleTime' class='form-control' value.bind="model.oppoSwitchCycleTime"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment5("oppoSwitchCycleTime")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col'>
+        <h3>Climb</h3>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col-sm'>
+        <label> 
+          <input type='checkbox' class='form-control' checked.bind='model.climbed' />
+          Climbed 
+        </label>
+      </div>
+      <div class='col-sm'>
+        <div>
+          <label> 
+            Lifted ${partner1}
+            <input type='checkbox' class='form-control' checked.bind='liftedPartner1' />
+          </label>
+          <label> 
+            Lifted ${partner2}
+            <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col'>
+        <div class='row'>
+          <div class='col-sm-2 form-group'>
+            <label class='form-control-label'>Robot Failure?</label>
+            <div>
+              <label><input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="true"> Yes</label><br>
+              <label><input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="false"> No</label><br>
+            </div>
+          </div>
+          <div class='col-sm-10 form-group' show.bind='model.isFailure'>
+            <label class='form-control-label' for='failureReason'>Failure Reasons: </label>
+            <textarea id='failureReason' class='form-control' rows='5' value.bind="model.failureReason"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class='col'>
+        <div class='row'>
+          <div class='col-sm-2 form-group'>
+            <label class='form-control-label'>Fouls?</label>
+            <div>
+              <label><input type="radio" class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="true"> Yes</label><br>
+              <label><input type="radio" class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="false"> No</label><br>
+            </div>
+          </div>
+          <div class='col-sm-10 form-group' show.bind='model.isFoul'>
+            <label class='form-control-label' for='foulReason'>Foul Reasons: </label>
+            <textarea id='foulReason' class='form-control' rows='5' value.bind="model.foulReason"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col form-group'>
+        <label class='form-control-label'>General Notes</label>
+        <textarea id='notes' class='form-control' rows='6' value.bind='model.notes'>
+        </textarea>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col'>
+        <button class='btn btn-primary' click.delegate="click()">Save</button>
+      </div>
+    </div>
+
+    <div>&nbsp;</div>
+  </div>
+
 </template>

@@ -110,6 +110,13 @@
           "velocity-animate",
           "tether",
           {
+            "name": "aurelia-validation",
+            "main": "aurelia-validation",
+            "path": "../node_modules/aurelia-validation/dist/amd",
+            "resources": [
+            ]
+          },
+          {
             "name": "aurelia-bootstrap",
             "path": "../node_modules/aurelia-bootstrap/dist/amd",
             "main": "index",

@@ -6,6 +6,7 @@ import { FrcStatsContext, EventMatchEntity } from "../persistence";
 @autoinject
 export class TbaEventDialog {
   year = "2018";
+  customEventKey = "";
   events: any[];
 
   constructor(
@@ -48,6 +49,18 @@ export class TbaEventDialog {
     });
   }
 
+  importByEventKey() {
+    this.tbaApi.getEvent(this.customEventKey).then(evnt => {
+      return this.saveEvent(evnt).then(() => evnt);
+    }).then(evnt => {
+      return this.saveDistrict(evnt.district).then(() => evnt);
+    }).then(evnt => {
+      return this.saveTeams(evnt).then(() => evnt);
+    }).then(evnt => {
+      return this.saveMatchEvent(evnt);
+    });
+  }
+
   private saveMatchEvent(evnt: tbaEvent)
   {
     return this.tbaApi.getEventMatches(evnt.key).then(matches =>{
@@ -57,18 +70,22 @@ export class TbaEventDialog {
           let localMatch: EventMatchEntity = {
             year: this.year,
             eventCode: evnt.event_code,
-            matchNumber: match.match_number,
-            teamNumbers_red: [],
-            teamNumbers_blue: [],
+            matchNumber: ""+match.match_number,
+            red1: "",
+            red2: "",
+            red3: "",
+            blue1: "",
+            blue2: "",
+            blue3: "",
           };
-          let promises1 = match.alliances.blue.team_keys.map(team_key => {
+          let promises1 = match.alliances.blue.team_keys.map((team_key, i) => {
             return this.dbContext.teams.where("tbaKey").equals(team_key).first().then(localTeam => {
-              localMatch.teamNumbers_blue.push(localTeam.teamNumber);
+              localMatch['blue' + (i+1)] = localTeam.teamNumber;
             })
           });
-          let promises2 = match.alliances.red.team_keys.map(team_key => {
+          let promises2 = match.alliances.red.team_keys.map((team_key, i) => {
             return this.dbContext.teams.where("tbaKey").equals(team_key).first().then(localTeam => {
-              localMatch.teamNumbers_red.push(localTeam.teamNumber);
+              localMatch['red' + (i+1)] = localTeam.teamNumber;
             })
           });
           console.info(localMatch.eventCode, localMatch.matchNumber);

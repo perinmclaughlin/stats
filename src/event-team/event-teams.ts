@@ -52,6 +52,23 @@ export class EventTeams {
         year: this.event.year,
         eventCode: this.event.eventCode,
         teams: this.teams.map(x => x.team),
+        mode: "add",
+      }),
+    }).whenClosed(() => {
+      this.getEventMatches()
+    });
+  }
+
+  edit(match: EventMatchEntity)
+  {
+    this.dialogService.open({
+      viewModel: MatchDialog,
+      model: ({
+        year: match.year,
+        eventCode: match.eventCode,
+        matchNumber: match.matchNumber,
+        teams: this.teams.map(x => x.team),
+        mode: "edit",
       }),
     }).whenClosed(() => {
       this.getEventMatches()
@@ -127,7 +144,11 @@ export class EventTeams {
       this.teamVault_fail = 0;
       this.teamVault_success = 0;
       teamData.matchCount = 0;
-      teamData.cubeAverage = 0;
+      teamData.scaleCount = 0;
+      teamData.switchCount = 0;
+      teamData.vaultCount = 0;
+      teamData.climbCount = 0;
+      teamData.liftCount = 0;
       for(var b of this.matches2018){
         if(b.teamNumber == teamData.teamNumber){
           teamData.cubeAverage += b.cubeCount;
@@ -135,9 +156,22 @@ export class EventTeams {
             teamData.failureCount++;            
           }
           
-          var y = parseInt(<any>b.foulCount);
-          teamData.foulCount += y;
           teamData.matchCount++;
+
+          teamData.scaleCount += parseInt(<any>b.scaleCount);
+          teamData.switchCount += parseInt(<any>b.allySwitchCount);
+          teamData.switchCount += parseInt(<any>b.oppoSwitchCount);
+
+          teamData.vaultCount += parseInt(<any>b.vaultCount);
+
+          if(b.climbed) {
+            teamData.climbCount ++;
+          }
+
+          if(b.lifted) {
+            teamData.liftCount += b.lifted.length;
+          }
+          /*
           if(! b.isScale){
             this.teamScale_fail++;
             this.teamScale_total++;
@@ -160,7 +194,22 @@ export class EventTeams {
           else{
             this.teamVault_fail++;
           }
+          */
         }
+      }
+
+      if(teamData.matchCount == 0) {
+        teamData.scaleAvg = 0;
+        teamData.switchAvg = 0;
+        teamData.vaultAvg = 0;
+        teamData.climbAvg = 0;
+        teamData.liftAvg = 0;
+      }else {
+        teamData.scaleAvg = teamData.scaleCount / teamData.matchCount;
+        teamData.switchAvg = teamData.switchCount / teamData.matchCount;
+        teamData.vaultAvg = teamData.vaultCount / teamData.matchCount;
+        teamData.climbAvg = teamData.climbCount / teamData.matchCount;
+        teamData.liftAvg = teamData.liftCount / teamData.matchCount;
       }
 
       if(teamData.matchCount != 0){
@@ -170,18 +219,6 @@ export class EventTeams {
         teamData.cubeAverage = 0;
       }
 
-      if(this.teamScale_fail > this.teamScale_success){
-        teamData.scale = "false";
-      }
-      else if(this.teamScale_fail < this.teamScale_success){
-        teamData.scale = "true";
-      }
-      else if(this.teamScale_fail != 0 && this.teamScale_success != 0){
-        teamData.scale = "neutral";
-      }
-      else{
-        teamData.vault = "";
-      }
       if(this.teamVault_fail > this.teamVault_success){
         teamData.vault = "false";
       }
@@ -211,5 +248,38 @@ export class EventTeams {
 
       this.teamsData.push(teamData);
     }
+  }
+
+  public scouted(eventMatch: EventMatchEntity, teamNumber: string) {
+    var result = this.matches2018.filter(match => 
+      match.eventCode == eventMatch.eventCode && 
+      match.matchNumber == eventMatch.matchNumber &&
+      match.teamNumber == teamNumber).length != 0;
+
+    return result;
+  }
+
+  public sortByTeamNumber() {
+    this.teamsData.sort((a,b) => naturalSort(a.teamNumber, b.teamNumber));
+  }
+
+  public sortByScale() {
+    this.teamsData.sort((a, b) => b.scaleAvg - a.scaleAvg);
+  }
+
+  public sortBySwitch() {
+    this.teamsData.sort((a, b) => b.switchAvg - a.switchAvg);
+  }
+
+  public sortByVault() {
+    this.teamsData.sort((a, b) => b.vaultAvg - a.vaultAvg);
+  }
+
+  public sortByClimb() {
+    this.teamsData.sort((a, b) => b.climbAvg - a.climbAvg);
+  }
+
+  public sortByLift() {
+    this.teamsData.sort((a, b) => b.liftAvg - a.liftAvg);
   }
 }
