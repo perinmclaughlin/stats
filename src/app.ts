@@ -28,7 +28,7 @@ export class App {
       },
       {
         route: ["year/:year/event/:eventCode"], 
-        name: "event", moduleId: PLATFORM.moduleName("event-team/teh-event"), 
+        name: "event", moduleId: PLATFORM.moduleName("teh-event"), 
         nav: false, title: "Smaller Honking Page", adminRoute: false,
       },
       {

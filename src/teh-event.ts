@@ -21,7 +21,7 @@ export class EventView {
       {
         route: ["", "matches"],
         name: "event-matches",
-        moduleId: PLATFORM.moduleName("event-team/event-matches"),
+        moduleId: PLATFORM.moduleName("event-matches/event-matches"),
         title: "event matches",
       }]);
   }
