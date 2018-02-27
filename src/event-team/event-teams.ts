@@ -180,7 +180,7 @@ export class EventTeams {
         teamData.scale = "neutral";
       }
       else{
-        teamData.vault = "";
+        teamData.vault = "no data";
       }
       if(this.teamVault_fail > this.teamVault_success){
         teamData.vault = "false";
@@ -192,7 +192,7 @@ export class EventTeams {
         teamData.vault = "neutral";
       }
       else{
-        teamData.vault = "";
+        teamData.vault = "no data";
       }
       if(this.teamSwitch_fail > this.teamSwitch_success){
         teamData.switch_cap = "false";
@@ -204,7 +204,7 @@ export class EventTeams {
         teamData.switch_cap = "neutral";
       }
       else{
-        teamData.vault = "";
+        teamData.vault = "no data";
       }
 
       //teamData.
