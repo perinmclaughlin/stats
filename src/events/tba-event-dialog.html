@@ -23,15 +23,20 @@
               Import
             </button>
           </td>
+
+        </tr>
+
+        <tr>
+          <td>
+            <label>By Event Key:</label> <input type='text' value.bind="customEventKey" /> 
+          </td>
+          <td>
+            <button class='btn btn-primary' click.delegate='importByEventKey()'>Import</button>
+          </td>
         </tr>
       </table>
     </ux-dialog-body>
     <ux-dialog-footer>
-      <!--
-      <button class='btn btn-default' click.delegate='controller.ok()'>
-        Done
-      </button>
-      -->
     </ux-dialog-footer>
   </ux-dialog>
 </template>

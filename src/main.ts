@@ -9,7 +9,9 @@ export function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .feature(PLATFORM.moduleName('resources/index'))
     .plugin(PLATFORM.moduleName('aurelia-bootstrap'))
-    .plugin(PLATFORM.moduleName('aurelia-dialog'));
+    .plugin(PLATFORM.moduleName('aurelia-validation'))
+    .plugin(PLATFORM.moduleName('aurelia-dialog'))
+    .globalResources(PLATFORM.moduleName("resources/value-converters/numeric-value-converter"));
 
   // Uncomment the line below to enable animation.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));

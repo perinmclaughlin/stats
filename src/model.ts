@@ -22,7 +22,22 @@ export class EventTeamData {
 
 	public matchCount: number;
 	public failureCount: number;
-	public scale: string;
+
+	public scaleCount: number;
+	public scaleAvg: number;
+
+  public switchCount: number;
+  public switchAvg: number;
+
+  public vaultCount: number;
+  public vaultAvg: number;
+
+  public climbCount: number;
+  public climbAvg: number;
+
+  public liftCount: number;
+  public liftAvg: number;
+
 	public switch_cap: string;
 	public vault: string;
 	public foulCount: number;

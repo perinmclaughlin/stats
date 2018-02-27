@@ -1,0 +1,74 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+      Add Match
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='row'>
+        <div class='col form-group'>
+          <label for='matchNumber'>Match Number</label>
+          <input type="text" class='form-control' id='matchNumber' value.bind="match.matchNumber & validate:rules">
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col form-group'>
+          <label for='blue1'>Blue Alliance (1)</label>
+          <select class='form-control' id='blue1' value.bind="match.blue1 & validate:rules">
+            <option model=''></option>
+            <option repeat.for="team of teams" model.bind="team.teamNumber"> ${team.teamNumber} </option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col form-group'>
+          <label for='blue2'>Blue Alliance (2)</label>
+          <select class='form-control' id='blue2' value.bind="match.blue2 & validate:rules">
+            <option model=''></option>
+            <option repeat.for="team of teams" model.bind="team.teamNumber"> ${team.teamNumber} </option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col form-group'>
+          <label for='blue3'>Blue Alliance (3)</label>
+          <select class='form-control' id='blue3' value.bind="match.blue3 & validate:rules">
+            <option model=''></option>
+            <option repeat.for="team of teams" model.bind="team.teamNumber"> ${team.teamNumber} </option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col form-group'>
+          <label for='red1'>Red Alliance (1)</label>
+          <select class='form-control' id='red1' value.bind="match.red1 & validate:rules">
+            <option model=''></option>
+            <option repeat.for="team of teams" model.bind="team.teamNumber"> ${team.teamNumber} </option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col form-group'>
+          <label for='red2'>Red Alliance (2)</label>
+          <select class='form-control' id='red2' value.bind="match.red2 & validate:rules">
+            <option model=''></option>
+            <option repeat.for="team of teams" model.bind="team.teamNumber"> ${team.teamNumber} </option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col form-group'>
+          <label for='red3'>Red Alliance (3)</label>
+          <select class='form-control' id='red3' value.bind="match.red3 & validate:rules">
+            <option model=''></option>
+            <option repeat.for="team of teams" model.bind="team.teamNumber"> ${team.teamNumber} </option>
+          </select>
+        </div>
+      </div>
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <button class="btn btn-primary" click.delegate="save()">
+        Save
+      </button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

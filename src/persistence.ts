@@ -14,7 +14,7 @@ export class FrcStatsContext extends Dexie {
     super('FrcStats')
 
     this.version(1).stores({
-      teamMatches2018: '++id, eventCode, teamNumber, matchNumber, [eventCode+teamNumber], &[eventCode+teamNumber+matchNumber]',
+      teamMatches2018: '++id, eventCode, teamNumber, matchNumber, [eventCode+matchNumber], [eventCode+teamNumber], &[eventCode+teamNumber+matchNumber]',
       teams: '++id, &teamNumber, districtCode, tbaKey',
       eventTeams: '++id, year, eventCode, teamNumber, [year+eventCode], &[year+eventCode+teamNumber]',
       districts: '++id, &districtCode',
@@ -42,17 +42,24 @@ export interface TeamMatch2018Entity {
   id?: number;
 	eventCode: string;
 	teamNumber: string;
-	matchNumber: number;
+	matchNumber: string;
 
 	isFailure: boolean;
 	failureReason: string;
-	isSwitch: boolean;
-	isScale: boolean;
-	isVault: boolean;
+	allySwitchCount: number;
+  allySwitchCycleTime: number
+	oppoSwitchCount: number;
+  oppoSwitchCycleTime: number
+	scaleCount: number;
+	scaleCycleTime: number;
+  vaultCount: number;
+  vaultCycleTime: number;
+  climbed: boolean;
+  lifted: string[];
 	isFoul: boolean;
-	foulCount: number;
 	foulReason: string;
 	cubeCount: number;
+  notes: string;
 }
 
 export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018Entity {
@@ -60,16 +67,23 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
     eventCode: eventCode,
     teamNumber: teamNumber,
     matchNumber: matchNumber,
+    allySwitchCount: 0,
+    allySwitchCycleTime: 150,
+    oppoSwitchCount: 0,
+    oppoSwitchCycleTime: 150,
+    scaleCount: 0,
+    scaleCycleTime: 150,
+    vaultCount: 0,
+    vaultCycleTime: 150,
+    climbed: false,
+    lifted: [],
 
     isFailure: false,
     failureReason: "",
-    isSwitch: false,
-    isScale: false,
-    isVault: false,
     isFoul: false,
-    foulCount: 0,
     foulReason: "",
     cubeCount: 0,
+    notes: "",
   };
 }
 
@@ -128,7 +142,11 @@ export interface EventMatchEntity {
 	
 	year: string;
 	eventCode: string;
-	matchNumber: number;
-	teamNumbers_red: string[];
-	teamNumbers_blue: string[];
+	matchNumber: string;
+  red1: string;
+  red2: string;
+  red3: string;
+  blue1: string;
+  blue2: string;
+  blue3: string;
 }
