@@ -7,7 +7,7 @@ import * as naturalSort from "javascript-natural-sort";
 import { EventTeamData, MatchData } from "../model";
 
 @autoinject
-export class EventTeams {
+export class EventMatches {
   public event: EventEntity;
   public eventMatches: EventMatchEntity[];
   public teams: {team: TeamEntity, eventTeam: EventTeamEntity}[];
@@ -36,6 +36,37 @@ export class EventTeams {
     });
   }
   
+  add()
+  {
+    this.dialogService.open({
+      viewModel: MatchDialog,
+      model: ({
+        year: this.event.year,
+        eventCode: this.event.eventCode,
+        teams: this.teams.map(x => x.team),
+        mode: "add",
+      }),
+    }).whenClosed(() => {
+      this.getEventMatches()
+    });
+  }
+
+  edit(match: EventMatchEntity)
+  {
+    this.dialogService.open({
+      viewModel: MatchDialog,
+      model: ({
+        year: match.year,
+        eventCode: match.eventCode,
+        matchNumber: match.matchNumber,
+        teams: this.teams.map(x => x.team),
+        mode: "edit",
+      }),
+    }).whenClosed(() => {
+      this.getEventMatches()
+    });
+  }
+
   getEvent(params) {
 	  return this.dbContext.events.where(["year", "eventCode"]).equals([params.year, params.eventCode]).first().then(event => {
 		  this.event = event;
@@ -71,6 +102,19 @@ export class EventTeams {
     }).then(() => {
       this.getTeamTotals();
       var i = 0;
+    });
+  }
+
+  remove(eventMatch){
+    this.dialogService.open({
+      viewModel: ConfirmDialog,
+      model: ["Are you SURE that you want to delete that?", "Press 'OKAY' to confirm"],
+    }).whenClosed(dialogResult => {
+      if(! dialogResult.wasCancelled){
+        this.dbContext.eventMatches.delete(eventMatch.id).then(() => {
+          this.getEventMatches();
+        });
+      }
     });
   }
 
@@ -142,6 +186,16 @@ export class EventTeams {
     }
   }
 
+  public scouted(eventMatch: EventMatchEntity, teamNumber: string) {
+    var result = this.matches2018.filter(match => 
+      match.eventCode == eventMatch.eventCode && 
+      match.matchNumber == eventMatch.matchNumber &&
+      match.teamNumber == teamNumber).length != 0;
+
+    return result;
+  }
+
+  /*
   public sortByTeamNumber() {
     this.teamsData.sort((a,b) => naturalSort(a.teamNumber, b.teamNumber));
   }
@@ -165,4 +219,5 @@ export class EventTeams {
   public sortByLift() {
     this.teamsData.sort((a, b) => b.liftAvg - a.liftAvg);
   }
+  */
 }

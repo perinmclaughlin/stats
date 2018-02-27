@@ -1,0 +1,81 @@
+<template>
+  <require from="aurelia-bootstrap/tabs/aubs-tab"></require>
+  <require from="aurelia-bootstrap/tabs/aubs-tabset"></require>
+
+  <div class='container-fluid'>
+    <h1> ${event.name} (${event.year})</h1>
+
+    <!--<p> Maybe make a tab for match schedule, and make a tab for team list? </p>-->
+    <ul class='nav nav-tabs'>
+      <li class='nav-item active'>
+        <a class='nav-link active' href="javascript:void">Matches</a>
+      </li>
+      <li class='nav-item'>
+        <a class='nav-link' route-href="route: event-teams">Teams (${teamsData.length})</a>
+      </li>
+    </ul>
+    <div class='tab-content'>
+      <table class="table table-hover">
+        <tr>
+          <th>Match Number</th>
+          <th>Blue Alliance (1)</th>
+          <th>Blue Alliance (2)</th>
+          <th>Blue Alliance (3)</th>
+          <th>Red Alliance (1)</th>
+          <th>Red Alliance (2)</th>
+          <th>Red Alliance (3)</th>
+          <th class="options-header">Options</th>  
+        </tr>
+        <tr repeat.for="eventMatch of eventMatches">
+          <td>${eventMatch.matchNumber}</td>
+          <td class="${scouted(eventMatch, eventMatch.blue1) ? 'blue' : ''}">
+            <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.blue1, matchNumber: eventMatch.matchNumber}">
+              ${eventMatch.blue1}
+            </a>
+          </td>
+          <td class="${scouted(eventMatch, eventMatch.blue2) ? 'blue' : ''}">
+            <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.blue2, matchNumber: eventMatch.matchNumber}">
+              ${eventMatch.blue2}
+            </a>
+          </td>
+          <td class="${scouted(eventMatch, eventMatch.blue3) ? 'blue' : ''}">
+            <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.blue3, matchNumber: eventMatch.matchNumber}">
+              ${eventMatch.blue3}
+            </a>
+          </td>
+          <td class="${scouted(eventMatch, eventMatch.red1) ? 'red' : ''}">
+            <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.red1, matchNumber: eventMatch.matchNumber}">
+              ${eventMatch.red1}
+            </a>
+          </td>
+          <td class="${scouted(eventMatch, eventMatch.red2) ? 'red' : ''}">
+            <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.red2, matchNumber: eventMatch.matchNumber}">
+              ${eventMatch.red2}
+            </a>
+          </td>
+          <td class="${scouted(eventMatch, eventMatch.red3) ? 'red' : ''}">
+            <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.red3, matchNumber: eventMatch.matchNumber}">
+              ${eventMatch.red3}
+            </a>
+          </td>
+          <td class="options-item">
+            <button class='btn btn-hover btn-primary' click.delegate="edit(eventMatch)">Edit</button>
+            <button class='btn btn-hover btn-danger' click.delegate="remove(eventMatch)">Remove</button>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="options-item">
+            <button class="btn btn-primary" click.delegate="add()">Add a Match</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</template>

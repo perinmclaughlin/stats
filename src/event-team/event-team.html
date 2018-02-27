@@ -6,7 +6,7 @@
             ${team.teamNumber} (${team.teamName}) 
           </a>
           at 
-          <a route-href='route: event-teams; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode }'>
+          <a route-href='route: event; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode }'>
             ${event.name} (${event.year})
           </a>
       </b>
@@ -33,7 +33,17 @@
             <td>${match.vaultCount}</td>
             <td>${match.climbed}</td>
             <td>${match.lifted.length}</td>
-            <td>${match.notes}</td>
+            <td>
+              ${match.notes}
+              <span show.bind="match.isFailure">
+                <br show.bind="match.notes"/><b>Fail:</b> 
+                ${match.failureReason}
+              </span>
+              <span show.bind="match.isFoul">
+                <br show.bind="match.notes || match.isFailure"/><b>Foul:</b> 
+                ${match.foulReason}
+              </span>
+            </td>
           </tr>
           <tr>
             <td><b>Total Number of Matches</b></td>

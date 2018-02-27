@@ -108,6 +108,7 @@
           "javascript-natural-sort",
           "dexie",
           "velocity-animate",
+          "numeral",
           "tether",
           {
             "name": "aurelia-validation",
