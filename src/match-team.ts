@@ -6,6 +6,8 @@ import {
   TeamMatch2018Entity, make2018match, 
   TeamEntity, EventEntity, EventMatchEntity,
 } from "./persistence";
+import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
+import { BootstrapRenderer } from "./bootstrap-renderer";
 
 
 @autoinject
@@ -19,6 +21,11 @@ export class MatchTeamPage {
   public isBlue = false;
   public isRed = false;
 
+  public rules: any[];
+  private validationController: ValidationController;
+  private renderer: BootstrapRenderer;
+  public mode = "add";
+
   public liftedPartner1 = false;
   public liftedPartner2 = false;
 
@@ -26,12 +33,18 @@ export class MatchTeamPage {
 
   constructor(
     private bindingEngine: BindingEngine,
-    private dbContext: FrcStatsContext){
+    private dbContext: FrcStatsContext,
+    validationControllerFactory: ValidationControllerFactory
+    ){
+    this.validationController = validationControllerFactory.createForCurrentScope();
   }
 
   public activate(params) {
+    let promise = Promise.resolve("yup");
+    
     return this.load(params).then(() => {
       this.observeFields();
+      this.setupValidation();
     });
   }
 
@@ -196,5 +209,35 @@ export class MatchTeamPage {
         teamNumber: this.model.teamNumber
       });
     });
+  }
+
+  private setupValidation() {
+    this.setupRules();
+
+    this.rules = ValidationRules
+      .ensure("vaultCount") 
+      .required()
+      .satisfiesRule("isNumeric")
+      .on(this.model)
+      .rules;
+
+    this.renderer = new BootstrapRenderer({showMessages: true});
+    this.validationController.addRenderer(this.renderer);
+  }
+
+  private setupRules() {
+
+    ValidationRules.customRule(
+      "isNumeric",
+      (vaultCount: string, obj: EventMatchEntity) => {
+        if(vaultCount == null || vaultCount == "") {
+          return true;
+        }
+        if(isNaN(parseInt(vaultCount))){
+          return false;
+        }
+        return true;
+      }, "Your input needs to be a number."
+    );
   }
 }
