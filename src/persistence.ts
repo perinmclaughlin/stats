@@ -87,6 +87,32 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
   };
 }
 
+export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Entity) {
+  if(a == null && b != null || a != null && b == null) return false;
+  return (
+    a.eventCode == b.eventCode &&
+    a.teamNumber == b.teamNumber &&
+    a.matchNumber == b.matchNumber &&
+    a.allySwitchCount == b.allySwitchCount &&
+    a.allySwitchCycleTime == b.allySwitchCycleTime &&
+    a.oppoSwitchCount == b.oppoSwitchCount &&
+    a.oppoSwitchCycleTime == b.oppoSwitchCycleTime &&
+    a.scaleCount == b.scaleCount &&
+    a.scaleCycleTime == b.scaleCycleTime &&
+    a.vaultCount == b.vaultCount &&
+    a.vaultCycleTime == b.vaultCycleTime &&
+    a.climbed == b.climbed &&
+    (a.lifted == null && b.lifted == null ||
+     a.lifted.length == b.lifted.length) &&
+    a.isFailure == b.isFailure &&
+    a.failureReason == b.failureReason &&
+    a.isFoul == b.isFoul &&
+    a.foulReason == b.foulReason &&
+    a.cubeCount == b.cubeCount &&
+    a.notes == b.notes
+  );
+}
+
 export interface EventTeamEntity {
   id?: number;
 	year: string;
@@ -149,4 +175,10 @@ export interface EventMatchEntity {
   blue1: string;
   blue2: string;
   blue3: string;
+}
+
+export function eventMatchesAreEqual(a: EventMatchEntity, b: EventMatchEntity): boolean {
+  return (a.matchNumber == b.matchNumber && a.year == b.year && a.eventCode == b.eventCode &&
+    a.red1 == b.red1 && a.red2 == b.red2 && a.red3 == b.red3  &&
+    a.blue1 == b.blue1 && a.blue2 == b.blue2 && a.blue3 == b.blue3);
 }

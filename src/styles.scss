@@ -6,6 +6,10 @@
   background-color: #fee;
 }
 
+.green {
+  background-color: #efe;
+}
+
 .blue a {
   display: block;
   font-weight: bold;
@@ -26,4 +30,8 @@
 
 .clickable {
   cursor: pointer;
+}
+
+html, body, .body-like {
+  height: 100%;
 }

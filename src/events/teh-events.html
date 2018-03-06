@@ -1,9 +1,11 @@
 <template>
   <h1>Events</h1>
 
-  <p> Maybe implement import from file? <p>
-
-  <p> Maybe implement export to file? </p>
+  <p> Maybe implement export to excel? </p>
+  <p> Maybe validate contents of imported file before letting user do things with it? </p>
+  <p> Maybe validate merge results before letting user save it? </p>
+  <p> Maybe have tba import go through merge if event already exists?</p>
+  <p> Maybe implement delete event?</p>
 
   <div class='container'>
 
@@ -14,7 +16,7 @@
             Import from TBA
             <img src="static/tba.png" />
           </button>
-          <button class='btn btn-primary'>
+          <button class='btn btn-primary' click.delegate='importJson()'>
             Import from json
           </button>
         </div>

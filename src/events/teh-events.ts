@@ -3,6 +3,7 @@ import { DialogService, DialogOpenResult } from "aurelia-dialog";
 
 import { FrcStatsContext, EventEntity, GameEntity } from "../persistence";
 import { TbaEventDialog } from "./tba-event-dialog";
+import { JsonImportDialog } from "./json-import-dialog";
 
 @autoinject
 export class Events {
@@ -103,5 +104,14 @@ export class Events {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }, 0);
+  }
+
+  public importJson() {
+    this.dialogService.open({
+      model: {},
+      viewModel: JsonImportDialog,
+    }).whenClosed(() => {
+      this.loadEvents();
+    });
   }
 }

@@ -1,0 +1,140 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+        <button class='btn btn-danger btn-sm float-right' click.delegate='controller.cancel()'>
+          X
+        </button>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <label class='btn btn-secondary' id='SelectFile' style='margin-top: 5px'>
+        Select File <input type='file' id='turpidEvil' class='btn btn-secondary' files.bind="rawFiles" style='display:none' accept='.json'/>
+      </label>
+
+      <span> ${fileName} </span>
+
+      <br/>
+
+      <div show.bind="true">
+        <h3>${json.event.name}</h3>
+      </div>
+
+      <div show.bind="noExisting">
+        There is currently no stored data for this event.
+        <button class='btn btn-primary' click.delegate='importSimple()'>
+          Import
+        </button>
+      </div>
+      <div show.bind="yesExisting">
+        Data for this event already exists. What do you want to do?
+
+        <button class='btn btn-primary' click.delegate='beginMerge()'>
+          Merge with existing
+        </button>
+        <button class='btn btn-primary' click.delegate='replaceEvent()'>
+          Replace existing
+        </button>
+      </div>
+
+      <div show.bind="yesMerging">
+        <table class='table table-hover'>
+          <tr>
+            <th> Match Number</th>
+            <th>Local Saved</th>
+            <th>From File</th>
+            <th> 
+              ${eventMatchesMerge.length} Matches 
+              <br/>
+              <label>
+                <input type='checkbox' checked.bind="showAllMatches" />
+                show all
+              </label>
+            </th>
+          </tr>
+          <tr repeat.for="state of eventMatchesMerge" show.bind="!state.same || showAllMatches">
+            <td> ${state.matchNumber} </td>
+            <td>
+              <span show.bind="state.localSaved != null">Yup</span>
+            </td>
+            <td>
+              <span show.bind="state.fromFile != null">Yup</span>
+            </td>
+            <td>
+              <span show.bind="!state.same && !state.resolved">
+                gotta do something!
+              </span>
+              <span show.bind="state.resolved">
+                yup
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th> Match Number </th>
+            <th> Team Number </th>
+            <th> Local Saved </th>
+            <th> From File </th>
+            <th> 
+              ${matches2018Merge.length} Match Records 
+              <br/>
+              <label>
+                <input type='checkbox' checked.bind='showAllMatchRecords' />
+                show all
+              </label>
+
+            </th>
+          </tr>
+          <tr repeat.for="state of matches2018Merge" show.bind="!state.same || showAllMatchRecords" class="${state.resolved ? 'green' : 'red'}">
+            <td> ${state.matchNumber} </td>
+            <td> ${state.teamNumber} </td>
+            <td>
+              <!-- local -->
+              <span show.bind="state.localSaved != null && state.fromFile == null">
+                <label>
+                  <input type='checkbox' checked.bind='state.takeLocal' />
+                  Take
+                </label>
+              </span>
+            </td>
+            <td>
+              <!-- from file -->
+              <span show.bind="state.fromFile != null && state.localSaved == null">
+                <label>
+                  <input type='checkbox' checked.bind='state.takeFromFile' />
+                  Take
+                </label>
+              </span>
+            </td>
+            <td>
+              <span show.bind='state.takeLocal'>
+                Local
+              </span>
+              <span show.bind='state.takeFromFile'>
+                From File
+              </span>
+              <span show.bind="!state.takeLocal && !state.takeFromFile">
+                <button class='btn btn-secondary' click.delegate='merge(state)'>Merge</button>
+              </span>
+            </td>
+
+          </tr>
+        </table>
+
+        <div class='row'>
+          <div class='col'>
+            <span class='danger' show.bind="mergeErrored">
+              That didn't work
+            </span>
+            <button class='btn btn-primary float-right' click.delegate="completeMerge()">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+      <div show.bind="done">
+        ${doneMessage}
+        <button class='btn btn-secondary float-right' click.delegate='controller.ok()'>
+          Done
+        </button>
+      </div>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

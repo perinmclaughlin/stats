@@ -1,10 +1,11 @@
 import { autoinject } from "aurelia-framework";
 import { Router, RouterConfiguration } from "aurelia-router";
 import { PLATFORM } from "aurelia-pal";
+import environment from './environment';
 
 @autoinject
 export class App {
-  message = 'Hello World!';
+  version = environment.version;
 
   constructor(public router: Router) {
   }

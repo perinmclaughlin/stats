@@ -25,11 +25,11 @@ gulp.task('generate-service-worker', function (callback) {
 });
 
 gulp.task('touch-up-index', function(callback) {
-  var replace = require('gulp-replace');
+  let replace = require('gulp-replace');
   let env = CLIOptions.getEnvironment();
-  var baseUrl = project.baseUrl[env] || project.baseUrl['default'] || "/";
-  var rootDir = project.platform.output;
-  var swPrecacheRegister = `<!-- sw-precache -->
+  let baseUrl = project.baseUrl[env] || project.baseUrl['default'] || "/";
+  let rootDir = project.platform.output;
+  let swPrecacheRegister = `<!-- sw-precache -->
     <script>
       if ('serviceWorker' in navigator && ${env != "dev"}) {
         navigator.serviceWorker.register('${baseUrl}sw.js').then(function() {
@@ -44,11 +44,11 @@ gulp.task('touch-up-index', function(callback) {
 });
 
 gulp.task('touch-up-run-docker', function(callback) {
-  var replace = require('gulp-replace');
+  let replace = require('gulp-replace');
   let env = CLIOptions.getEnvironment();
-  var baseUrl = project.baseUrl[env] || project.baseUrl['default'] || "/";
+  let baseUrl = project.baseUrl[env] || project.baseUrl['default'] || "/";
   baseUrl = baseUrl.substr(1)
-  var offlinestatus = env != "dev" ? "(offline enabled)" : "";
+  let offlinestatus = env != "dev" ? "(offline enabled)" : "";
 
   return gulp.src('./run-docker.sh', {base: './'})
     .pipe(replace(/baseurl=.*/, "baseurl='"  + baseUrl + "'"))

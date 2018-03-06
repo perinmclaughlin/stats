@@ -1,4 +1,5 @@
 <template>
+  <require from="./event-team.css"></require>
   <div class='container-fluid'>
     <h1>
       <b>
@@ -58,7 +59,26 @@
         </table>
       </aubs-tab>
       <aubs-tab header='Schedule'>
-        Team match schedule goes here!
+        <table class='table table-hover'>
+          <tr>
+            <th>Match Number</th>
+            <th>Blue Alliance (1)</th>
+            <th>Blue Alliance (2)</th>
+            <th>Blue Alliance (3)</th>
+            <th>Red Alliance (1)</th>
+            <th>Red Alliance (2)</th>
+            <th>Red Alliance (3)</th>
+          </tr>
+          <tr repeat.for="eventMatch of eventMatches">
+            <td>${eventMatch.matchNumber}</td>
+            <td class='blue ${eventMatch.blue1 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.blue1} </td>
+            <td class='blue ${eventMatch.blue2 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.blue2} </td>
+            <td class='blue ${eventMatch.blue3 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.blue3} </td>
+            <td class='red ${eventMatch.red1 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.red1} </td>
+            <td class='red ${eventMatch.red2 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.red2} </td>
+            <td class='red ${eventMatch.red3 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.red3} </td>
+          </tr>
+        </table>
       </aubs-tab>
     </aubs-tabset>
     <!--<textarea name="team_stats" style="width:50%; height:100px" value.bind="model.foulReason">-->
