@@ -8,6 +8,7 @@ import {
 } from "./persistence";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { BootstrapRenderer } from "./bootstrap-renderer";
+import { Router } from "aurelia-router";
 
 
 @autoinject
@@ -34,7 +35,8 @@ export class MatchTeamPage {
   constructor(
     private bindingEngine: BindingEngine,
     private dbContext: FrcStatsContext,
-    validationControllerFactory: ValidationControllerFactory
+    validationControllerFactory: ValidationControllerFactory,
+    private router: Router
     ){
     this.validationController = validationControllerFactory.createForCurrentScope();
   }
@@ -179,35 +181,48 @@ export class MatchTeamPage {
   }
 
   public click() {
-    var numericProperties = [
-      'scaleCount', 'scaleCycleTime', 
-      'allySwitchCount', 'allySwitchCycleTime', 
-      'oppoSwitchCount', 'oppoSwitchCycleTime', 
-      'vaultCount', 'vaultCycleTime'
-    ];
-    for (var prop of numericProperties) {
-      if(this.model[prop] == "Infinity") {
-        this.model[prop] = Infinity;
-      }else if(typeof this.model[prop] == "string") {
-        this.model[prop] = parseInt(this.model[prop]);
+    this.validationController.validate({
+      object: this.model,
+      rules: this.rules,
+    }).then(validationResult => {
+      var i = 0;
+      if(validationResult.valid){
+        var numericProperties = [
+          'scaleCount', 'scaleCycleTime', 
+          'allySwitchCount', 'allySwitchCycleTime', 
+          'oppoSwitchCount', 'oppoSwitchCycleTime', 
+          'vaultCount', 'vaultCycleTime'
+        ];
+        for (var prop of numericProperties) {
+          if(this.model[prop] == "Infinity") {
+            this.model[prop] = Infinity;
+          }else if(typeof this.model[prop] == "string") {
+            this.model[prop] = parseInt(this.model[prop]);
+          }
+        }
+    
+        this.dbContext.teamMatches2018.where(['eventCode', 'teamNumber', 'matchNumber'])
+          .equals([this.model.eventCode, this.model.teamNumber, this.model.matchNumber]).first()
+        .then(savedMatch => {
+          if(savedMatch != null) {
+            this.model.id = savedMatch.id;
+          }
+        }).then(() => {
+          return this.dbContext.teamMatches2018.put(this.model);
+        }).then(() => {
+          return this.load({
+            year: this.event.year,
+            eventCode: this.model.eventCode,
+            matchNumber: this.model.matchNumber,
+            teamNumber: this.model.teamNumber
+          });
+        }).then(() => {
+          this.router.navigateToRoute("event", {
+            year: this.event.year,
+            eventCode: this.model.eventCode,
+          });
+        });
       }
-    }
-
-    this.dbContext.teamMatches2018.where(['eventCode', 'teamNumber', 'matchNumber'])
-      .equals([this.model.eventCode, this.model.teamNumber, this.model.matchNumber]).first()
-    .then(savedMatch => {
-      if(savedMatch != null) {
-        this.model.id = savedMatch.id;
-      }
-    }).then(() => {
-      return this.dbContext.teamMatches2018.put(this.model);
-    }).then(() => {
-      return this.load({
-        year: this.event.year,
-        eventCode: this.model.eventCode,
-        matchNumber: this.model.matchNumber,
-        teamNumber: this.model.teamNumber
-      });
     });
   }
 
@@ -216,6 +231,27 @@ export class MatchTeamPage {
 
     this.rules = ValidationRules
       .ensure("vaultCount") 
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("scaleCount")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("vaultCycleTime")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("scaleCycleTime")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("allySwitchCount")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("allySwitchCycleTime")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("oppoSwitchCount")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("oppoSwitchCycleTime")
       .required()
       .satisfiesRule("isNumeric")
       .on(this.model)
@@ -233,7 +269,8 @@ export class MatchTeamPage {
         if(vaultCount == null || vaultCount == "") {
           return true;
         }
-        if(isNaN(parseInt(vaultCount))){
+        let pattern = /^\d*$/;
+        if(!pattern.test(vaultCount)){
           return false;
         }
         return true;

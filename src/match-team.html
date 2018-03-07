@@ -28,7 +28,7 @@
               <div class='input-group-prepend'>
                 <button class='btn btn-outline-primary' click.delegate='decrement("vaultCount")'>-</button>
               </div>
-              <input id='vaultCount' class='form-control' value.bind="model.vaultCount"/>
+              <input id='vaultCount' class='form-control' value.bind="model.vaultCount & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment("vaultCount")'>+</button>
               </div>
@@ -44,7 +44,7 @@
               <div class='input-group-prepend'>
                 <button class='btn btn-outline-primary' click.delegate='decrement5("vaultCycleTime")'>-</button>
               </div>
-              <input id='vaultCycleTime' class='form-control' value.bind="model.vaultCycleTime"/>
+              <input id='vaultCycleTime' class='form-control' value.bind="model.vaultCycleTime & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment5("vaultCycleTime")'>+</button>
               </div>
@@ -66,7 +66,7 @@
               <div class='input-group-prepend'>
                 <button class='btn btn-outline-primary' click.delegate='decrement("scaleCount")'>-</button>
               </div>
-              <input id='scaleCount' class='form-control' value.bind="model.scaleCount"/>
+              <input id='scaleCount' class='form-control' value.bind="model.scaleCount & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment("scaleCount")'>+</button>
               </div>
@@ -81,7 +81,7 @@
               <div class='input-group-prepend'>
                 <button class='btn btn-outline-primary' click.delegate='decrement5("scaleCycleTime")'>-</button>
               </div>
-              <input id='scaleCycleTime' class='form-control' value.bind="model.scaleCycleTime"/>
+              <input id='scaleCycleTime' class='form-control' value.bind="model.scaleCycleTime & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment5("scaleCycleTime")'>+</button>
               </div>
@@ -106,7 +106,7 @@
               <div class='input-group-prepend'>
                 <button class='btn btn-outline-primary' click.delegate='decrement("allySwitchCount")'>-</button>
               </div>
-              <input id='allySwitchCount' class='form-control' value.bind="model.allySwitchCount"/>
+              <input id='allySwitchCount' class='form-control' value.bind="model.allySwitchCount & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment("allySwitchCount")'>+</button>
               </div>
@@ -121,7 +121,7 @@
               <div class='input-group-prepend'>
                 <button class='btn btn-outline-primary' click.delegate='decrement5("allySwitchCycleTime")'>-</button>
               </div>
-              <input id='allySwitchCycleTime' class='form-control' value.bind="model.allySwitchCycleTime"/>
+              <input id='allySwitchCycleTime' class='form-control' value.bind="model.allySwitchCycleTime & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment5("allySwitchCycleTime")'>+</button>
               </div>
@@ -144,7 +144,7 @@
               <div class='input-group-prepend'>
                 <button class='btn btn-outline-primary' click.delegate='decrement("oppoSwitchCount")'>-</button>
               </div>
-              <input id='oppoSwitchCount' class='form-control' value.bind="model.oppoSwitchCount"/>
+              <input id='oppoSwitchCount' class='form-control' value.bind="model.oppoSwitchCount & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment("oppoSwitchCount")'>+</button>
               </div>
@@ -159,7 +159,7 @@
               <div class='input-group-prepend'>
                 <button class='btn btn-outline-primary' click.delegate='decrement5("oppoSwitchCycleTime")'>-</button>
               </div>
-              <input id='oppoSwitchCycleTime' class='form-control' value.bind="model.oppoSwitchCycleTime"/>
+              <input id='oppoSwitchCycleTime' class='form-control' value.bind="model.oppoSwitchCycleTime & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment5("oppoSwitchCycleTime")'>+</button>
               </div>
