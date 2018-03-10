@@ -51,8 +51,8 @@
               Take
             </button>
           </td>
-          <td>
-            <input type='text' class='form-control' value.bind='state.merged.vaultCount' />
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.vaultCount & validate: rules'/>
           </td>
         </tr>
         <tr class='${state.localSaved.vaultCycleTime == state.fromFile.vaultCycleTime ? "green" : "red" }'>
@@ -75,8 +75,8 @@
               Take
             </button>
           </td>
-          <td>
-            <input type='text' class='form-control' value.bind='state.merged.vaultCycleTime' />
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.vaultCycleTime  & validate: rules' />
           </td>
         </tr>
         <tr class='${state.localSaved.scaleCount == state.fromFile.scaleCount ? "green" : "red" }'>
@@ -99,8 +99,8 @@
               Take
             </button>
           </td>
-          <td>
-            <input type='text' class='form-control' value.bind='state.merged.scaleCount' />
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.scaleCount & validate: rules' />
           </td>
         </tr>
         <tr class='${state.localSaved.scaleCycleTime == state.fromFile.scaleCycleTime ? "green" : "red" }'>
@@ -123,8 +123,8 @@
               Take
             </button>
           </td>
-          <td>
-            <input type='text' class='form-control' value.bind='state.merged.scaleCycleTime' />
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.scaleCycleTime & validate: rules' />
           </td>
         </tr>
         <tr class='${state.localSaved.allySwitchCount == state.fromFile.allySwitchCount ? "green" : "red" }'>
@@ -147,8 +147,8 @@
               Take
             </button>
           </td>
-          <td>
-            <input type='text' class='form-control' value.bind='state.merged.allySwitchCount' />
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.allySwitchCount & validate: rules' />
           </td>
         </tr>
         <tr class='${state.localSaved.allySwitchCycleTime == state.fromFile.allySwitchCycleTime ? "green" : "red" }'>
@@ -171,8 +171,8 @@
               Take
             </button>
           </td>
-          <td>
-            <input type='text' class='form-control' value.bind='state.merged.allySwitchCycleTime' />
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.allySwitchCycleTime & validate: rules' />
           </td>
         </tr>
         <tr class='${state.localSaved.oppoSwitchCount == state.fromFile.oppoSwitchCount ? "green" : "red" }'>
@@ -195,8 +195,8 @@
               Take
             </button>
           </td>
-          <td>
-            <input type='text' class='form-control' value.bind='state.merged.oppoSwitchCount' />
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.oppoSwitchCount & validate: rules' />
           </td>
         </tr>
         <tr class='${state.localSaved.oppoSwitchCycleTime == state.fromFile.oppoSwitchCycleTime ? "green" : "red" }'>
@@ -219,8 +219,8 @@
               Take
             </button>
           </td>
-          <td>
-            <input type='text' class='form-control' value.bind='state.merged.oppoSwitchCycleTime' />
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.oppoSwitchCycleTime & validate: rules' />
           </td>
         </tr>
         <tr class='${state.localSaved.climbed == state.fromFile.climbed ? "green" : "red" }'>
@@ -408,6 +408,9 @@
       <button class='btn btn-primary' click.delegate='resolve()'>
         Mark Resolved
       </button>
+      <span show.bind='!validationController.valid'>
+        ${errorMessage}
+      </span>
     </ux-dialog-body>
   </ux-dialog>
 </template>

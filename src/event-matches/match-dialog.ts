@@ -182,7 +182,8 @@ export class MatchDialog {
         if(matchNumber == null || matchNumber == "") {
           return true;
         }
-        return !isNaN(parseInt(matchNumber));
+        let pattern = /^\d*$/;
+        return pattern.test(matchNumber);
       }, "must be numeric."
     );
   }

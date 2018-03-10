@@ -3,6 +3,7 @@ import { DialogController } from "aurelia-dialog";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { BootstrapRenderer } from "../bootstrap-renderer";
 import { Match2018MergeState } from "../model";
+import { EventMatchEntity } from "../persistence";
 
 @autoinject
 export class Match2018MergeDialog {
@@ -10,6 +11,7 @@ export class Match2018MergeDialog {
   private validationController: ValidationController;
   private renderer: BootstrapRenderer;
   public rules: any[];
+  public errorMessage: String;
 
   public static properties = [
     "vaultCount", "vaultCycleTime", "scaleCount", "scaleCycleTime", 
@@ -42,12 +44,55 @@ export class Match2018MergeDialog {
   }
 
   private setupValidation() {
-    this.rules = (ValidationRules
-      .ensure("vaultCount")
-      .required()
-      .on(this.state.merged)
-    ).rules;
+    this.setupRules();
 
+    this.rules = ValidationRules
+      .ensure("vaultCount") 
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("scaleCount")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("vaultCycleTime")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("scaleCycleTime")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("allySwitchCount")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("allySwitchCycleTime")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("oppoSwitchCount")
+      .required()
+      .satisfiesRule("isNumeric")
+      .ensure("oppoSwitchCycleTime")
+      .required()
+      .satisfiesRule("isNumeric")
+      //.on(this)
+      .rules;
+
+    this.renderer = new BootstrapRenderer({showMessages: true});
+    this.validationController.addRenderer(this.renderer);
+  }
+
+  private setupRules() {
+
+    ValidationRules.customRule(
+      "isNumeric",
+      (vaultCount: string, obj: EventMatchEntity) => {
+        if(vaultCount == null || vaultCount == "") {
+          return true;
+        }
+        let pattern = /^\d*$/;
+        if(!pattern.test(vaultCount)){
+          return false;
+        }
+        return true;
+      }, "Your input needs to be a number."
+    );
     this.renderer = new BootstrapRenderer({showMessages: true});
     this.validationController.addRenderer(this.renderer);
   }
@@ -84,12 +129,18 @@ export class Match2018MergeDialog {
     }
   }
 
+
+
   public resolve() {
     this.validationController.validate({object: this.state.merged, rules: this.rules })
       .then(validationResult => {
         if(validationResult.valid) {
           this.state.resolved = true;
           this.controller.ok();
+        }
+        else{
+          this.errorMessage = "You screwed up.";
+          this.state.resolved = false;
         }
       });
   }
