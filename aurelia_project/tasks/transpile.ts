@@ -13,10 +13,14 @@ function configureEnvironment() {
   let env = CLIOptions.getEnvironment();
   let replace = require('gulp-replace');
 
+  let revision = require('child_process')
+    .execSync('git rev-parse HEAD')
+    .toString().trim();
+
   return gulp.src(`aurelia_project/environments/${env}.ts`)
     .pipe(changedInPlace({firstPass:true}))
     .pipe(rename('environment.ts'))
-    .pipe(replace(/{git-commit}/, process.env.TRAVIS_COMMIT))
+    .pipe(replace(/{git-commit}/, revision))
     .pipe(gulp.dest(project.paths.root));
 }
 

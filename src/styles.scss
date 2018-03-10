@@ -32,7 +32,12 @@
   cursor: pointer;
 }
 
-html, body, .body-like {
+html, body {
+  min-height: 100%;
+  height: 100%;
+}
+
+.body-like {
   min-height: 100%;
 }
 

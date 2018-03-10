@@ -52,6 +52,7 @@ export class MatchTeamPage {
 
   public deactivate() {
     this.unobserveFields();
+    this.teardownValidation();
   }
 
   private observeFields() {
@@ -227,8 +228,6 @@ export class MatchTeamPage {
   }
 
   private setupValidation() {
-    this.setupRules();
-
     this.rules = ValidationRules
       .ensure("vaultCount") 
       .required()
@@ -261,20 +260,7 @@ export class MatchTeamPage {
     this.validationController.addRenderer(this.renderer);
   }
 
-  private setupRules() {
-
-    ValidationRules.customRule(
-      "isNumeric",
-      (vaultCount: string, obj: EventMatchEntity) => {
-        if(vaultCount == null || vaultCount == "") {
-          return true;
-        }
-        let pattern = /^\d*$/;
-        if(!pattern.test(vaultCount)){
-          return false;
-        }
-        return true;
-      }, "Your input needs to be a number."
-    );
+  private teardownValidation() {
+    this.validationController.removeRenderer(this.renderer);
   }
 }
