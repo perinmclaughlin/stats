@@ -23,6 +23,9 @@
               Import
             </button>
           </td>
+          <td>
+            <div show.bind='event.isLoading' class='loader'></div>
+          </td>
 
         </tr>
 
@@ -31,7 +34,10 @@
             <label>By Event Key:</label> <input type='text' value.bind="customEventKey" /> 
           </td>
           <td>
-            <button class='btn btn-primary' click.delegate='importByEventKey()'>Import</button>
+            <button class='btn btn-sm btn-primary' click.delegate='importByEventKey()'>Import</button>
+          </td>
+          <td>
+            <div show.bind='customIsLoading' class='loader'></div>
           </td>
         </tr>
       </table>

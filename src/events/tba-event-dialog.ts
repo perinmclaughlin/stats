@@ -7,6 +7,7 @@ import { FrcStatsContext, EventMatchEntity } from "../persistence";
 export class TbaEventDialog {
   year = "2018";
   customEventKey = "";
+  customIsLoading = false;
   events: any[];
 
   constructor(
@@ -40,16 +41,22 @@ export class TbaEventDialog {
   }
 
   importEvent(evnt: tbaEvent) {
+    (<any>evnt).isLoading = true;
     this.saveEvent(evnt).then(x => {
       return this.saveDistrict(evnt.district);
     }).then(x => {
       return this.saveTeams(evnt);
     }).then(aValue => {
       return this.saveMatchEvent(evnt);
+    }).then(() => {
+      (<any>evnt).isLoading = false;
+    }).catch(() => {
+      (<any>evnt).isLoading = false;
     });
   }
 
   importByEventKey() {
+    this.customIsLoading = true;
     this.tbaApi.getEvent(this.customEventKey).then(evnt => {
       return this.saveEvent(evnt).then(() => evnt);
     }).then(evnt => {
@@ -58,6 +65,10 @@ export class TbaEventDialog {
       return this.saveTeams(evnt).then(() => evnt);
     }).then(evnt => {
       return this.saveMatchEvent(evnt);
+    }).then(() => {
+      this.customIsLoading = false;
+    }).catch(() => {
+      this.customIsLoading = false;
     });
   }
 

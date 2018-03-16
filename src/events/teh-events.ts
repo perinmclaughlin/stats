@@ -4,6 +4,7 @@ import { DialogService, DialogOpenResult } from "aurelia-dialog";
 import { FrcStatsContext, EventEntity, GameEntity } from "../persistence";
 import { TbaEventDialog } from "./tba-event-dialog";
 import { JsonImportDialog } from "./json-import-dialog";
+import { ConfirmDialog } from "../event-matches/confirm-dialog";
 
 @autoinject
 export class Events {
@@ -113,5 +114,46 @@ export class Events {
     }).whenClosed(() => {
       this.loadEvents();
     });
+  }
+
+  public deleteEvent(event) {
+    this.dialogService.open({
+      viewModel: ConfirmDialog,
+      model: ["Are you SURE that you want to delete that?", "Press 'OKAY' to confirm"],
+    }).whenClosed(dialogResult => {
+      if(!dialogResult.wasCancelled) {
+        this.dbContext.transaction("rw", [
+          this.dbContext.events,
+          this.dbContext.eventTeams,
+          this.dbContext.eventMatches,
+          this.dbContext.teamMatches2018,
+        ], () => {
+          let eventPromise = this.dbContext.events.delete(event.id);
+          let eventTeamsPromise = this.dbContext.eventTeams
+            .where(["year", "eventCode"])
+            .equals([event.year, event.eventCode])
+            .delete();
+          let eventMatchesPromise = this.dbContext.eventMatches
+            .where(["year", "eventCode"])
+            .equals([event.year, event.eventCode])
+            .delete();
+          let promises : Promise<any>[] = [eventPromise, eventTeamsPromise, eventMatchesPromise];
+
+          if(event.year == "2018") {
+            promises.push(
+              this.dbContext.teamMatches2018
+              .where("eventCode")
+              .equals(event.eventCode)
+              .delete()
+            );
+          }
+
+          return Promise.all(promises);
+        }).then(() => {
+          this.loadEvents();
+        });
+      }
+    });
+
   }
 }
