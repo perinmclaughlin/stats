@@ -178,6 +178,7 @@ export interface EventMatchEntity {
 }
 
 export function eventMatchesAreEqual(a: EventMatchEntity, b: EventMatchEntity): boolean {
+  if(a == null && b != null || a != null && b == null) return false;
   return (a.matchNumber == b.matchNumber && a.year == b.year && a.eventCode == b.eventCode &&
     a.red1 == b.red1 && a.red2 == b.red2 && a.red3 == b.red3  &&
     a.blue1 == b.blue1 && a.blue2 == b.blue2 && a.blue3 == b.blue3);
