@@ -1,13 +1,14 @@
 import { autoinject } from "aurelia-framework";
 import { Router, RouterConfiguration } from "aurelia-router";
 import { PLATFORM } from "aurelia-pal";
+import { CustomValidationRules } from "./custom-validation-rules";
 import environment from './environment';
 
 @autoinject
 export class App {
   version = environment.version;
 
-  constructor(public router: Router) {
+  constructor(public router: Router, customValidationRules: CustomValidationRules) {
   }
 
 

@@ -44,8 +44,6 @@ export class Match2018MergeDialog {
   }
 
   private setupValidation() {
-    this.setupRules();
-
     this.rules = ValidationRules
       .ensure("vaultCount") 
       .required()
@@ -71,28 +69,8 @@ export class Match2018MergeDialog {
       .ensure("oppoSwitchCycleTime")
       .required()
       .satisfiesRule("isNumeric")
-      //.on(this)
       .rules;
 
-    this.renderer = new BootstrapRenderer({showMessages: true});
-    this.validationController.addRenderer(this.renderer);
-  }
-
-  private setupRules() {
-
-    ValidationRules.customRule(
-      "isNumeric",
-      (vaultCount: string, obj: EventMatchEntity) => {
-        if(vaultCount == null || vaultCount == "") {
-          return true;
-        }
-        let pattern = /^\d*$/;
-        if(!pattern.test(vaultCount)){
-          return false;
-        }
-        return true;
-      }, "Your input needs to be a number."
-    );
     this.renderer = new BootstrapRenderer({showMessages: true});
     this.validationController.addRenderer(this.renderer);
   }

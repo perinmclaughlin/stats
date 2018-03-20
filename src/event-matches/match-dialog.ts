@@ -89,7 +89,7 @@ export class MatchDialog {
       .ensure("matchNumber") 
       .required()
       .satisfiesRule("matchNoExists")
-      .satisfiesRule("matchNumeric")
+      .satisfiesRule("isNumeric")
       .ensure("blue1")
       .required()
       .ensure("blue2")
@@ -175,17 +175,6 @@ export class MatchDialog {
             }
           });
       }, "match already exists.");
-
-    ValidationRules.customRule(
-      "matchNumeric",
-      (matchNumber: string, obj: EventTeamEntity) => {
-        if(matchNumber == null || matchNumber == "") {
-          return true;
-        }
-        let pattern = /^\d*$/;
-        return pattern.test(matchNumber);
-      }, "must be numeric."
-    );
   }
 
   private teardownValidation() {

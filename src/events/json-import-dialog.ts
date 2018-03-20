@@ -207,7 +207,7 @@ export class JsonImportDialog {
       let teamsPromises = this.saveTeams();
       let eventTeamsPromise = this.dbContext.eventTeams.bulkPut(this.json.eventTeams);
       let eventMatchesPromise = this.dbContext.eventMatches.bulkPut(this.json.eventMatches);
-      let matches2018Promise = this.dbContext.eventMatches.bulkPut(this.json.matches2018);
+      let matches2018Promise = this.dbContext.teamMatches2018.bulkPut(this.json.matches2018);
 
 
       return Promise.all([

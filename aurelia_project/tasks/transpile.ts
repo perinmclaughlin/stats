@@ -11,12 +11,10 @@ import * as eventStream from 'event-stream';
 
 function configureEnvironment() {
   let env = CLIOptions.getEnvironment();
-  let replace = require('gulp-replace');
 
   return gulp.src(`aurelia_project/environments/${env}.ts`)
     .pipe(changedInPlace({firstPass:true}))
     .pipe(rename('environment.ts'))
-    .pipe(replace(/{git-commit}/, process.env.TRAVIS_COMMIT))
     .pipe(gulp.dest(project.paths.root));
 }
 
