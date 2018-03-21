@@ -19,6 +19,7 @@
       <table class="table table-hover">
         <tr>
           <th class='clickable' click.delegate="sortByTeamNumber()">Team Number</th>
+          <th>Team Name</th>
           <th>Scouted Match Count</th>
           <th class='clickable' click.delegate="sortByScale()">Avg Scale Count</th>
           <th class='clickable' click.delegate="sortBySwitch()">Avg Switch Count</th>
@@ -33,6 +34,7 @@
               ${teamData.teamNumber}
             </a>
           </td>
+          <td>${teamData.teamName}</td>
           <td>${teamData.matchCount}</td>
           <td>${teamData.scaleAvg | numeric }</td>
           <td>${teamData.switchAvg | numeric }</td>

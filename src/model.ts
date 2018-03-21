@@ -21,6 +21,7 @@ export class MatchData {
 }
 
 export class EventTeamData {
+  teamName: string;
 	public year: string;
 	public eventCode: string;
 	public teamNumber: string;

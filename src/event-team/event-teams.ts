@@ -76,6 +76,7 @@ export class EventTeams {
     this.teamsData = [];
     for(var a of this.teams){
       var teamData = new EventTeamData();
+      teamData.teamName = a.team.teamName;
       teamData.teamNumber = a.team.teamNumber;
       teamData.eventCode = a.eventTeam.eventCode;
       teamData.year = a.eventTeam.year;
