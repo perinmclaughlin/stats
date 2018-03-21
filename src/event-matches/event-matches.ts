@@ -32,7 +32,7 @@ export class EventMatches {
         this.getEventTeams(),
       ]);
     }).then(() => {
-      this.get2018Matches();
+      return this.get2018Matches();
     });
   }
   
