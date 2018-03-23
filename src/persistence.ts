@@ -60,6 +60,12 @@ export interface TeamMatch2018Entity {
 	foulReason: string;
 	cubeCount: number;
   notes: string;
+  startingPosition: string;
+  autoCrossedLine: boolean;
+  autoCubeLeftSwitch: boolean;
+  autoCubeRightSwitch: boolean;
+  autoCubeLeftScale: boolean;
+  autoCubeRightScale: boolean;
 }
 
 export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018Entity {
@@ -84,6 +90,12 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
     foulReason: "",
     cubeCount: 0,
     notes: "",
+    startingPosition: null,
+    autoCrossedLine: false,
+    autoCubeLeftSwitch: false,
+    autoCubeRightSwitch: false,
+    autoCubeLeftScale: false,
+    autoCubeRightScale: false,
   };
 }
 

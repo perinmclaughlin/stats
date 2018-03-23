@@ -14,6 +14,57 @@
       match ${model.matchNumber}
     </h3>
     <div class='row'>
+      <div class='col'>
+        <h3> Auto </h3>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col'>
+        <h3> starting position </h3>
+        <label>
+          <input type='radio' 
+            name='starting_pos' model='Right' 
+            checked.bind='model.startingPosition'> Right </label>
+        <br>
+        <label>
+          <input type='radio' 
+            name='starting_pos' model='Middle'
+            checked.bind='model.startingPosition'> Middle </label>
+        <br>
+        <label>
+          <input type='radio' name='starting_pos' model='Left'
+            checked.bind='model.startingPosition'
+          > Left </label>
+      </div>
+      <div class='col'>
+        <h3> action </h3>
+        <label>
+          <input type='checkbox' checked.bind='model.autoCrossedLine'> 
+          Crossed Line 
+        </label>
+        <br>
+        <label>
+          <input type='checkbox' checked.bind='model.autoCubeLeftSwitch'> 
+          Cube in Left Switch 
+        </label>
+        <br>
+        <label>
+          <input type='checkbox' checked.bind='model.autoCubeRightSwitch'>
+          Cube in Right Switch 
+        </label>
+        <br>
+        <label>
+          <input type='checkbox' checked.bind='model.autoCubeLeftScale'>
+          Cube in Left Scale 
+        </label>
+        <br>
+        <label>
+          <input type='checkbox' checked.bind='model.autoCubeRightScale'> 
+          Cube in Right Scale 
+        </label>
+      </div>
+    </div>
+    <div class='row'>
       <div class='col-sm'>
         <div class='row'>
           <div class='col'>
