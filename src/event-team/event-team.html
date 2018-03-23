@@ -18,6 +18,8 @@
         <table class="table table-hover">
           <tr>
             <th>Match Number</th>
+            <th>Starting Position</th>
+            <th>Auto</th>
             <th>Scale Count</th>
             <th>Ally Switch Count</th>
             <th>Opponent Switch Count</th>
@@ -28,6 +30,24 @@
           </tr>
           <tr repeat.for="match of matches2018">
             <td><a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
+            <td>${match.startingPosition}</td>
+            <td>
+              <span show.bind="match.autoCrossedLine">
+                Crossed line;
+              </span>
+              <span show.bind="match.autoCubeRightSwitch">
+                Right switch;
+              </span>
+              <span show.bind="match.autoCubeLeftSwitch">
+                Left switch;
+              </span>
+              <span show.bind="match.autoCubeLeftScale">
+                Left scale;
+              </span>
+              <span show.bind="match.autoCubeRightScale">
+                Right scale; 
+              </span>
+            </td>
             <td>${match.scaleCount}</td>
             <td>${match.allySwitchCount}</td>
             <td>${match.oppoSwitchCount}</td>
