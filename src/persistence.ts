@@ -121,7 +121,13 @@ export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Enti
     a.isFoul == b.isFoul &&
     a.foulReason == b.foulReason &&
     a.cubeCount == b.cubeCount &&
-    a.notes == b.notes
+    a.notes == b.notes &&
+    a.startingPosition == b.startingPosition &&
+    a.autoCrossedLine == b.autoCrossedLine &&
+    a.autoCubeLeftSwitch == b.autoCubeLeftSwitch &&
+    a.autoCubeRightSwitch == b.autoCubeRightSwitch &&
+    a.autoCubeLeftScale == b.autoCubeLeftScale &&
+    a.autoCubeRightScale == b.autoCubeRightScale
   );
 }
 

@@ -31,6 +31,150 @@
             To Save
           </th>
         </tr>
+        <tr class='${state.localSaved.startingPosition == state.fromFile.startingPosition ? "green" : "red" }'>
+          <td>
+            Starting Position
+          </td>
+          <td>
+            ${state.localSaved.startingPosition}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.startingPosition=state.localSaved.startingPosition'>
+              Take
+            </button>
+          </td>
+          <td>
+            ${state.fromFile.startingPosition}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.startingPosition=state.fromFile.startingPosition'>
+              Take
+            </button>
+          </td>
+          <td class='form-group'>
+            <input type='text' class='form-control' value.bind='state.merged.startingPosition & validate: rules'/>
+          </td>
+        </tr>
+        <tr class='${state.localSaved.autoCrossedLine == state.fromFile.autoCrossedLine ? "green" : "red" }'>
+          <td>
+            Crossed Line
+          </td>
+          <td>
+            ${state.localSaved.autoCrossedLine}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCrossedLine=state.localSaved.autoCrossedLine'>
+              Take
+            </button>
+          </td>
+          <td>
+            ${state.fromFile.autoCrossedLine}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCrossedLine=state.fromFile.autoCrossedLine'>
+              Take
+            </button>
+          </td>
+          <td>
+            <input type='checkbox' class='form-control' checked.bind='state.merged.autoCrossedLine' />
+          </td>
+        </tr>
+        <tr class='${state.localSaved.autoCubeLeftSwitch == state.fromFile.autoCubeLeftSwitch ? "green" : "red" }'>
+          <td>
+            Auto Cube in Left Switch
+          </td>
+          <td>
+            ${state.localSaved.autoCubeLeftSwitch}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeLeftSwitch=state.localSaved.autoCubeLeftSwitch'>
+              Take
+            </button>
+          </td>
+          <td>
+            ${state.fromFile.autoCubeLeftSwitch}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeLeftSwitch=state.fromFile.autoCubeLeftSwitch'>
+              Take
+            </button>
+          </td>
+          <td>
+            <input type='checkbox' class='form-control' checked.bind='state.merged.autoCubeLeftSwitch' />
+          </td>
+        </tr>
+        <tr class='${state.localSaved.autoCubeRightSwitch == state.fromFile.autoCubeRightSwitch ? "green" : "red" }'>
+          <td>
+            Auto Cube in Right Switch
+          </td>
+          <td>
+            ${state.localSaved.autoCubeRightSwitch}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeRightSwitch=state.localSaved.autoCubeRightSwitch'>
+              Take
+            </button>
+          </td>
+          <td>
+            ${state.fromFile.autoCubeRightSwitch}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeRightSwitch=state.fromFile.autoCubeRightSwitch'>
+              Take
+            </button>
+          </td>
+          <td>
+            <input type='checkbox' class='form-control' checked.bind='state.merged.autoCubeRightSwitch' />
+          </td>
+        </tr>
+        <tr class='${state.localSaved.autoCubeLeftScale == state.fromFile.autoCubeLeftScale ? "green" : "red" }'>
+          <td>
+            Auto Cube in Left Scale
+          </td>
+          <td>
+            ${state.localSaved.autoCubeLeftScale}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeLeftScale=state.localSaved.autoCubeLeftScale'>
+              Take
+            </button>
+          </td>
+          <td>
+            ${state.fromFile.autoCubeLeftScale}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeLeftScale=state.fromFile.autoCubeLeftScale'>
+              Take
+            </button>
+          </td>
+          <td>
+            <input type='checkbox' class='form-control' checked.bind='state.merged.autoCubeLeftScale' />
+          </td>
+        </tr>
+        <tr class='${state.localSaved.autoCubeRightScale == state.fromFile.autoCubeRightScale ? "green" : "red" }'>
+          <td>
+            Auto Cube in Right Scale
+          </td>
+          <td>
+            ${state.localSaved.autoCubeRightScale}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeRightScale=state.localSaved.autoCubeRightScale'>
+              Take
+            </button>
+          </td>
+          <td>
+            ${state.fromFile.autoCubeRightScale}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeRightScale=state.fromFile.autoCubeRightScale'>
+              Take
+            </button>
+          </td>
+          <td>
+            <input type='checkbox' class='form-control' checked.bind='state.merged.autoCubeRightScale' />
+          </td>
+        </tr>
         <tr class='${state.localSaved.vaultCount == state.fromFile.vaultCount ? "green" : "red" }'>
           <td>
             Vault count
@@ -53,6 +197,30 @@
           </td>
           <td class='form-group'>
             <input type='text' class='form-control' value.bind='state.merged.vaultCount & validate: rules'/>
+          </td>
+        </tr>
+        <tr class='${state.localSaved.autoCubeRightSwitch == state.fromFile.autoCubeRightSwitch ? "green" : "red" }'>
+          <td>
+            Climbed
+          </td>
+          <td>
+            ${state.localSaved.autoCubeRightSwitch}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeRightSwitch=state.localSaved.autoCubeRightSwitch'>
+              Take
+            </button>
+          </td>
+          <td>
+            ${state.fromFile.autoCubeRightSwitch}
+          </td>
+          <td>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.autoCubeRightSwitch=state.fromFile.autoCubeRightSwitch'>
+              Take
+            </button>
+          </td>
+          <td>
+            <input type='checkbox' class='form-control' checked.bind='state.merged.autoCubeRightSwitch' />
           </td>
         </tr>
         <tr class='${state.localSaved.vaultCycleTime == state.fromFile.vaultCycleTime ? "green" : "red" }'>

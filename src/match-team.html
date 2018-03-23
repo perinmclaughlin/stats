@@ -20,19 +20,20 @@
     </div>
     <div class='row'>
       <div class='col'>
-        <h3> starting position </h3>
+        <h3> starting position ${model.startingPosition} </h3>
         <label>
           <input type='radio' 
-            name='starting_pos' model='Right' 
+            name='starting_pos' value='Right' 
             checked.bind='model.startingPosition'> Right </label>
         <br>
         <label>
           <input type='radio' 
-            name='starting_pos' model='Middle'
+            name='starting_pos' value='Middle'
             checked.bind='model.startingPosition'> Middle </label>
         <br>
         <label>
-          <input type='radio' name='starting_pos' model='Left'
+          <input type='radio' 
+            name='starting_pos' value='Left'
             checked.bind='model.startingPosition'
           > Left </label>
       </div>

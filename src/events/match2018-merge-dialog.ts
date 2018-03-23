@@ -18,6 +18,9 @@ export class Match2018MergeDialog {
     "allySwitchCount", "allySwitchCycleTime", "oppoSwitchCount", "oppoSwitchCycleTime",
     "isFailure", "failureReason", "isFoul", "foulReason",
     "climbed", "lifted", "notes",
+    "startingPosition",
+    "autoCrossedLine", "autoCubeLeftSwitch", "autoCubeRightSwitch",
+    "autoCubeLeftScale", "autoCubeRightScale",
   ];
 
   constructor (
