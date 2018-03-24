@@ -48,6 +48,10 @@ export class EventTeamData {
 	public vault: string;
 	public foulCount: number;
 	public cubeAverage: number;
+
+  public autoLineCount: number;
+  public autoSwitchCount: number;
+  public autoScaleCount: number;
 }
 
 export class EventMatchMergeState {

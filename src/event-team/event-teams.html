@@ -26,6 +26,9 @@
           <th class='clickable' click.delegate="sortByVault()">Avg Vault Count</th>
           <th class='clickable' click.delegate="sortByClimb()">Climb Rate</th>
           <th class='clickable' click.delegate="sortByLift()">Lift Rate</th>
+          <th class='clickable' click.delegate="sortByAutoLine()">Auto Line</th>
+          <th class='clickable' click.delegate="sortByAutoSwitch()">Auto Switch</th>
+          <th class='clickable' click.delegate="sortByAutoScale()">Auto Scale</th>
           <th>Failures/Fouls</th>
         </tr>
         <tr repeat.for="teamData of teamsData">
@@ -41,6 +44,9 @@
           <td>${teamData.vaultAvg | numeric }</td>
           <td>${teamData.climbAvg | numeric }</td>
           <td>${teamData.liftAvg | numeric }</td>
+          <td>${teamData.autoLineCount }</td>
+          <td>${teamData.autoSwitchCount }</td>
+          <td>${teamData.autoScaleCount }</td>
           <td>${teamData.failureCount}/${teamData.foulCount}</td>
         </tr>
       </table>

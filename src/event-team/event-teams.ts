@@ -88,6 +88,9 @@ export class EventTeams {
       teamData.vaultCount = 0;
       teamData.climbCount = 0;
       teamData.liftCount = 0;
+      teamData.autoSwitchCount = 0;
+      teamData.autoScaleCount = 0;
+      teamData.autoLineCount = 0;
       for(var b of this.matches2018){
         if(b.teamNumber == teamData.teamNumber){
           teamData.cubeAverage += b.cubeCount;
@@ -105,6 +108,16 @@ export class EventTeams {
           teamData.switchCount += parseInt(<any>b.oppoSwitchCount);
 
           teamData.vaultCount += parseInt(<any>b.vaultCount);
+
+          if(b.autoCubeLeftSwitch || b.autoCubeRightSwitch) {
+            teamData.autoSwitchCount ++;
+          }
+          if(b.autoCubeLeftScale || b.autoCubeRightScale) {
+            teamData.autoScaleCount ++;
+          }
+          if(b.autoCrossedLine) {
+            teamData.autoLineCount ++;
+          }
 
           if(b.climbed) {
             teamData.climbCount ++;
@@ -163,5 +176,17 @@ export class EventTeams {
 
   public sortByLift() {
     this.teamsData.sort((a, b) => b.liftAvg - a.liftAvg);
+  }
+
+  public sortByAutoSwitch() {
+    this.teamsData.sort((a, b) => b.autoSwitchCount - a.autoSwitchCount);
+  }
+
+  public sortByAutoScale() {
+    this.teamsData.sort((a, b) => b.autoScaleCount - a.autoScaleCount);
+  }
+
+  public sortByAutoLine() {
+    this.teamsData.sort((a, b) => b.autoLineCount - a.autoLineCount);
   }
 }
