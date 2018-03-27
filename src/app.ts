@@ -38,6 +38,11 @@ export class App {
         name: "event-team", moduleId: PLATFORM.moduleName("event-team/event-team"), 
         nav: false, title: "Smaller Honking Page", adminRoute: false,
       },
+      {
+        route: ["district-rankings"],
+        name: "district-rankings", moduleId: PLATFORM.moduleName("district-rankings"), 
+        nav: true, title: "District Rankings", adminRoute: false,
+      },
     ]);
 
     return config;

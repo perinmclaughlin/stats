@@ -239,8 +239,8 @@ export class TbaApi {
     return this.callAPI('district/' + districtShort + '/events/keys');
   }
 
-  getDistrictRankings(districtShort, year) {
-    return this.callAPI('district/' + districtShort + '/' + year + '/rankings');
+  getDistrictRankings(districtKey): Promise<TeamRanking[]> {
+    return this.callAPI(`district/${districtKey}/rankings`);
   }
 
   getDistrictTeams(districtShort, year) {
@@ -299,4 +299,22 @@ export interface Alliances {
 
 export interface Alliance {
 	team_keys: string[];
+}
+
+export interface TeamRanking {
+  event_points: EventPoints[];
+  point_total: number;
+  rank: number;
+  rookie_bonus: number;
+  team_key: string;
+}
+
+export interface EventPoints { 
+  event_key: string;
+  district_cmp: boolean;
+  qual_points: number;
+  alliance_points: number;
+  award_points: number;
+  elim_points: number;
+  total: number;
 }

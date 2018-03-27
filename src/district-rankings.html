@@ -1,0 +1,60 @@
+<template>
+  <div class='row'>
+    <div class='col'>
+      <select class='form-control' 
+        value.bind="districtKey" 
+        change.delegate="load()">
+        <option></option>
+        <option 
+          repeat.for="districtKey of districtKeys" 
+          value.bind="districtKey"> 
+        ${districtKey} </option>
+      </select>
+    </div>
+    <div class='col'>
+      <input class='form-control' value.bind='districtKey' 
+        change.delegate="load()"
+      />
+    </div>
+  </div>
+  <table class='table table-hover'>
+    <tr>
+      <th></th>
+      <th colspan=2>Team</th>
+      <th> Event 1</th>
+      <th> Event 2</th>
+      <th> Rookie Bonus </th>
+      <th class='clickable' click.delegate='sortByPreDcmp()'> Pre DCMP Total </th>
+      <th class='clickable' click.delegate='sortByDcmp()'> DCMP </th>
+      <th class='clickable' click.delegate='sortByTotal()'> Total </th>
+    </tr>
+    <tr repeat.for="teamRanking of rankings">
+      <td>
+        ${$index+1}
+      </td>
+      <td>
+        ${teamRanking.team_key}
+      </td>
+      <td>
+      </td>
+      <td>
+        ${teamRanking.event_points[0].total}
+      </td>
+      <td>
+        ${teamRanking.event_points[1].total}
+      </td>
+      <td>
+        ${teamRanking.rookie_bonus}
+      </td>
+      <td>
+        ${preDcmpSum(teamRanking)}
+      </td>
+      <td>
+        ${teamRanking.event_points[2].total}
+      </td>
+      <td>
+        ${teamRanking.point_total}
+      </td>
+    </tr>
+  </table>
+</template>
