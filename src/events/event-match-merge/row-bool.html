@@ -1,0 +1,24 @@
+<template>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
+        ${displayName}
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
+        ${state.localSaved[property]}
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
+        <button class='btn btn-secondary btn-sm' click.delegate='state.merged[property]=state.localSaved[property]'>
+            Take
+        </button>
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
+        ${state.fromFile[property]}
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
+        <button class='btn btn-secondary btn-sm' click.delegate='state.merged[property]=state.fromFile[property]'>
+            Take
+        </button>
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
+        <input type='checkbox' class='form-control' checked.bind='state.merged[property]' />
+    </div>
+</template>

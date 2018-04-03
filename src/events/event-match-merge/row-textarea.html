@@ -1,0 +1,25 @@
+<template>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }' show.bind="shown">
+        ${displayName}
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'  show.bind="shown">
+        ${state.localSaved[property]}
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }' show.bind="shown">
+        <button class='btn btn-secondary btn-sm' click.delegate='state.merged[property]=state.localSaved[property]'>
+            Take
+        </button>
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }' show.bind="shown">
+        ${state.fromFile[property]}
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }' show.bind="shown">
+        <button class='btn btn-secondary btn-sm' click.delegate='state.merged[property]=state.fromFile[property]'>
+            Take
+        </button>
+    </div>
+    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }' show.bind="shown">
+        <textarea class='form-control' value.bind='state.merged[property]'>
+        </textarea>
+    </div>
+</template>

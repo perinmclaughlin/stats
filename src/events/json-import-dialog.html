@@ -60,7 +60,7 @@
             </td>
             <td>
               <span show.bind="!state.same && !state.resolved">
-                gotta do something!
+                <button class='btn btn-secondary' click.delegate='mergeEventTeams(state)'>Merge</button>
               </span>
               <span show.bind="state.resolved">
                 yup

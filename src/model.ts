@@ -1,6 +1,6 @@
 import { 
   EventMatchEntity, eventMatchesAreEqual, 
-  TeamMatch2018Entity, matches2018AreEqual, make2018match,
+  TeamMatch2018Entity, matches2018AreEqual, make2018match, makeEventMatch,
 } from "./persistence";
 
 export class MatchData {
@@ -61,6 +61,7 @@ export class EventMatchMergeState {
   public resolved: boolean;
   public takeFromFile: boolean;
   public takeLocal: boolean;
+  public merged: EventMatchEntity;
 
 
   constructor(public matchNumber: string) {
@@ -76,6 +77,20 @@ export class EventMatchMergeState {
       this.takeLocal = false;
       this.takeFromFile = true;
     }
+  }
+
+  public static makeFromDb(entity: EventMatchEntity): EventMatchMergeState {
+    let state = new EventMatchMergeState(entity.matchNumber);
+    state.localSaved = entity;
+    state.merged = makeEventMatch(entity.year, entity.eventCode, entity.matchNumber);
+    return state;
+  }
+
+  public static makeFromFile(entity: EventMatchEntity): EventMatchMergeState {
+    let state = new EventMatchMergeState(entity.matchNumber);
+    state.fromFile = entity;
+    state.merged = makeEventMatch(entity.year, entity.eventCode, entity.matchNumber);
+    return state;
   }
 }
 

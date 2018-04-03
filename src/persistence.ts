@@ -195,6 +195,19 @@ export interface EventMatchEntity {
   blue3: string;
 }
 
+export function makeEventMatch(year: string, eventCode: string, matchNumber: string): EventMatchEntity {
+  return {
+    year: year,
+    eventCode: eventCode,
+    matchNumber: matchNumber,
+    red1: "",
+    red2: "",
+    red3: "",
+    blue1: "",
+    blue2: "",
+    blue3: "",
+  };
+}
 export function eventMatchesAreEqual(a: EventMatchEntity, b: EventMatchEntity): boolean {
   if(a == null && b != null || a != null && b == null) return false;
   return (a.matchNumber == b.matchNumber && a.year == b.year && a.eventCode == b.eventCode &&

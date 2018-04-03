@@ -58,3 +58,16 @@ html, body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+}
+
+.grid-item {
+  padding: 5px;
+}
+
+.grid-item.form-group {
+  margin-bottom: 0
+}

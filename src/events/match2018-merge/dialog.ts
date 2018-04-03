@@ -1,9 +1,9 @@
 import { autoinject } from "aurelia-framework";
 import { DialogController } from "aurelia-dialog";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
-import { BootstrapRenderer } from "../bootstrap-renderer";
-import { Match2018MergeState } from "../model";
-import { EventMatchEntity } from "../persistence";
+import { BootstrapRenderer } from "../../bootstrap-renderer";
+import { Match2018MergeState } from "../../model";
+import { EventMatchEntity } from "../../persistence";
 
 @autoinject
 export class Match2018MergeDialog {

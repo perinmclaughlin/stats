@@ -1,0 +1,45 @@
+<template>
+  <require from="./row-text"></require>
+  <ux-dialog>
+    <ux-dialog-header>
+      <button class='btn btn-danger btn-sm float-right' click.delegate='controller.cancel()'>
+        X
+      </button>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='grid-container'>
+        <div class='grid-item'>
+          Field
+        </div>
+        <div class='grid-item'>
+          Local Saved
+        </div>
+        <div class='grid-item'>
+          <button class='btn btn-secondary btn-sm' click.delegate='takeAllFromDb()'>
+            Take All
+          </button>
+        </div>
+        <div class='grid-item'>
+          From File
+        </div>
+        <div class='grid-item'>
+          <button class='btn btn-secondary btn-sm' click.delegate='takeAllFromFile()'>
+            Take All
+          </button>
+        </div>
+        <div class='grid-item'>
+          To Save
+        </div>
+        
+        <row-text state.bind="state" property="blue1" display-name="Blue 1"></row-text>
+        <row-text state.bind="state" property="blue2" display-name="Blue 2"></row-text>
+        <row-text state.bind="state" property="blue3" display-name="Blue 3"></row-text>
+        <row-text state.bind="state" property="red1" display-name="Red 1"></row-text>
+        <row-text state.bind="state" property="red2" display-name="Red 2"></row-text>
+        <row-text state.bind="state" property="red3" display-name="Red 3"></row-text>
+      </div>
+
+      started, not done
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

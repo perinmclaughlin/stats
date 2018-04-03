@@ -4,7 +4,8 @@ import { BindingEngine, Disposable } from "aurelia-binding";
 import * as naturalSort from "javascript-natural-sort";
 import { FrcStatsContext, EventMatchEntity, TeamMatch2018Entity, EventEntity } from "../persistence";
 import { EventMatchMergeState, Match2018MergeState } from "../model";
-import { Match2018MergeDialog } from "./match2018-merge-dialog";
+import { Match2018MergeDialog } from "./match2018-merge/dialog";
+import { EventMatchMergeDialog } from "./event-match-merge/dialog";
 
 @autoinject
 export class JsonImportDialog {
@@ -131,8 +132,7 @@ export class JsonImportDialog {
       }
     }).then(() => {
       this.fromDbEventMatches.forEach(eventMatch => {
-        let state = new EventMatchMergeState(eventMatch.matchNumber);
-        state.localSaved = eventMatch;
+        let state = EventMatchMergeState.makeFromDb(eventMatch);
         eventMatchMergeDict[eventMatch.matchNumber] = state;
       });
 
@@ -141,8 +141,7 @@ export class JsonImportDialog {
           let state = eventMatchMergeDict[eventMatch.matchNumber];
           state.fromFile = eventMatch;
         }else {
-          let state = new EventMatchMergeState(eventMatch.matchNumber);
-          state.fromFile = eventMatch;
+          let state = EventMatchMergeState.makeFromFile(eventMatch);
           eventMatchMergeDict[eventMatch.matchNumber] = state;
         }
       });
@@ -391,5 +390,16 @@ export class JsonImportDialog {
       this.mergeErrored = true;
       this.done = false;
     });
+  }
+
+  mergeEventTeams(state: EventMatchMergeState) {
+
+    this.dialogService.open({
+      model: {
+        state: state,
+      },
+      viewModel: EventMatchMergeDialog,
+    });
+
   }
 }
