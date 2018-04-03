@@ -82,7 +82,7 @@
 
             </th>
           </tr>
-          <tr repeat.for="state of matches2018Merge" show.bind="!state.same || showAllMatchRecords" class="${state.resolved ? 'green' : 'red'}">
+          <tr repeat.for="state of matches2018Merge" show.bind="(!state.same && (state.fromFile == null) == (state.localSaved == null)) || showAllMatchRecords" class="${state.resolved ? 'green' : 'red'}">
             <td> ${state.matchNumber} </td>
             <td> ${state.teamNumber} </td>
             <td>
