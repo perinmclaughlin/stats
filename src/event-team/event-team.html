@@ -19,7 +19,8 @@
           <tr>
             <th>Match Number</th>
             <th>Starting Position</th>
-            <th>Auto</th>
+            <th>Auto Switch Count</th>
+            <th>Auto Scale Count</th>
             <th>Scale Count</th>
             <th>Ally Switch Count</th>
             <th>Opponent Switch Count</th>
@@ -31,23 +32,8 @@
           <tr repeat.for="match of matches2018">
             <td><a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
             <td>${match.startingPosition}</td>
-            <td>
-              <span show.bind="match.autoCrossedLine">
-                Crossed line;
-              </span>
-              <span show.bind="match.autoCubeRightSwitch">
-                Right switch;
-              </span>
-              <span show.bind="match.autoCubeLeftSwitch">
-                Left switch;
-              </span>
-              <span show.bind="match.autoCubeLeftScale">
-                Left scale;
-              </span>
-              <span show.bind="match.autoCubeRightScale">
-                Right scale; 
-              </span>
-            </td>
+            <td> ${match.autoSwitchCount} </td>
+            <td> ${match.autoScaleCount} </td>
             <td>${match.scaleCount}</td>
             <td>${match.allySwitchCount}</td>
             <td>${match.oppoSwitchCount}</td>
@@ -55,6 +41,11 @@
             <td>${match.climbed}</td>
             <td>${match.lifted.length}</td>
             <td>
+              <div show.bind="match.autoNotes">
+              <b>Auto</b>
+              ${match.autoNotes}
+              </div>
+              <b>teleop</b>
               ${match.notes}
               <span show.bind="match.isFailure">
                 <br show.bind="match.notes"/><b>Fail:</b> 
