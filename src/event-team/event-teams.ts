@@ -109,7 +109,8 @@ export class EventTeams {
 
           teamData.vaultCount += parseInt(<any>b.vaultCount);
 
-          teamData;
+          teamData.autoSwitchCount += b.autoSwitchCount
+          teamData.autoScaleCount += b.autoScaleCount;
 
           if(b.autoCrossedLine) {
             teamData.autoLineCount ++;

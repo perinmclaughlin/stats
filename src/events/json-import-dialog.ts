@@ -343,8 +343,18 @@ export class JsonImportDialog {
           if(state.same) {
             // no need to do anything
             return noop;
+          }else if (state.takeFromFile) {
+            return this.dbContext.eventMatches.put(state.fromFile)
+              .then(() => noop);
+          }else if(!state.takeLocal && !state.takeFromFile && state.localSaved != null && state.fromFile == null) {
+            return this.dbContext.eventMatches.delete(state.localSaved.id)
+              .then(() => noop);
+          }else if(state.merged != null) {
+            state.merged.id = state.localSaved.id;
+            return this.dbContext.eventMatches.put(state.merged)
+              .then(() => noop);
           }else{ 
-            throw new Error("Merging Event-Matches Not Implemented!")
+            throw new Error("crumb! we missed a case!")
           }
         }));
 

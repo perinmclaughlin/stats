@@ -23,8 +23,8 @@
         <h3> starting position ${model.startingPosition} </h3>
         <label>
           <input type='radio' 
-            name='starting_pos' value='Right' 
-            checked.bind='model.startingPosition'> Right </label>
+            name='starting_pos' value='Non exchange side' 
+            checked.bind='model.startingPosition'> Non exchange side </label>
         <br>
         <label>
           <input type='radio' 
@@ -33,9 +33,9 @@
         <br>
         <label>
           <input type='radio' 
-            name='starting_pos' value='Left'
+            name='starting_pos' value='Exchange side'
             checked.bind='model.startingPosition'
-          > Left </label>
+          > Exchange side </label>
       </div>
       <div class='col'>
         <h3> action </h3>
@@ -140,6 +140,7 @@
 
         <div class='row'>
           <div class='col form-group'>
+            <!--
             <label class='form-control-label' for='vaultCycleTime'>Cycle Time (seconds): </label>
 
             <div class='input-group'>
@@ -151,6 +152,7 @@
                 <button class='btn btn-outline-primary' click.delegate='increment5("vaultCycleTime")'>+</button>
               </div>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -207,6 +209,7 @@
         </div>
         <div class='row'>
           <div class='col form-group'>
+            <!--
             <label class='form-control-label' for='scaleCycleTime'>Cycle Time (seconds): </label>
 
             <div class='input-group'>
@@ -218,6 +221,7 @@
                 <button class='btn btn-outline-primary' click.delegate='increment5("scaleCycleTime")'>+</button>
               </div>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -247,6 +251,7 @@
         </div>
         <div class='row'>
           <div class='col form-group'>
+            <!--
             <label class='form-control-label' for='allySwitchCycleTime'>Cycle Time (seconds): </label>
 
             <div class='input-group'>
@@ -258,6 +263,7 @@
                 <button class='btn btn-outline-primary' click.delegate='increment5("allySwitchCycleTime")'>+</button>
               </div>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -285,6 +291,7 @@
         </div>
         <div class='row'>
           <div class='col form-group'>
+            <!--
             <label class='form-control-label' for='oppoSwitchCycleTime'>Cycle Time (seconds): </label>
 
             <div class='input-group'>
@@ -296,6 +303,7 @@
                 <button class='btn btn-outline-primary' click.delegate='increment5("oppoSwitchCycleTime")'>+</button>
               </div>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -324,6 +332,19 @@
             Lifted ${partner2}
             <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
           </label>
+
+        </div>
+        <div class='col-sm'>
+          <label>Lifted by</label>
+          <select class='form-control' value.bind='model.liftedBy'>
+            <option />
+            <option model.bind="partner1">
+              ${partner1}
+            </option>
+            <option model.bind="partner2">
+              ${partner2}
+            </option>
+          </select>
         </div>
       </div>
       <div class='col-sm'>
