@@ -53,6 +53,13 @@ export class EventTeamData {
   public autoLineCount: number;
   public autoSwitchCount: number;
   public autoScaleCount: number;
+  public autoSwitchAttempt: boolean;
+  public autoScaleAttempt: boolean;
+  public autoVault: boolean;
+
+  public attemptClimb: boolean;
+  public liftedBy: string;
+
 }
 
 export class EventMatchMergeState {

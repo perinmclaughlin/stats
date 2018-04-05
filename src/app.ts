@@ -21,22 +21,22 @@ export class App {
       {
         route: ["year/:year/event/:eventCode/team/:teamNumber/match/:matchNumber"], 
         name: "match-team", moduleId: PLATFORM.moduleName("match-team"), 
-        nav: false, title: "Big Honking Page", adminRoute: false,
+        nav: false, title: "match-team", adminRoute: false,
       },
       {
         route: ["events", ""], 
         name: "events", moduleId: PLATFORM.moduleName("events/teh-events"), 
-        nav: false, title: "Smaller Honking Page", adminRoute: false,
+        nav: false, title: "events", adminRoute: false,
       },
       {
         route: ["year/:year/event/:eventCode"], 
         name: "event", moduleId: PLATFORM.moduleName("teh-event"), 
-        nav: false, title: "Smaller Honking Page", adminRoute: false,
+        nav: false, title: "event", adminRoute: false,
       },
       {
         route: ["year/:year/event/:eventCode/team/:teamNumber"],
         name: "event-team", moduleId: PLATFORM.moduleName("event-team/event-team"), 
-        nav: false, title: "Smaller Honking Page", adminRoute: false,
+        nav: false, title: "event-team", adminRoute: false,
       },
       {
         route: ["district-rankings"],
