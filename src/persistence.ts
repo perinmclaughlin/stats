@@ -62,14 +62,38 @@ export interface TeamMatch2018Entity {
   notes: string;
   startingPosition: string;
   autoCrossedLine: boolean;
-  autoCubeLeftSwitch: boolean;
-  autoCubeRightSwitch: boolean;
-  autoCubeLeftScale: boolean;
-  autoCubeRightScale: boolean;
+  autoScaleCount: number;
+  autoSwitchCount: number;
+  autoScaleWrongSide: boolean;
+  autoSwitchWrongSide: boolean;
+  autoVault: boolean;
+  autoAttemptedSwitch: boolean;
+  autoAttemptedScale: boolean;
+  autoNotes: string;
+  scaleMechanism: string;
+  scaleKnockedOutCount: number;
+  scaleDroppedCount: number;
+  attemptedClimb: boolean;
+  liftedBy: string;
+  strategy: string;
 }
 
 export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018Entity {
   return {
+    autoScaleCount: 0,
+    autoSwitchCount: 0,
+    autoScaleWrongSide: false,
+    autoSwitchWrongSide: false,
+    autoVault: false,
+    autoAttemptedScale: false,
+    autoAttemptedSwitch: false,
+    autoNotes: "",
+    scaleDroppedCount: 0,
+    scaleMechanism: "",
+    scaleKnockedOutCount: 0,
+    attemptedClimb: false,
+    liftedBy: "",
+    strategy: "",
     eventCode: eventCode,
     teamNumber: teamNumber,
     matchNumber: matchNumber,
@@ -92,10 +116,6 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
     notes: "",
     startingPosition: null,
     autoCrossedLine: false,
-    autoCubeLeftSwitch: false,
-    autoCubeRightSwitch: false,
-    autoCubeLeftScale: false,
-    autoCubeRightScale: false,
   };
 }
 
@@ -124,10 +144,20 @@ export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Enti
     a.notes == b.notes &&
     a.startingPosition == b.startingPosition &&
     a.autoCrossedLine == b.autoCrossedLine &&
-    a.autoCubeLeftSwitch == b.autoCubeLeftSwitch &&
-    a.autoCubeRightSwitch == b.autoCubeRightSwitch &&
-    a.autoCubeLeftScale == b.autoCubeLeftScale &&
-    a.autoCubeRightScale == b.autoCubeRightScale
+    a.autoScaleCount == b.autoScaleCount &&
+    a.autoAttemptedScale == b.autoAttemptedScale &&
+    a.autoAttemptedSwitch == b.autoAttemptedSwitch &&
+    a.autoNotes == b.autoNotes &&
+    a.autoScaleWrongSide == b.autoScaleWrongSide &&
+    a.autoSwitchCount == b.autoSwitchCount &&
+    a.autoSwitchWrongSide == b.autoSwitchWrongSide &&
+    a.autoVault == b.autoVault &&
+    a.scaleDroppedCount == b.scaleDroppedCount &&
+    a.scaleKnockedOutCount == b.scaleKnockedOutCount &&
+    a.scaleMechanism == b.scaleMechanism &&
+    a.attemptedClimb == b.attemptedClimb &&
+    a.liftedBy == b.liftedBy &&
+    a.strategy == b.strategy
   );
 }
 

@@ -17,7 +17,8 @@ export class MatchData {
 	public isFoul: boolean;
 	public foulCount: string;
 	public foulReason: string;
-	public cubeCount: string;
+  public cubeCount: string;
+  public strategy: string;
 }
 
 export class EventTeamData {
