@@ -45,24 +45,74 @@
         </label>
         <br>
         <label>
-          <input type='checkbox' checked.bind='model.autoCubeLeftSwitch'> 
-          Cube in Left Switch 
+          <input type='checkbox' checked.bind='model.autoScaleWrongSide'>
+            Cube on Scale (Wrong Side)
+          </input>
         </label>
         <br>
         <label>
-          <input type='checkbox' checked.bind='model.autoCubeRightSwitch'>
-          Cube in Right Switch 
+          <input type='checkbox' checked.bind='model.autoSwitchWrongSide'>
+            Cube on Switch (Wrong Side)
+          </input>
         </label>
         <br>
         <label>
-          <input type='checkbox' checked.bind='model.autoCubeLeftScale'>
-          Cube in Left Scale 
+          <input type='checkbox' checked.bind='model.autoAttemptedSwitch'>
+            Attempted Switch
+          </input>
         </label>
         <br>
         <label>
-          <input type='checkbox' checked.bind='model.autoCubeRightScale'> 
-          Cube in Right Scale 
+          <input type='checkbox' checked.bind='model.autoAttemptedScale'>
+            Attempted Scale
+          </input>
         </label>
+        <br>
+        <label>
+          <input type='checkbox' checked.bind='model.autoVault'>
+            Vault (lol)
+          </input>
+        </label>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col'></div>
+      <div class='col form-group'>
+        <label class='form-control-label' for='scaleCount'><b>Scale Cubes deposited: </b></label>
+
+        <div class='input-group'>
+          <div class='input-group-prepend'>
+            <button class='btn btn-outline-primary' click.delegate='decrement("autoScaleCount")'>-</button>
+          </div>
+          <input id='scaleCount' class='form-control' value.bind="model.autoScaleCount & validate:rules"/>
+          <div class='input-group-append'>
+            <button class='btn btn-outline-primary' click.delegate='increment("autoScaleCount")'>+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col'></div>
+      <div class='col form-group'>
+        <label class='form-control-label' for='scaleCount'><b>Switch Cubes deposited: </b></label>
+
+        <div class='input-group'>
+          <div class='input-group-prepend'>
+            <button class='btn btn-outline-primary' click.delegate='decrement("autoSwitchCount")'>-</button>
+          </div>
+          <input id='scaleCount' class='form-control' value.bind="model.autoSwitchCount & validate:rules"/>
+          <div class='input-group-append'>
+            <button class='btn btn-outline-primary' click.delegate='increment("autoSwitchCount")'>+</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col'></div>
+      <div class='col'>
+        <h5>Notes</h5>
+        <textarea id='autoNotes' class='form-control' rows='5' value.bind="model.autoNotes"></textarea>
       </div>
     </div>
     <div class='row'>
@@ -121,6 +171,36 @@
               <input id='scaleCount' class='form-control' value.bind="model.scaleCount & validate:rules"/>
               <div class='input-group-append'>
                 <button class='btn btn-outline-primary' click.delegate='increment("scaleCount")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='vaultCount'>Dropped Cubes: </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement("scaleDroppedCount")'>-</button>
+              </div>
+              <input id='vaultCount' class='form-control' value.bind="model.scaleDroppedCount & validate:rules"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment("scaleDroppedCount")'>+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <label class='form-control-label' for='vaultCount'>Cubes Knocked Out: </label>
+
+            <div class='input-group'>
+              <div class='input-group-prepend'>
+                <button class='btn btn-outline-primary' click.delegate='decrement("scaleKnockedOutCount")'>-</button>
+              </div>
+              <input id='vaultCount' class='form-control' value.bind="model.scaleKnockedOutCount & validate:rules"/>
+              <div class='input-group-append'>
+                <button class='btn btn-outline-primary' click.delegate='increment("scaleKnockedOutCount")'>+</button>
               </div>
             </div>
           </div>
@@ -289,6 +369,18 @@
         </textarea>
       </div>
     </div>
+
+    <div class='row'>
+      <div class='col'>
+        <h5>Scale Mechanism</h5>
+        <select class='form-control' value.bind='model.scaleMechanism'>
+          <option repeat.for='mechanism of scaleMechanisms' model.bind='mechanism'>
+            ${mechanism}
+          </option>
+        </select>
+      </div>
+    </div>
+    
 
     <div class='row'>
       <div class='col'>
