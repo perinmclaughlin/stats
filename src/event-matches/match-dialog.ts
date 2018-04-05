@@ -147,18 +147,6 @@ export class MatchDialog {
     });
 
     ValidationRules.customRule(
-      "teamExists",
-      (teamNumber: string, obj: EventMatchEntity) => {
-        return this.dbContext.eventTeams
-          .where(["year", "eventCode", "teamNumber"])
-          .equals([obj.year, obj.eventCode, teamNumber]).first()
-          .then(teamEvent => {
-            return teamEvent != null;
-          });
-      }, "team is not attending this event."
-    );
-
-    ValidationRules.customRule(
       "matchNoExists",
       (matchNumber: string, obj: EventMatchEntity) => {
         if(matchNumber == null) {

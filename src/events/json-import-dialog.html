@@ -50,20 +50,27 @@
               </label>
             </th>
           </tr>
-          <tr repeat.for="state of eventMatchesMerge" show.bind="!state.same || showAllMatches">
+          <tr repeat.for="state of eventMatchesMerge" show.bind="(!state.same && (state.fromFile == null) == (state.localSaved == null)) || showAllMatches" class="${state.resolved ? 'green' : 'red'}">
             <td> ${state.matchNumber} </td>
             <td>
-              <span show.bind="state.localSaved != null">Yup</span>
-            </td>
-            <td>
-              <span show.bind="state.fromFile != null">Yup</span>
-            </td>
-            <td>
-              <span show.bind="!state.same && !state.resolved">
-                <button class='btn btn-secondary' click.delegate='mergeEventTeams(state)'>Merge</button>
+              <span show.bind="state.localSaved != null && state.fromFile == null">
+                <label>
+                  <input type='checkbox' checked.bind='state.takeLocal' />
+                  Take
+                </label>
               </span>
-              <span show.bind="state.resolved">
-                yup
+            </td>
+            <td>
+              <span show.bind="state.localSaved == null && state.fromFile != null">
+                <label>
+                  <input type='checkbox' checked.bind='state.takeFromFile' />
+                  Take
+                </label>
+              </span>
+            </td>
+            <td>
+              <span show.bind="!state.takeLocal && !state.takeFromFile">
+                <button class='btn btn-secondary' click.delegate='mergeEventTeams(state)'>Merge</button>
               </span>
             </td>
           </tr>

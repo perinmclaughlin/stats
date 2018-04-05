@@ -73,9 +73,11 @@ export class EventMatchMergeState {
     if (this.localSaved != null && this.fromFile == null) {
       this.takeLocal = true;
       this.takeFromFile = false;
+      this.resolved = true;
     }else if(this.localSaved == null && this.fromFile != null) {
       this.takeLocal = false;
       this.takeFromFile = true;
+      this.resolved = true;
     }
   }
 

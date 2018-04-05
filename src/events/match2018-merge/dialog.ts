@@ -11,7 +11,7 @@ export class Match2018MergeDialog {
   private validationController: ValidationController;
   private renderer: BootstrapRenderer;
   public rules: any[];
-  public errorMessage: String;
+  public errorMessage: string;
 
   public static properties = [
     "vaultCount", "vaultCycleTime", "scaleCount", "scaleCycleTime", 
