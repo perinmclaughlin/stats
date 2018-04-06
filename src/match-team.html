@@ -316,13 +316,19 @@
     </div>
 
     <div class='row'>
-      <div class='col-sm'>
+      <div class='col-3'>
         <label> 
           <input type='checkbox' class='form-control' checked.bind='model.climbed' />
           Climbed 
         </label>
       </div>
-      <div class='col-sm'>
+      <div class='col-3'>
+        <label> 
+          <input type='checkbox' class='form-control' checked.bind='model.attemptedClimb' />
+          Attempted Climbed 
+        </label>
+      </div>
+      <div class='col-3'>
         <div>
           <label> 
             Lifted ${partner1}
@@ -334,7 +340,8 @@
           </label>
 
         </div>
-        <div class='col-sm'>
+      </div>
+      <div class='col-3'>
           <label>Lifted by</label>
           <select class='form-control' value.bind='model.liftedBy'>
             <option />
@@ -346,12 +353,12 @@
             </option>
           </select>
         </div>
-      </div>
     </div>
 
     <div class='row'>
       <div class='col'>
         <div class='row'>
+          
           <div class='col-sm-2 form-group'>
             <label class='form-control-label'>Robot Failure?</label>
             <div>
@@ -399,6 +406,12 @@
             ${mechanism}
           </option>
         </select>
+      </div>
+      <div class='col'>
+        <div show.bind='model.scaleMechanism=="other"'>
+          <label class='form-control-label'>Scale Mechanism Notes</label>
+          <input type="text" class='form-control' value.bind='model.scaleMechanismOther'/>
+        </div>
       </div>
     </div>
     

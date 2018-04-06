@@ -71,6 +71,7 @@ export interface TeamMatch2018Entity {
   autoAttemptedScale: boolean;
   autoNotes: string;
   scaleMechanism: string;
+  scaleMechanismOther: string;
   scaleKnockedOutCount: number;
   scaleDroppedCount: number;
   attemptedClimb: boolean;
@@ -90,6 +91,7 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
     autoNotes: "",
     scaleDroppedCount: 0,
     scaleMechanism: "",
+    scaleMechanismOther: "",
     scaleKnockedOutCount: 0,
     attemptedClimb: false,
     liftedBy: "",

@@ -21,7 +21,7 @@ export class MatchTeamPage {
   public partner2: string;
   public isBlue = false;
   public isRed = false;
-  public scaleMechanisms = ["lift", "shooter", "janky lift", "janky shooter"];
+  public scaleMechanisms = ["lift", "shooter", "janky lift", "janky shooter", "other" ];
 
   public rules: any[];
   private validationController: ValidationController;
