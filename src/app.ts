@@ -7,13 +7,37 @@ import environment from './environment';
 @autoinject
 export class App {
   version = environment.version;
+  persisted: boolean;
 
   constructor(public router: Router, customValidationRules: CustomValidationRules) {
+    this.persisted = false;
   }
 
 
   public activate() {
-    return this.router.configure(this.configureRoutes);
+    return Promise.all([
+      this.router.configure(this.configureRoutes),
+      this.persist(),
+      this.getPersisted(),
+    ]);
+  }
+
+  private persist(): Promise<any> {
+    if((<any>navigator).storage && (<any>navigator).storage.persist) {
+      return (<any>navigator).storage.persist();
+    }
+    return Promise.resolve("yup");
+  }
+
+  private getPersisted(): Promise<any> {
+    let promise = Promise.resolve(false);
+    if((<any>navigator).storage && (<any>navigator).storage.persisted) {
+      promise = (<any>navigator).storage.persisted();
+    }
+
+    return promise.then(result => {
+      this.persisted = result;
+    })
   }
 
   public configureRoutes(config: RouterConfiguration): RouterConfiguration {
