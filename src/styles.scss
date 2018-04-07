@@ -71,3 +71,13 @@ html, body {
 .grid-item.form-group {
   margin-bottom: 0
 }
+
+.bingo-container {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+}
+
+.bingo-item {
+  padding: 5px;
+  border: 1px solid black;
+}

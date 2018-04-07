@@ -1,6 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { BindingEngine, Disposable } from "aurelia-binding";
 import { MatchData } from "./model";
+import { DialogService } from "aurelia-dialog";
 import { 
   FrcStatsContext, 
   TeamMatch2018Entity, make2018match, 
@@ -9,6 +10,8 @@ import {
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { BootstrapRenderer } from "./bootstrap-renderer";
 import { Router } from "aurelia-router";
+import { PowerupBingoDialog } from "./powerup-bingo";
+
 
 
 @autoinject
@@ -35,6 +38,7 @@ export class MatchTeamPage {
 
   constructor(
     private bindingEngine: BindingEngine,
+    private dialogService: DialogService,
     private dbContext: FrcStatsContext,
     validationControllerFactory: ValidationControllerFactory,
     private router: Router
@@ -263,5 +267,14 @@ export class MatchTeamPage {
 
   private teardownValidation() {
     this.validationController.removeRenderer(this.renderer);
+  }
+
+  public showBingo() {
+    this.dialogService.open({
+      model: {
+        match: this.model,
+      },
+      viewModel: PowerupBingoDialog,
+    });
   }
 }

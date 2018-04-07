@@ -77,6 +77,31 @@ export interface TeamMatch2018Entity {
   attemptedClimb: boolean;
   liftedBy: string;
   strategy: string;
+
+  bingoSovietRussia: boolean;
+  bingoGrunt: boolean;
+  bingoFullHouse: boolean;
+  bingoJudges: boolean;
+  bingoYoink: boolean;
+  bingoScalePlateHang: boolean;
+  bingoDieInNull: boolean;
+  bingoPushedInNull: boolean;
+  bingoClotheslined: boolean;
+  bingoWedged: boolean;
+  bingoPowerUpsExist: boolean;
+  bingoBoost: boolean;
+  bingoForceTime: boolean;
+  bingoClimbPlatform: boolean;
+  bingoScaleBeach: boolean;
+  bingoPyramid: boolean;
+  bingoTimber: boolean;
+  bingoClimbsGiven: boolean;
+  bingoPlatformZone: boolean;
+  bingoSkydivingClub: boolean;
+  bingoCongaClimb: boolean;
+  bingoWindchimeClimb: boolean;
+  bingoLiftlessClimb: boolean;
+  bingo3xClimb: boolean;
 }
 
 export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018Entity {
@@ -118,6 +143,31 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
     notes: "",
     startingPosition: null,
     autoCrossedLine: false,
+
+    bingoSovietRussia: false,
+    bingoGrunt: false,
+    bingoFullHouse: false,
+    bingoJudges: false,
+    bingoYoink: false,
+    bingoScalePlateHang: false,
+    bingoDieInNull: false,
+    bingoPushedInNull: false,
+    bingoClotheslined: false,
+    bingoWedged: false,
+    bingoPowerUpsExist: false,
+    bingoBoost: false,
+    bingoForceTime: false,
+    bingoClimbPlatform: false,
+    bingoScaleBeach: false,
+    bingoPyramid: false,
+    bingoTimber: false,
+    bingoClimbsGiven: false,
+    bingoPlatformZone: false,
+    bingoSkydivingClub: false,
+    bingoCongaClimb: false,
+    bingoWindchimeClimb: false,
+    bingoLiftlessClimb: false,
+    bingo3xClimb: false,
   };
 }
 
@@ -159,7 +209,31 @@ export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Enti
     a.scaleMechanism == b.scaleMechanism &&
     a.attemptedClimb == b.attemptedClimb &&
     a.liftedBy == b.liftedBy &&
-    a.strategy == b.strategy
+    a.strategy == b.strategy &&
+    a.bingoSovietRussia == b.bingoSovietRussia &&
+    a.bingoGrunt == b.bingoGrunt &&
+    a.bingoFullHouse == b.bingoFullHouse &&
+    a.bingoJudges == b.bingoJudges &&
+    a.bingoYoink == b.bingoYoink &&
+    a.bingoScalePlateHang == b.bingoScalePlateHang &&
+    a.bingoDieInNull == b.bingoDieInNull &&
+    a.bingoPushedInNull == b.bingoPushedInNull &&
+    a.bingoClotheslined == b.bingoClotheslined &&
+    a.bingoWedged == b.bingoWedged &&
+    a.bingoPowerUpsExist == b.bingoPowerUpsExist &&
+    a.bingoBoost == b.bingoBoost &&
+    a.bingoForceTime == b.bingoForceTime &&
+    a.bingoClimbPlatform == b.bingoClimbPlatform &&
+    a.bingoScaleBeach == b.bingoScaleBeach &&
+    a.bingoPyramid == b.bingoPyramid &&
+    a.bingoTimber == b.bingoTimber &&
+    a.bingoClimbsGiven == b.bingoClimbsGiven &&
+    a.bingoPlatformZone == b.bingoPlatformZone &&
+    a.bingoSkydivingClub == b.bingoSkydivingClub &&
+    a.bingoCongaClimb == b.bingoCongaClimb &&
+    a.bingoWindchimeClimb == b.bingoWindchimeClimb &&
+    a.bingoLiftlessClimb == b.bingoLiftlessClimb &&
+    a.bingo3xClimb == b.bingo3xClimb 
   );
 }
 
