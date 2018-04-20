@@ -26,5 +26,17 @@ export class CustomValidationRules {
           });
       }, "team is not attending this event."
     );
+
+    ValidationRules.customRule(
+      "maximum",
+      (input: string, obj: any, maxValue) => {
+        let value = parseInt(input);
+        if(isNaN(value)) {
+          return true;
+        }
+        return value < maxValue;
+      }, `must be less than or equal to \${$config.maxValue}.`,
+      (maxValue) => ({maxValue}),
+    );
   }
 }

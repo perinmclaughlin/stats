@@ -11,11 +11,12 @@ import { ValidationController, ValidationControllerFactory, ValidationRules } fr
 import { BootstrapRenderer } from "./bootstrap-renderer";
 import { Router } from "aurelia-router";
 import { PowerupBingoDialog } from "./powerup-bingo";
+import { actionTypes, actionTypeMap } from "./action-types";
 
 
 
 @autoinject
-export class MatchTeamPage {
+export class MatchTeamPage2 {
   public model: TeamMatch2018Entity;
   public team: TeamEntity;
   public event: EventEntity;
@@ -27,8 +28,13 @@ export class MatchTeamPage {
   public scaleMechanisms = ["lift", "shooter", "janky lift", "janky shooter", "other" ];
   public errorMessage: string;
   public defaultMax = 100;
+  public actions: any[];
 
   public rules: any[];
+  public matchRunning: boolean;
+  public intervalId: any;
+  public time: number;
+  public actionType: number;
   private validationController: ValidationController;
   private renderer: BootstrapRenderer;
   public mode = "add";
@@ -38,6 +44,10 @@ export class MatchTeamPage {
 
   private observers: Disposable[];
 
+  public currentTime = 150;
+  public actionTypes = actionTypes;
+  public actionTypeMap = actionTypeMap;
+
   constructor(
     private bindingEngine: BindingEngine,
     private dialogService: DialogService,
@@ -46,9 +56,14 @@ export class MatchTeamPage {
     private router: Router
     ){
     this.validationController = validationControllerFactory.createForCurrentScope();
+    this.actions = [];
   }
 
   public activate(params) {
+    params.year = "2018";
+    params.teamNumber = "4125";
+    params.eventCode = 'wayak';
+    params.matchNumber = '1';
     let promise = Promise.resolve("yup");
     
     return this.load(params).then(() => {
@@ -300,4 +315,41 @@ export class MatchTeamPage {
       viewModel: PowerupBingoDialog,
     });
   }
+
+  public beginMatch() {
+    this.currentTime = 150;
+    this.matchRunning = true;
+    this.intervalId = setInterval(() => {
+      this.currentTime--;
+      if (this.currentTime == 0) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+        this.matchRunning = false;
+      }
+    }, 1000);
+  }
+
+  public startThingHappened() {
+    if(this.matchRunning) {
+      this.time = this.currentTime;
+    }
+  }
+
+  public saveThing() {
+    this.actions.push({
+      time: this.time,
+      actionId: this.actionType,
+    });
+
+    this.time = null;
+    this.actionType = null;
+  }
+
+  public currentTimeDisplay(currentTime) {
+    if(currentTime > 135) {
+      return `Auto ${currentTime - 135}`;
+    }
+    return `Teleop ${currentTime}`;
+  }
 }
+

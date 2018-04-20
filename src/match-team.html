@@ -1,4 +1,5 @@
 <template>
+  <require from="./counter"></require>
   <div class='container-fluid'>
     <h1><b><u>
           <a route-href='route: event-team; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: team.teamNumber}'>
@@ -78,34 +79,13 @@
     <div class='row'>
       <div class='col'></div>
       <div class='col form-group'>
-        <label class='form-control-label' for='scaleCount'><b>Scale Cubes deposited: </b></label>
-
-        <div class='input-group'>
-          <div class='input-group-prepend'>
-            <button class='btn btn-outline-primary' click.delegate='decrement("autoScaleCount")'>-</button>
-          </div>
-          <input id='scaleCount' class='form-control' value.bind="model.autoScaleCount & validate:rules"/>
-          <div class='input-group-append'>
-            <button class='btn btn-outline-primary' click.delegate='increment("autoScaleCount")'>+</button>
-          </div>
-        </div>
+        <counter display="Scale Cubes deposited" model.bind='model' property="autoScaleCount" max.bind="defaultMax" rules.bind="rules"></counter>
       </div>
     </div>
     <div class='row'>
       <div class='col'></div>
       <div class='col form-group'>
-        <label class='form-control-label' for='scaleCount'><b>Switch Cubes deposited: </b></label>
-
-        <div class='input-group'>
-          <div class='input-group-prepend'>
-            <button class='btn btn-outline-primary' click.delegate='decrement("autoSwitchCount")'>-</button>
-          </div>
-          <input id='scaleCount' class='form-control' value.bind="model.autoSwitchCount & validate:rules"/>
-          <div class='input-group-append'>
-            <button class='btn btn-outline-primary' click.delegate='increment("autoSwitchCount")'>+</button>
-          </div>
-        </div>
-        </div>
+        <counter display="Switch Cubes deposited" model.bind='model' property="autoSwitchCount" max.bind="defaultMax" rules.bind="rules"></counter>
       </div>
     </div>
     <div class='row'>
@@ -124,35 +104,12 @@
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <label class='form-control-label' for='vaultCount'>Cubes deposited: </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement("vaultCount")'>-</button>
-              </div>
-              <input id='vaultCount' class='form-control' value.bind="model.vaultCount & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment("vaultCount")'>+</button>
-              </div>
-            </div>
+            <counter display="Cubes deposited" model.bind='model' property="vaultCount" max.bind="defaultMax" rules.bind="rules"></counter>
           </div>
         </div>
 
         <div class='row'>
           <div class='col form-group'>
-            <!--
-            <label class='form-control-label' for='vaultCycleTime'>Cycle Time (seconds): </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement5("vaultCycleTime")'>-</button>
-              </div>
-              <input id='vaultCycleTime' class='form-control' value.bind="model.vaultCycleTime & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment5("vaultCycleTime")'>+</button>
-              </div>
-            </div>
-            -->
           </div>
         </div>
       </div>
@@ -164,64 +121,21 @@
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <label class='form-control-label' for='scaleCount'>Cubes deposited: </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement("scaleCount")'>-</button>
-              </div>
-              <input id='scaleCount' class='form-control' value.bind="model.scaleCount & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment("scaleCount")'>+</button>
-              </div>
-            </div>
+            <counter display="Cubes deposited" model.bind='model' property="scaleCount" max.bind="defaultMax" rules.bind="rules"></counter>
           </div>
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <label class='form-control-label' for='vaultCount'>Dropped Cubes: </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement("scaleDroppedCount")'>-</button>
-              </div>
-              <input id='vaultCount' class='form-control' value.bind="model.scaleDroppedCount & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment("scaleDroppedCount")'>+</button>
-              </div>
-            </div>
+            <counter display="Dropped Cubes" model.bind='model' property="scaleDroppedCount" max.bind="defaultMax" rules.bind="rules"></counter>
           </div>
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <label class='form-control-label' for='vaultCount'>Cubes Knocked Out: </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement("scaleKnockedOutCount")'>-</button>
-              </div>
-              <input id='vaultCount' class='form-control' value.bind="model.scaleKnockedOutCount & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment("scaleKnockedOutCount")'>+</button>
-              </div>
-            </div>
+            <counter display="Cubes Knocked Out" model.bind='model' property="scaleKnockedOutCount" max.bind="defaultMax" rules.bind="rules"></counter>
           </div>
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <!--
-            <label class='form-control-label' for='scaleCycleTime'>Cycle Time (seconds): </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement5("scaleCycleTime")'>-</button>
-              </div>
-              <input id='scaleCycleTime' class='form-control' value.bind="model.scaleCycleTime & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment5("scaleCycleTime")'>+</button>
-              </div>
-            </div>
-            -->
           </div>
         </div>
       </div>
@@ -236,34 +150,11 @@
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <label class='form-control-label' for='allySwitchCount'>Cubes deposited: </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement("allySwitchCount")'>-</button>
-              </div>
-              <input id='allySwitchCount' class='form-control' value.bind="model.allySwitchCount & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment("allySwitchCount")'>+</button>
-              </div>
-            </div>
+            <counter display="Cubes deposited" model.bind='model' property="allySwitchCount" max.bind="defaultMax" rules.bind="rules"></counter>
           </div>
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <!--
-            <label class='form-control-label' for='allySwitchCycleTime'>Cycle Time (seconds): </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement5("allySwitchCycleTime")'>-</button>
-              </div>
-              <input id='allySwitchCycleTime' class='form-control' value.bind="model.allySwitchCycleTime & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment5("allySwitchCycleTime")'>+</button>
-              </div>
-            </div>
-            -->
           </div>
         </div>
       </div>
@@ -276,34 +167,11 @@
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <label class='form-control-label' for='oppoSwitchCount'>Cubes deposited: </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement("oppoSwitchCount")'>-</button>
-              </div>
-              <input id='oppoSwitchCount' class='form-control' value.bind="model.oppoSwitchCount & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment("oppoSwitchCount")'>+</button>
-              </div>
-            </div>
+            <counter display="Cubes deposited" model.bind='model' property="oppoSwitchCount" max.bind="defaultMax" rules.bind="rules"></counter>
           </div>
         </div>
         <div class='row'>
           <div class='col form-group'>
-            <!--
-            <label class='form-control-label' for='oppoSwitchCycleTime'>Cycle Time (seconds): </label>
-
-            <div class='input-group'>
-              <div class='input-group-prepend'>
-                <button class='btn btn-outline-primary' click.delegate='decrement5("oppoSwitchCycleTime")'>-</button>
-              </div>
-              <input id='oppoSwitchCycleTime' class='form-control' value.bind="model.oppoSwitchCycleTime & validate:rules"/>
-              <div class='input-group-append'>
-                <button class='btn btn-outline-primary' click.delegate='increment5("oppoSwitchCycleTime")'>+</button>
-              </div>
-            </div>
-            -->
           </div>
         </div>
       </div>
@@ -419,6 +287,7 @@
     <div class='row'>
       <div class='col'>
         <button class='btn btn-primary' click.delegate="click()">Save</button>
+        <span show.bind="errorMessage != null"> ${errorMessage} </span>
         <button class='btn btn-outline-primary float-right' click.delegate="showBingo()">Bingo</button>
       </div>
     </div>

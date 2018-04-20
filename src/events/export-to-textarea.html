@@ -1,0 +1,28 @@
+
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+        <button class='btn btn-danger btn-sm float-right' click.delegate='controller.cancel()'>
+          X
+        </button>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='row'>
+        <div class='col'>
+          <button class='btn btn-secondary' click.delegate='click()'>Select</button>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col'>
+          <textarea class='form-control' rows=10 element.ref='textarea' value.one-time='json'></textarea>
+        </div>
+      </div>
+      <div show.bind="done">
+        ${doneMessage}
+        <button class='btn btn-secondary float-right' click.delegate='controller.ok()'>
+          Done
+        </button>
+      </div>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

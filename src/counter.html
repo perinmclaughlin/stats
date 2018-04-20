@@ -1,0 +1,12 @@
+<template>
+  <label class='form-control-label' for='${id}'><b>${display}: </b></label>
+  <div class='input-group'>
+    <div class='input-group-prepend'>
+      <button class='btn btn-outline-primary' click.delegate='decrement()'>-</button>
+    </div>
+    <input id='${id}' class='form-control' value.bind="model[property] & validate:rules"/>
+    <div class='input-group-append'>
+      <button class='btn btn-outline-primary' click.delegate='increment()'>+</button>
+    </div>
+  </div>
+</template>

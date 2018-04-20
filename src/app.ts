@@ -67,6 +67,11 @@ export class App {
         name: "district-rankings", moduleId: PLATFORM.moduleName("district-rankings"), 
         nav: true, title: "District Rankings", adminRoute: false,
       },
+      {
+        route: ["test"],
+        name: "match-team-alt", moduleId: PLATFORM.moduleName("match-team-alt"), 
+        nav: true, title: "2018 Match Team", adminRoute: false,
+      },
     ]);
 
     return config;

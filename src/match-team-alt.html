@@ -1,0 +1,45 @@
+<template>
+  <require from="./counter"></require>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-sm-3'>
+        <button class='btn btn-primary' disabled.bind='matchRunning' click.delegate='beginMatch()'>Begin Match</button>
+
+      </div>
+      <div class='col-sm-3'>
+        ${currentTimeDisplay(currentTime)}
+      </div>
+      <div class='col-sm-3'>
+        <counter display="Match Time" model.bind='$this' property="currentTime" max.bind="150" rules.bind="rules"></counter>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-sm-3'>
+        <button class='btn btn-primary' click.delegate='startThingHappened()'>Thing Happened</button>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-sm-3 form-group'>
+        <counter display="time" model.bind="$this" property="time" max.bind="150" rules.bind="rules"></counter>
+      </div>
+      <div class='col-sm-3 form-group'>
+        <label for='actionType'>Action</label>
+        <select id='actionType' type='text' class='form-control' value.bind="actionType">
+          <option></option>
+          <option repeat.for="option of actionTypes" model.bind="option.id">
+          ${option.description}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-sm-3'>
+        <button class='btn btn-primary' click.delegate='saveThing()'>Save thing</button>
+      </div>
+    </div>
+    <div class='row' repeat.for="item of actions">
+      <div class='col-sm-3'> ${currentTimeDisplay(item.time)} </div>
+      <div class='col-sm-3'> ${actionTypeMap[item.actionId].description} </div>
+    </div>
+  </div>
+</template>

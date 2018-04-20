@@ -1,0 +1,28 @@
+
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+        <button class='btn btn-danger btn-sm float-right' click.delegate='controller.cancel()'>
+          X
+        </button>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='row'>
+        <div class='col'>
+          <button class='btn btn-primary' click.delegate='exportRawFile()'>Raw File</button>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col'>
+          <button class='btn btn-primary' click.delegate='exportTextarea()'>Textarea</button>
+        </div>
+      </div>
+      <div show.bind="done">
+        ${doneMessage}
+        <button class='btn btn-secondary float-right' click.delegate='controller.ok()'>
+          Done
+        </button>
+      </div>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>
