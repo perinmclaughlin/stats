@@ -118,6 +118,12 @@
             ]
           },
           {
+              "name": "d3v4",
+              "path": "../node_modules/d3v4",
+              "main": "build/d3.js",
+              "resources": []
+          },
+          {
             "name": "aurelia-bootstrap",
             "path": "../node_modules/aurelia-bootstrap/dist/amd",
             "main": "index",

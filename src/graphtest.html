@@ -1,0 +1,63 @@
+<template>
+    <style>
+        .line1 {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2px;
+        }
+
+        .line2 {
+            fill: none;
+            stroke: rebeccapurple;
+            stroke-width: 2px;
+        }
+
+        .line3 {
+            fill: none;
+            stroke: orangered;
+            stroke-width: 2px;
+        }
+
+        .line4 {
+            fill: none;
+            stroke: maroon;
+            stroke-width: 2px;
+        }
+
+        .line5 {
+            fill: none;
+            stroke: darkgreen;
+            stroke-width: 2px;
+        }
+
+        .layout1 {
+            display: grid;
+            grid-template-columns: auto auto;
+        }
+    </style>
+    <div class='layout1'>
+
+        <svg width.bind="width + margin.left + margin.right" height.bind="height + margin.top + margin.bottom">
+            <g transform.bind="translate(margin.left, margin.top)" id='outerg'>
+                <path class='${item.clazz}' repeat.for="item of districtKeys" element.ref="item.gElt" show.bind='item.show'>
+                </path>
+
+                <g id="leftAxis">
+
+                </g>
+                <g id='legend'>
+
+                </g>
+            </g>
+        </svg>
+        <div>
+            <div class='form-check' repeat.for="item of districtKeys">
+                <input id="${item.key}_chbx" type='checkbox' class="form-check-input" checked.bind="item.show" />
+                <label for="${item.key}_chbx" class="form-check-label"> ${item.key}</label>
+                <svg width="50" height="5"> 
+                    <path class='${item.clazz}' d="M0,3L50,3"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</template>

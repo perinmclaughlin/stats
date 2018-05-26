@@ -1,5 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { TbaApi, TeamRanking } from "./tba-api";
+import { sortByPreDcmp, sortByDcmp, sortByTotal, preDcmpSum} from "./district-ranking-utils";
 
 @autoinject
 export class DistrictRankingsPage {
@@ -21,41 +22,24 @@ export class DistrictRankingsPage {
   public load() {
     this.rankings = [];
     return this.api.getDistrictRankings(this.districtKey).then(rankings => {
-      console.info(rankings);
       this.rankings = rankings;
       this.sortByPreDcmp();
     });
   }
 
-  public preDcmpSum(ranking: TeamRanking) {
-    let result = 0;
-    for(var event of ranking.event_points) {
-      if(!event.district_cmp) {
-        result += event.total || 0;
-      }
-    }
-    result += ranking.rookie_bonus || 0;
-    return result;
+  public preDcmpSum(ranking) {
+    return preDcmpSum(ranking);
   }
 
   public sortByPreDcmp() {
-    this.rankings.sort((a, b) => this.preDcmpSum(b) - this.preDcmpSum(a));
-  }
-
-  public dcmpScore(ranking: TeamRanking) {
-    for(var event of ranking.event_points) {
-      if(event.district_cmp) {
-        return event.total;
-      }
-    }
-    return 0;
+    sortByPreDcmp(this.rankings);
   }
 
   public sortByDcmp() {
-    this.rankings.sort((a, b) => this.dcmpScore(b) - this.dcmpScore(a));
+    sortByDcmp(this.rankings);
   }
 
   public sortByTotal() {
-    this.rankings.sort((a, b) => b.point_total - a.point_total);
+    sortByTotal(this.rankings);
   }
 }

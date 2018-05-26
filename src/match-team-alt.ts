@@ -38,6 +38,7 @@ export class MatchTeamPage2 {
   private validationController: ValidationController;
   private renderer: BootstrapRenderer;
   public mode = "add";
+  public hasErrors = false;
 
   public liftedPartner1 = false;
   public liftedPartner2 = false;
@@ -69,6 +70,9 @@ export class MatchTeamPage2 {
     return this.load(params).then(() => {
       this.observeFields();
       this.setupValidation();
+    }).catch(err => {
+      this.hasErrors = true;
+      return null;
     });
   }
 

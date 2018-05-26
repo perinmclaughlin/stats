@@ -72,6 +72,11 @@ export class App {
         name: "match-team-alt", moduleId: PLATFORM.moduleName("match-team-alt"), 
         nav: true, title: "2018 Match Team", adminRoute: false,
       },
+      {
+        route: ["graphtest"],
+        name: "graphtest", moduleId: PLATFORM.moduleName("graphtest"), 
+        nav: true, title: "graph test", adminRoute: false,
+      },
     ]);
 
     return config;
