@@ -254,27 +254,14 @@ export class MatchTeamPage {
       .required()
       .satisfiesRule("isNumeric")
       .satisfiesRule("maximum", this.defaultMax)
-      .ensure("vaultCycleTime")
-      .required()
-      .satisfiesRule("isNumeric")
-      .ensure("scaleCycleTime")
-      .required()
-      .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
       .ensure("allySwitchCount")
       .required()
       .satisfiesRule("isNumeric")
       .satisfiesRule("maximum", this.defaultMax)
-      .ensure("allySwitchCycleTime")
-      .required()
-      .satisfiesRule("isNumeric")
       .ensure("oppoSwitchCount")
       .required()
       .satisfiesRule("isNumeric")
       .satisfiesRule("maximum", this.defaultMax)
-      .ensure("oppoSwitchCycleTime")
-      .required()
-      .satisfiesRule("isNumeric")
       .ensure("scaleDroppedCount")
       .required()
       .satisfiesRule("isNumeric")
@@ -299,5 +286,15 @@ export class MatchTeamPage {
       },
       viewModel: PowerupBingoDialog,
     });
+  }
+  
+  public onIncAutoSwitch() {
+    this.model.autoCrossedLine = true;
+    this.model.autoAttemptedSwitch = true;
+  }
+
+  public onIncAutoScale() {
+    this.model.autoCrossedLine = true;
+    this.model.autoAttemptedScale = true;
   }
 }

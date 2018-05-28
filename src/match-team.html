@@ -1,98 +1,109 @@
 <template>
   <require from="./counter"></require>
   <div class='container-fluid'>
-    <h1><b><u>
+    <h1>
+      <b>
+        <u>
           <a route-href='route: event-team; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: team.teamNumber}'>
-          ${team.teamNumber} (${team.teamName}) 
+            ${team.teamNumber} (${team.teamName})
           </a>
-        </u></b></h1>
+        </u>
+      </b>
+    </h1>
     <h3>
       <b>
         <a route-href='route: event; params.bind: {year: event.year, eventCode: event.eventCode }'>
           ${event.name}
         </a>
-      </b> 
+      </b>
       match ${model.matchNumber}
     </h3>
     <div class='row'>
       <div class='col'>
         <h3> Auto </h3>
+        <hr>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col'>
+        <div class='row'>
+          <div class='col'>
+            <h3> starting position ${model.startingPosition} </h3>
+            <label>
+              <input type='radio' name='starting_pos' value='Non exchange side' checked.bind='model.startingPosition'> Non exchange side </label>
+            <br>
+            <label>
+              <input type='radio' name='starting_pos' value='Middle' checked.bind='model.startingPosition'> Middle </label>
+            <br>
+            <label>
+              <input type='radio' name='starting_pos' value='Exchange side' checked.bind='model.startingPosition'> Exchange side </label>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col'>
+            <h5>Notes</h5>
+            <textarea id='autoNotes' class='form-control' rows='5' value.bind="model.autoNotes"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class='col'>
+        <div class='row'>
+          <div class='col'>
+            <h3> action </h3>
+            <label>
+              <input type='checkbox' checked.bind='model.autoCrossedLine'> Crossed Line
+            </label>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <counter display="Switch Cubes deposited" model.bind='model' property="autoSwitchCount" max.bind="defaultMax" rules.bind="rules" on-increment.call="onIncAutoSwitch()"></counter>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col'>
+            <label>
+              <input type='checkbox' checked.bind='model.autoAttemptedSwitch' /> Attempted Switch
+            </label>
+          </div>
+          <div class='col'>
+            <label>
+              <input type='checkbox' checked.bind='model.autoSwitchWrongSide' /> Switch Wrong Side
+            </label>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col form-group'>
+            <counter display="Scale Cubes deposited" model.bind='model' property="autoScaleCount" max.bind="defaultMax" rules.bind="rules" on-increment.call='onIncAutoScale()'></counter>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col'>
+            <label>
+              <input type='checkbox' checked.bind='model.autoAttemptedScale' /> Attempted Scale
+            </label>
+          </div>
+          <div class='col'>
+            <label>
+              <input type='checkbox' checked.bind='model.autoScaleWrongSide' /> Scale Wrong Side
+            </label>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col'>
+            <label>
+              <input type='checkbox' checked.bind='model.autoVault'> Vault (lol)
+              </input>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
     <div class='row'>
       <div class='col'>
-        <h3> starting position ${model.startingPosition} </h3>
-        <label>
-          <input type='radio' 
-            name='starting_pos' value='Non exchange side' 
-            checked.bind='model.startingPosition'> Non exchange side </label>
-        <br>
-        <label>
-          <input type='radio' 
-            name='starting_pos' value='Middle'
-            checked.bind='model.startingPosition'> Middle </label>
-        <br>
-        <label>
-          <input type='radio' 
-            name='starting_pos' value='Exchange side'
-            checked.bind='model.startingPosition'
-          > Exchange side </label>
-      </div>
-      <div class='col'>
-        <h3> action </h3>
-        <label>
-          <input type='checkbox' checked.bind='model.autoCrossedLine'> 
-          Crossed Line 
-        </label>
-        <br>
-        <label>
-          <input type='checkbox' checked.bind='model.autoScaleWrongSide'>
-            Cube on Scale (Wrong Side)
-          </input>
-        </label>
-        <br>
-        <label>
-          <input type='checkbox' checked.bind='model.autoSwitchWrongSide'>
-            Cube on Switch (Wrong Side)
-          </input>
-        </label>
-        <br>
-        <label>
-          <input type='checkbox' checked.bind='model.autoAttemptedSwitch'>
-            Attempted Switch
-          </input>
-        </label>
-        <br>
-        <label>
-          <input type='checkbox' checked.bind='model.autoAttemptedScale'>
-            Attempted Scale
-          </input>
-        </label>
-        <br>
-        <label>
-          <input type='checkbox' checked.bind='model.autoVault'>
-            Vault (lol)
-          </input>
-        </label>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='col'></div>
-      <div class='col form-group'>
-        <counter display="Scale Cubes deposited" model.bind='model' property="autoScaleCount" max.bind="defaultMax" rules.bind="rules"></counter>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='col'></div>
-      <div class='col form-group'>
-        <counter display="Switch Cubes deposited" model.bind='model' property="autoSwitchCount" max.bind="defaultMax" rules.bind="rules"></counter>
-      </div>
-    </div>
-    <div class='row'>
-      <div class='col'></div>
-      <div class='col'>
-        <h5>Notes</h5>
-        <textarea id='autoNotes' class='form-control' rows='5' value.bind="model.autoNotes"></textarea>
+        <h3> Teleop </h3>
+        <hr>
       </div>
     </div>
     <div class='row'>
@@ -185,24 +196,22 @@
 
     <div class='row'>
       <div class='col-3'>
-        <label> 
-          <input type='checkbox' class='form-control' checked.bind='model.climbed' />
-          Climbed 
+        <label>
+          <input type='checkbox' class='form-control' checked.bind='model.climbed' click.delegate='model.attemptedClimb=true' /> Climbed
         </label>
       </div>
       <div class='col-3'>
-        <label> 
-          <input type='checkbox' class='form-control' checked.bind='model.attemptedClimb' />
-          Attempted Climbed 
+        <label>
+          <input type='checkbox' class='form-control' checked.bind='model.attemptedClimb' /> Attempted Climbed
         </label>
       </div>
       <div class='col-3'>
         <div>
-          <label> 
+          <label>
             Lifted ${partner1}
             <input type='checkbox' class='form-control' checked.bind='liftedPartner1' />
           </label>
-          <label> 
+          <label>
             Lifted ${partner2}
             <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
           </label>
@@ -210,28 +219,32 @@
         </div>
       </div>
       <div class='col-3'>
-          <label>Lifted by</label>
-          <select class='form-control' value.bind='model.liftedBy'>
-            <option />
-            <option model.bind="partner1">
-              ${partner1}
-            </option>
-            <option model.bind="partner2">
-              ${partner2}
-            </option>
-          </select>
-        </div>
+        <label>Lifted by</label>
+        <select class='form-control' value.bind='model.liftedBy'>
+          <option />
+          <option model.bind="partner1">
+            ${partner1}
+          </option>
+          <option model.bind="partner2">
+            ${partner2}
+          </option>
+        </select>
+      </div>
     </div>
 
     <div class='row'>
       <div class='col'>
         <div class='row'>
-          
+
           <div class='col-sm-2 form-group'>
             <label class='form-control-label'>Robot Failure?</label>
             <div>
-              <label><input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="true"> Yes</label><br>
-              <label><input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="false"> No</label><br>
+              <label>
+                <input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="true"> Yes</label>
+              <br>
+              <label>
+                <input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="false"> No</label>
+              <br>
             </div>
           </div>
           <div class='col-sm-10 form-group' show.bind='model.isFailure'>
@@ -246,8 +259,12 @@
           <div class='col-sm-2 form-group'>
             <label class='form-control-label'>Fouls?</label>
             <div>
-              <label><input type="radio" class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="true"> Yes</label><br>
-              <label><input type="radio" class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="false"> No</label><br>
+              <label>
+                <input type="radio" class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="true"> Yes</label>
+              <br>
+              <label>
+                <input type="radio" class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="false"> No</label>
+              <br>
             </div>
           </div>
           <div class='col-sm-10 form-group' show.bind='model.isFoul'>
@@ -278,11 +295,11 @@
       <div class='col'>
         <div show.bind='model.scaleMechanism=="other"'>
           <label class='form-control-label'>Scale Mechanism Notes</label>
-          <input type="text" class='form-control' value.bind='model.scaleMechanismOther'/>
+          <input type="text" class='form-control' value.bind='model.scaleMechanismOther' />
         </div>
       </div>
     </div>
-    
+
 
     <div class='row'>
       <div class='col'>
