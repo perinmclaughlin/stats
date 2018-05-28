@@ -6,11 +6,13 @@ import { HttpClient } from "aurelia-fetch-client";
 export class TbaApi {
   private auth_key: string;
   private base: string;
+  private http: HttpClient;
   
-  constructor(private http: HttpClient) {
+  constructor() {
     this.auth_key = "3jjSND0FVNOyI2kJjj00seaIIw5fjz4FAb0iSjSmR5sYeRkDE38u2TnixIPj8cs2";
     this.base = 'https://www.thebluealliance.com/api/v3/';
 
+    this.http = new HttpClient();
     this.http.configure(c => {
         c.defaults.headers = {
           'X-TBA-Auth-Key': this.auth_key 

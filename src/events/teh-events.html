@@ -1,4 +1,6 @@
 <template>
+  <require from="../aurelia-bootstrap-patches/dropdown/aubs-dropdown"></require>
+  <require from="../aurelia-bootstrap-patches/dropdown/aubs-dropdown-toggle"></require>
   <h1>Events</h1>
 
   <p> Maybe implement export to excel? </p>
@@ -15,9 +17,20 @@
             Import from TBA
             <img src="static/tba.png" />
           </button>
-          <button class='btn btn-primary' click.delegate='importJson()'>
-            Import from json
-          </button>
+          <div class='btn-group dropdown' aubs-dropdown='auto-close.bind: false; on-toggle.call: toggled(state)'>
+            <button class='btn btn-primary dropdown-toggle' aubs-dropdown-toggle>
+              Import from json
+              <span class="caret"></span>
+            </button>
+            <ul class='dropdown-menu'>
+              <li>
+                <a class='dropdown-item' href="javascript:void(0)" click.delegate='localImportJson()'>Local File</a>
+              </li>
+              <li>
+                <a class='dropdown-item' href="javascript:void(0)" click.delegate='gdriveImportJson()'>Google Docs</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

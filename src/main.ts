@@ -8,7 +8,7 @@ export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .feature(PLATFORM.moduleName('resources/index'))
-    .plugin(PLATFORM.moduleName('aurelia-bootstrap'))
+    .plugin(PLATFORM.moduleName('aurelia-bootstrap'), config => config.options.version = 4)
     .plugin(PLATFORM.moduleName('aurelia-validation'))
     .plugin(PLATFORM.moduleName('aurelia-dialog'))
     .globalResources(PLATFORM.moduleName("resources/value-converters/numeric-value-converter"));
