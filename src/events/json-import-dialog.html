@@ -6,13 +6,14 @@
         </button>
     </ux-dialog-header>
     <ux-dialog-body>
-      <label class='btn btn-secondary' id='SelectFile' style='margin-top: 5px'>
-        Select File <input type='file' id='turpidEvil' class='btn btn-secondary' files.bind="rawFiles" style='display:none' accept='.json'/>
-      </label>
+      <div show.bind="selectFile">
+        <label class='btn btn-secondary' id='SelectFile' style='margin-top: 5px'>
+          Select File <input type='file' id='turpidEvil' class='btn btn-secondary' files.bind="rawFiles" style='display:none' accept='.json'/>
+        </label>
 
-      <span> ${fileName} </span>
+        <span> ${fileName} </span>
+      </div>
 
-      <br/>
 
       <div show.bind="true">
         <h3>${json.event.name}</h3>

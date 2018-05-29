@@ -8,7 +8,7 @@ import { JsonImportDialog } from "./json-import-dialog";
 import { JsonExportDialog } from "./json-export-dialog";
 import { ConfirmDialog } from "../event-matches/confirm-dialog";
 import { JsonExporter } from "./event-to-json";
-import { GoogleDriveApi } from "./google-apis";
+import { GoogleDriveApi } from "../google-apis";
 
 @autoinject
 export class Events {
@@ -129,8 +129,16 @@ export class Events {
       if(doc.mimeType != "application/json") {
         alert("you didn't pick a json file!");
       }else {
-        this.http.fetch(doc.url).then(result => {
-          console.info(result);
+        this.gdriveApi.getFile(doc.id).then(result => {
+          this.dialogService.open({
+            model: {
+              selectFile: false,
+              json: result.result,
+            },
+            viewModel: JsonImportDialog,
+          }).whenClosed(() => {
+            this.loadEvents();
+          });
         });
       }
     });

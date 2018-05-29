@@ -1,19 +1,24 @@
 import { autoinject } from "aurelia-framework";
-import { PickerResult } from "gapi_module";
+import { PickerResult, GetFileContentResult } from "gapi_module";
 
 @autoinject
 export class GoogleDriveApi {
   developerKey = 'AIzaSyCPC9f-IBGr9L5MOAIm01UcgklHhXT3LSI';
   clientId = '587604503649-9l4eh384hpt14hnfhel1d9t7ihae9ana.apps.googleusercontent.com';
   readScope = 'https://www.googleapis.com/auth/drive.readonly';
+  driveDoc = "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest";
   private loadPromise: Promise<any>;
   private accessToken: any;
+  private monkeyPatchDone = false;
 
   constructor() {
   }
 
   public openJsonSelector(): Promise<PickerResult> {
+    this.trickGapi();
     return this.loadClient().then(() => {
+      return this.initClient();
+    }).then(() => {
       return this.authorizeRead();
     }).then(() => {
       return this.createPicker();
@@ -34,26 +39,36 @@ export class GoogleDriveApi {
     return this.loadPromise;
   }
 
-  private authorizeRead() {
-    return new Promise((resolve, reject) => {
-      try {
-        gapi.auth2.authorize({
-          client_id: this.clientId,
-          scope: this.readScope
-        }, (authResult) => {
-          if(!authResult) {
-            reject("authResult null!");
-          }
-          if(authResult.error) {
-            reject(authResult.error);
-          }
-          this.accessToken = authResult.access_token;
-          resolve();
-        });
-      }catch(ex) {
-        reject(ex);
-      }
+  private initClient() {
+    return gapi.client.init({
+      apiKey: this.developerKey,
+      clientId: this.clientId,
+      discoveryDocs: [this.driveDoc],
+      scope: this.readScope,
     });
+  }
+
+  private trickGapi() {
+    // https://stackoverflow.com/questions/43040405/loading-aurelia-breaks-google-api
+    if(!this.monkeyPatchDone) {
+      const originTest = RegExp.prototype.test;
+      RegExp.prototype.test = function test(v: any) {
+        if (typeof v === 'function' && v.toString().includes('__array_observer__.addChangeRecord')) {
+          return true;
+        }
+        return originTest.apply(this, arguments);
+      };
+
+      this.monkeyPatchDone = true;
+    }
+  }
+
+  private authorizeRead() {
+    if(this.accessToken == null) {
+      return gapi.auth2.getAuthInstance().signIn().then(result => {
+        this.accessToken = result.getAuthResponse().access_token;
+      });
+    }
   }
 
   private createPicker(): Promise<PickerResult> {
@@ -86,9 +101,12 @@ export class GoogleDriveApi {
     });
   }
 
-  pickerCallback() {
+  public getFile(fileId): Promise<GetFileContentResult> {
+    return gapi.client.drive.files.get({
+      fileId,
+      alt: "media",
+    });
   }
-
 
 }
 

@@ -26,6 +26,7 @@ export class JsonImportDialog {
   fromDbMatches2018: TeamMatch2018Entity[];
   eventMatchesMerge: EventMatchMergeState[];
   matches2018Merge: Match2018MergeState[];
+  selectFile = true;
 
   constructor(
     private controller: DialogController,
@@ -35,8 +36,20 @@ export class JsonImportDialog {
   ) {
   }
 
-  activate() {
+  activate(options) {
     this.setupObservers();
+
+    if(options != null) {
+      if('selectFile' in options) {
+        this.selectFile = options.selectFile;
+      }else{
+        this.selectFile = true;
+      }
+      if('json' in options) {
+        this.json = options.json;
+        this.postReadJsonFixups();
+      }
+    }
   }
 
   deactivate() {
@@ -82,9 +95,14 @@ export class JsonImportDialog {
     readPromise.then((json: any) => {
       this.json = json;
 
+      this.postReadJsonFixups();
+    });
+  }
+
+  private postReadJsonFixups() {
       this.clearIds();
 
-      this.dbContext.events.where(["year", "eventCode"]).equals([json.event.year, json.event.eventCode]).first().then(localEvent => {
+      this.dbContext.events.where(["year", "eventCode"]).equals([this.json.event.year, this.json.event.eventCode]).first().then(localEvent => {
         if(localEvent == null) {
           this.yesExisting = false;
           this.noExisting = true;
@@ -94,8 +112,6 @@ export class JsonImportDialog {
           this.eventFromDb = localEvent;
         }
       });
-
-    });
   }
 
   private clearIds() {

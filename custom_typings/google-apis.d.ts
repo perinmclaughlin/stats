@@ -2,6 +2,7 @@ declare module 'gapi_module' {
   class GApi {
     load(things: string, callback: Function);
     auth2: any;
+    client: any;
   }
 
   interface PickerResult {
@@ -22,6 +23,13 @@ declare module 'gapi_module' {
     sizeBytes: number;
     type: string;
     url: string;
+  }
+
+  interface GetFileContentResult {
+    body: string;
+    headers: any;
+    result: any;
+    status: number;
   }
 
   global {
