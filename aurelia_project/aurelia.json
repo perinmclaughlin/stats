@@ -136,6 +136,13 @@
             "path": "../static/",
             "main": "google-api",
             "exports": "gapi"
+          },
+          "lodash",
+          "punycode",
+          {
+          "name": "urijs",
+          "path": "../node_modules/urijs",
+          "main": "./src/URI"
           }
         ]
       }
@@ -194,7 +201,7 @@
   },
   "baseUrl": {
     "default": "/",
-    "prod": "/aws-website-stage-rpfg4/stats/"
+    "prod": "/stats/"
   },
   "paths": {
     "root": "src",

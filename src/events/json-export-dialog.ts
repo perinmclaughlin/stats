@@ -2,13 +2,17 @@ import { autoinject } from "aurelia-framework";
 import { DialogController, DialogService } from "aurelia-dialog";
 import { BindingEngine, Disposable } from "aurelia-binding";
 import * as naturalSort from "javascript-natural-sort";
+import { debounce } from "lodash";
 import { FrcStatsContext, EventMatchEntity, TeamMatch2018Entity, EventEntity } from "../persistence";
 import { EventMatchMergeState, Match2018MergeState } from "../model";
 import { Match2018MergeDialog } from "./match2018-merge/dialog";
 import { EventMatchMergeDialog } from "./event-match-merge/dialog";
 import { JsonExporter } from "./event-to-json";
+import { GoogleDriveApi, FileExistsOutput } from "../google-apis";
+import { PickerResultDoc } from "gapi_module";
 import { TextAreaExportDialog } from "./export-to-textarea";
 
+// todo: set up validator, prevent double quotes in file names
 @autoinject
 export class JsonExportDialog {
   event: EventEntity;
@@ -16,11 +20,20 @@ export class JsonExportDialog {
   done = false;
   doneMessage: string;
   textarea: HTMLTextAreaElement;
+  fileName: string;
+  driveFolder: PickerResultDoc;
+  showUploadToDrive = false;
+  waitingAllowUploadToDrive = false;
+  waitingOnUpload = false;
+  driveFileExists: FileExistsOutput;
+  hasErrors = false;
+  errorMessage: string;
 
   constructor(
     private controller: DialogController,
     private dialogService: DialogService,
     private jsonExporter: JsonExporter,
+    private gdriveApi: GoogleDriveApi,
     private dbContext: FrcStatsContext,
     private bindingEngine: BindingEngine
   ) {
@@ -29,6 +42,7 @@ export class JsonExportDialog {
   activate(model) {
     this.event = model.event;
     this.setupObservers();
+    this.fileName = `${this.event.year}-${this.event.eventCode}.json`;
   }
 
   deactivate() {
@@ -37,6 +51,14 @@ export class JsonExportDialog {
 
   private setupObservers() {
     this.observers = [];
+
+    let fileNameObserver = this.bindingEngine.propertyObserver(this, "fileName").subscribe(debounce(() => {
+      if(this.showUploadToDrive) {
+        this.driveCheckUploadFolder();
+      }
+    }, 800));
+
+    this.observers.push(fileNameObserver);
   }
 
   private teardownObservers() {
@@ -46,14 +68,60 @@ export class JsonExportDialog {
     this.observers = [];
   }
 
-  exportTextarea() {
+  selectGoogleDrive() {
+    this.gdriveApi.openFolderSelector("Select folder in which to save file").then(result => {
+      if(result.action == "picked") {
+        this.driveFolder = result.docs[0]
+        this.showUploadToDrive = true;
+        this.driveCheckUploadFolder();
+      }
+    });
+  }
+
+  driveCheckUploadFolder() {
+    this.waitingAllowUploadToDrive = true;
+    let dto = {folderId: this.driveFolder.id, fileName: this.fileName, description: null, content: null};
+    this.gdriveApi.fileExists(dto).then(result => {
+      this.driveFileExists = result;
+      this.waitingAllowUploadToDrive = false;
+    });
+  }
+
+  exportGoogleDrive() {
+    if(this.driveFileExists == null) {
+      return;
+    }
+    if(this.driveFileExists.manyExist) {
+      return;
+    }
+
     this.jsonExporter.eventToJson(this.event).then(json => {
-      this.dialogService.open({
-        model: {
-          json: json,
-        },
-        viewModel: TextAreaExportDialog
-      })
+      let fileId = this.driveFileExists.exists? this.driveFileExists.fileId : null
+      this.hasErrors = false;
+      this.waitingOnUpload = true;
+      this.gdriveApi.uploadFile({
+        fileName: this.fileName,
+        description: `${this.event.year} data for ${this.event.name}`,
+        content: JSON.stringify(json),
+        folderId: this.driveFolder.id,
+        fileId: fileId,
+      }).then(results => {
+        this.waitingOnUpload = false;
+        if(results.status != 200) {
+          this.hasErrors = true;
+          results.json().then(json => {
+            this.errorMessage = json.error.message;
+          });
+        }else{
+          this.doneMessage = "Success!";
+          this.done = true;
+        }
+      }, () => {
+        this.waitingOnUpload = false;
+        this.hasErrors = true;
+      });
+    }, () => {
+      this.hasErrors = true;
     });
   }
 
@@ -65,7 +133,7 @@ export class JsonExportDialog {
   }
 
   private downloadJson(event, json) {
-    let name = `${event.year}-${event.eventCode}.json`
+    let name = this.fileName;
     let file = new Blob([JSON.stringify(json)], {type: "application/json"});
     let a = document.createElement("a");
     let url = URL.createObjectURL(file);

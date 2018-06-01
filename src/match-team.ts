@@ -11,6 +11,7 @@ import { ValidationController, ValidationControllerFactory, ValidationRules } fr
 import { BootstrapRenderer } from "./bootstrap-renderer";
 import { Router } from "aurelia-router";
 import { PowerupBingoDialog } from "./powerup-bingo";
+import { scrollToTop } from "./utilities/scroll";
 
 
 
@@ -27,6 +28,7 @@ export class MatchTeamPage {
   public scaleMechanisms = ["lift", "shooter", "janky lift", "janky shooter", "other" ];
   public errorMessage: string;
   public defaultMax = 100;
+  public maxVault = 9;
 
   public rules: any[];
   private validationController: ValidationController;
@@ -50,6 +52,7 @@ export class MatchTeamPage {
 
   public activate(params) {
     let promise = Promise.resolve("yup");
+    scrollToTop();
     
     return this.load(params).then(() => {
       this.observeFields();
@@ -144,50 +147,6 @@ export class MatchTeamPage {
     });
   }
 
-  public decrement(prop: string) {
-    let value = parseInt(<any>this.model[prop]);
-    if(value <= 0 || isNaN(value)) {
-      value = 0;
-    }else {
-      value--;
-    }
-
-    this.model[prop] = value;
-  }
-
-  public decrement5(prop: string) {
-    let value = parseInt(<any>this.model[prop]);
-    if(value <= 0 || isNaN(value)) {
-      value = 0;
-    }else {
-      value-=5;
-    }
-
-    this.model[prop] = value;
-  }
-
-  public increment(prop: string) {
-    let value = parseInt(<any>this.model[prop]);
-    if(value < 0 || isNaN(value)) {
-      value = 0;
-    }else {
-      value++;
-    }
-
-    this.model[prop] = value;
-  }
-
-  public increment5(prop: string) {
-    let value = parseInt(<any>this.model[prop]);
-    if(value < 0 || isNaN(value)) {
-      value = 0;
-    }else {
-      value+=5;
-    }
-
-    this.model[prop] = value;
-  }
-
   public click() {
     this.validationController.validate({
       object: this.model,
@@ -249,7 +208,7 @@ export class MatchTeamPage {
       .ensure("vaultCount") 
       .required()
       .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
+      .satisfiesRule("maximum", this.maxVault)
       .ensure("scaleCount")
       .required()
       .satisfiesRule("isNumeric")
