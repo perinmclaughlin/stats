@@ -3,8 +3,7 @@ import { DialogController, DialogService } from "aurelia-dialog";
 import { BindingEngine, Disposable } from "aurelia-binding";
 import * as naturalSort from "javascript-natural-sort";
 import { FrcStatsContext, EventMatchEntity, EventEntity } from "../persistence";
-import { EventMatchMergeState, Match2018MergeState } from "../model";
-import { Match2018MergeDialog } from "../games/powerup/merge-dialog";
+import { EventMatchMergeState } from "../model";
 import { EventMatchMergeDialog } from "./event-match-merge/dialog";
 import { gameManager, IMergeState } from "../games/index"
 
@@ -282,7 +281,7 @@ export class JsonImportDialog {
     });
   }
 
-  public merge(state: Match2018MergeState) {
+  public merge(state: IMergeState) {
     let game = gameManager.getGame(this.json.event.year);
     this.dialogService.open({
       model: {
