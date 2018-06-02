@@ -1,6 +1,5 @@
 <template>
-  <require from="./counter"></require>
-  <p show.bind="hasErrors">Note this page is not code complete and is hardcoded to use the 2018 sundome event. It needs to exist, or this page won't work</p>
+  <require from="../../utilities/counter"></require>
   <div class='container'>
     <div class='row'>
       <div class='col-sm-3'>
@@ -35,12 +34,16 @@
     </div>
     <div class='row'>
       <div class='col-sm-3'>
-        <button class='btn btn-primary' click.delegate='saveThing()'>Save thing</button>
+        <button class='btn btn-primary' click.delegate='saveThing()'>Record thing</button>
       </div>
     </div>
-    <div class='row' repeat.for="item of actions">
+    <div class='row' repeat.for="item of model.actions">
       <div class='col-sm-3'> ${currentTimeDisplay(item.time)} </div>
-      <div class='col-sm-3'> ${actionTypeMap[item.actionId].description} </div>
+      <div class='col-sm-3'> ${actionTypeMap[item.actionTypeId].description} </div>
+    </div>
+
+    <div class='row'>
+      <button type='button' class='btn btn-primary' click.delegate='click()'>Save</button>
     </div>
   </div>
 </template>

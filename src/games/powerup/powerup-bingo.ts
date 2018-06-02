@@ -2,7 +2,7 @@ import {autoinject} from "aurelia-framework";
 import {DialogController} from "aurelia-dialog";
 import { 
   TeamMatch2018Entity, 
-} from "./persistence";
+} from "../../persistence";
 
 @autoinject
 export class PowerupBingoDialog {

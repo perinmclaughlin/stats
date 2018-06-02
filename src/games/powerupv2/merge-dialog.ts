@@ -1,12 +1,12 @@
 import { autoinject } from "aurelia-framework";
 import { DialogController } from "aurelia-dialog";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
-import { BootstrapRenderer } from "../../bootstrap-renderer";
+import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import { Match2018MergeState } from "../../model";
 import { EventMatchEntity } from "../../persistence";
 
 @autoinject
-export class Match2018MergeDialog {
+export class Match2018V2MergeDialog {
   state: Match2018MergeState;
   private validationController: ValidationController;
   private renderer: BootstrapRenderer;
@@ -33,7 +33,7 @@ export class Match2018MergeDialog {
   activate(model) {
     this.state = model.state;
 
-    for (var prop of Match2018MergeDialog.properties) {
+    for (var prop of Match2018V2MergeDialog.properties) {
       if(this.state.localSaved[prop] == this.state.fromFile[prop]) {
         this.state.merged[prop] = this.state.localSaved[prop];
       }
@@ -99,13 +99,13 @@ export class Match2018MergeDialog {
   }
 
   public takeAllFromDb() {
-    for (var prop of Match2018MergeDialog.properties) {
+    for (var prop of Match2018V2MergeDialog.properties) {
       this.state.merged[prop] = this.state.localSaved[prop];
     }
   }
 
   public takeAllFromFile() {
-    for (var prop of Match2018MergeDialog.properties) {
+    for (var prop of Match2018V2MergeDialog.properties) {
       this.state.merged[prop] = this.state.fromFile[prop];
     }
   }

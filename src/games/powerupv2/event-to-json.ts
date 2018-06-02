@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import { FrcStatsContext, EventEntity, GameEntity } from "../persistence";
+import { FrcStatsContext, EventEntity, GameEntity } from "../../persistence";
 
 @autoinject
 export class JsonExporter {
@@ -35,8 +35,8 @@ export class JsonExporter {
       });
 
     let matches2018Promise = Promise.resolve("yup");
-    if(event.year == "2018") {
-      matches2018Promise = this.dbContext.teamMatches2018
+    if(event.year == "2018v2") {
+      matches2018Promise = this.dbContext.teamMatches2018V2
         .where("eventCode")
         .equals(event.eventCode).toArray()
         .then(matches2018 => {

@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { DialogController } from "aurelia-dialog";
 import { EventMatchMergeState } from "../../model";
 import { ValidationRules, ValidationController, ValidationControllerFactory } from "aurelia-validation";
-import { BootstrapRenderer } from "../../bootstrap-renderer";
+import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 
 @autoinject
 export class EventMatchMergeDialog {

@@ -1,0 +1,145 @@
+<template>
+  <require from="../../events/event-match-merge/row-text"></require>
+  <require from="../../events/event-match-merge/row-bool"></require>
+  <require from="../../events/event-match-merge/row-textarea"></require>
+  <ux-dialog>
+    <ux-dialog-header>
+        <button class='btn btn-danger btn-sm float-right' click.delegate='controller.cancel()'>
+          X
+        </button>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='grid-container'>
+        <div class='grid-item'>
+          Field
+        </div>
+        <div class='grid-item'>
+          Local Saved
+        </div>
+        <div class='grid-item'>
+          <button class='btn btn-secondary btn-sm' click.delegate='takeAllFromDb()'>
+            Take All
+          </button>
+        </div>
+        <div class='grid-item'>
+          From File
+        </div>
+        <div class='grid-item'>
+          <button class='btn btn-secondary btn-sm' click.delegate='takeAllFromFile()'>
+            Take All
+          </button>
+        </div>
+        <div class='grid-item'>
+          To Save
+        </div>
+        <row-text state.bind="state" property="startingPosition" display-name="Starting Position" rules.bind="rules"></row-text>
+        <row-bool state.bind="state" property="autoCrossedLine" display-name="Crossed Line"></row-bool>
+        <row-bool state.bind="state" property="autoCubeLeftSwitch" display-name="Auto Cube in Left Switch"></row-bool>
+        <row-bool state.bind="state" property="autoCubeRightSwitch" display-name="Auto Cube in Right Switch"></row-bool>
+        <row-bool state.bind="state" property="autoCubeLeftScale" display-name="Auto Cube in Left Scale"></row-bool>
+        <row-bool state.bind="state" property="autoCubeRightScale" display-name="Auto Cube in Right Scale"></row-bool>
+        <row-text state.bind="state" property="vaultCount" display-name="Vault count" rules.bind="rules"></row-text>
+        <row-text state.bind="state" property="vaultCycleTime" display-name="Vault cycle time" rules.bind="rules"></row-text>
+        <row-text state.bind="state" property="scaleCount" display-name="Scale count" rules.bind="rules"></row-text>
+        <row-text state.bind="state" property="scaleCycleTime" display-name="Scale cycle time" rules.bind="rules"></row-text>
+        <row-text state.bind="state" property="allySwitchCount" display-name="Ally Switch Count" rules.bind="rules"></row-text>
+        <row-text state.bind="state" property="allySwitchCycleTime" display-name="Ally Switch cycle time" rules.bind="rules"></row-text>
+        <row-text state.bind="state" property="oppoSwitchCount" display-name="Opponent Switch count" rules.bind="rules"></row-text>
+        <row-text state.bind="state" property="oppoSwitchCycleTime" display-name="Opponent Switch cycle time" rules.bind="rules"></row-text>
+        <row-bool state.bind="state" property="climbed" display-name="Climbed"></row-bool>
+
+        <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+            Lifted
+        </div>
+        <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+            <span repeat.for="teamNumber of state.localSaved.lifted">
+              ${teamNumber}
+              <br/>
+            </span>
+          </div>
+          <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.lifted=state.localSaved.lifted'>
+              Take
+            </button>
+          </div>
+          <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+            <span repeat.for="teamNumber of state.fromFile.lifted">
+              ${teamNumber}
+              <br/>
+            </span>
+          </div>
+          <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+            <button class='btn btn-secondary btn-sm' click.delegate='state.merged.lifted=state.fromFile.lifted'>
+              Take
+            </button>
+          </div>
+          <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+            <span repeat.for="teamNumber of state.merged.lifted">
+              ${teamNumber}
+              <br/>
+            </span>
+          </div>
+
+          <row-bool state.bind="state" property="isFailure" display-name="Robot failure?"></row-bool>
+          <row-textarea state.bind="state" property="failureReason" display-name="Failure reason" shown.bind='state.merged.isFailure'></row-textarea>
+          <row-bool state.bind="state" property="isFoul" display-name="Fouls?"></row-bool>
+          <row-textarea state.bind="state" property="foulReason" display-name="Foul reason" shown.bind='state.merged.isFoul'></row-textarea>
+          <row-textarea state.bind="state" property="notes" display-name="General Notes" shown.bind='true'></row-textarea>
+    
+          <row-bool state.bind="state" property="bingoGrunt" display-name="bingoGrunt">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoFullHouse" display-name="bingoFullHouse">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoJudges" display-name="bingoJudges">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoYoink" display-name="bingoYoink">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoScalePlateHang" display-name="bingoScalePlateHang">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoDieInNull" display-name="bingoDieInNull">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoPushedInNull" display-name="bingoPushedInNull">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoClotheslined" display-name="bingoClotheslined">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoWedged" display-name="bingoWedged">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoPowerUpsExist" display-name="bingoPowerUpsExist">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoBoost" display-name="bingoBoost">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoForceTime" display-name="bingoForceTime">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoClimbPlatform" display-name="bingoClimbPlatform">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoScaleBeach" display-name="bingoScaleBeach">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoPyramid" display-name="bingoPyramid">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoTimber" display-name="bingoTimber">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoClimbsGiven" display-name="bingoClimbsGiven">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoPlatformZone" display-name="bingoPlatformZone">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoSkydivingClub" display-name="bingoSkydivingClub">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoCongaClimb" display-name="bingoCongaClimb">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoWindchimeClimb" display-name="bingoWindchimeClimb">
+          </row-bool>
+          <row-bool state.bind="state" property="bingoLiftlessClimb" display-name="bingoLiftlessClimb">
+          </row-bool>
+          <row-bool state.bind="state" property="bingo3xClimb" display-name="bingo3xClimb">
+          </row-bool>
+      </div>
+
+      <button class='btn btn-primary' click.delegate='resolve()'>
+        Mark Resolved
+      </button>
+      <span show.bind='!validationController.valid'>
+        ${errorMessage}
+      </span>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

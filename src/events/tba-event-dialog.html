@@ -4,9 +4,18 @@
     </ux-dialog-header>
     <ux-dialog-body>
 
+      <label>year</label>
       <select class='form-control' value.bind="year" change.delegate='yearChanged()'>
         <option value.bind="'2018'">2018</option>
         <option value.bind="'2017'">2017</option>
+      </select>
+
+      <label>game</label>
+
+      <select class='form-control' value.bind="chosenGame">
+        <option repeat.for="game of games" model.bind="game">
+          ${game.name}
+        </option>
       </select>
 
       <table class='table'>

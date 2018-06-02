@@ -3,6 +3,7 @@ import { Router, RouterConfiguration } from "aurelia-router";
 import { PLATFORM } from "aurelia-pal";
 import { CustomValidationRules } from "./custom-validation-rules";
 import environment from './environment';
+import { gameManager } from "./games/index";
 
 @autoinject
 export class App {
@@ -41,11 +42,34 @@ export class App {
   }
 
   public configureRoutes(config: RouterConfiguration): RouterConfiguration {
-    config.map([
+    let setInstruction = (instruction, moduleGetter) => {
+      let game = gameManager.getGame(instruction.params.year);
+      instruction.config.href = instruction.fragment;
+      if(game == null) {
+        instruction.config.moduleId = PLATFORM.moduleName("errors/404");
+      }else{
+        instruction.config.moduleId = moduleGetter(game);
+      }
+    };
+
+    let navToGameMatchInput = (instruction) => {
+      setInstruction(instruction, game => game.matchInputModule);
+    };
+
+    let navToGameEventTeams = (instruction) => {
+      setInstruction(instruction, game => game.eventTeamsModule);
+    };
+
+    let navToGameEventTeam = (instruction) => {
+      setInstruction(instruction, game => game.eventTeamModule);
+    };
+    
+    let routes = [
       {
         route: ["year/:year/event/:eventCode/team/:teamNumber/match/:matchNumber"], 
-        name: "match-team", moduleId: PLATFORM.moduleName("match-team"), 
+        name: "match-team", 
         nav: false, title: "match-team", adminRoute: false,
+        navigationStrategy: navToGameMatchInput
       },
       {
         route: ["events", ""], 
@@ -53,14 +77,21 @@ export class App {
         nav: false, title: "events", adminRoute: false,
       },
       {
-        route: ["year/:year/event/:eventCode"], 
-        name: "event", moduleId: PLATFORM.moduleName("teh-event"), 
+        route: ["year/:year/event/:eventCode/matches"], 
+        name: "event-matches", moduleId: PLATFORM.moduleName("event-matches/event-matches"), 
         nav: false, title: "event", adminRoute: false,
       },
       {
+        route: ["year/:year/event/:eventCode/teams"], 
+        name: "event-teams", 
+        nav: false, title: "event", adminRoute: false,
+        navigationStrategy: navToGameEventTeams
+      },
+      {
         route: ["year/:year/event/:eventCode/team/:teamNumber"],
-        name: "event-team", moduleId: PLATFORM.moduleName("event-team/event-team"), 
+        name: "event-team", 
         nav: false, title: "event-team", adminRoute: false,
+        navigationStrategy: navToGameEventTeam,
       },
       {
         route: ["district-rankings"],
@@ -68,16 +99,15 @@ export class App {
         nav: true, title: "District Rankings", adminRoute: false,
       },
       {
-        route: ["test"],
-        name: "match-team-alt", moduleId: PLATFORM.moduleName("match-team-alt"), 
-        nav: true, title: "2018 Match Team", adminRoute: false,
-      },
-      {
         route: ["graphtest"],
         name: "graphtest", moduleId: PLATFORM.moduleName("graphtest"), 
         nav: true, title: "graph test", adminRoute: false,
       },
-    ]);
+    ];
+
+    config.map(routes);
+
+    config.mapUnknownRoutes((instruction) => PLATFORM.moduleName("errors/404"));
 
     return config;
   }
