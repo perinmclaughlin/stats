@@ -1,4 +1,5 @@
 import { EventEntity, IEventTeamMatch } from "../persistence";
+import { Match2018MergeState } from "./powerup/model";
 
 export interface IGame {
   gameCode: string; // a unique code for identifying this game. internal to this application.
@@ -12,6 +13,28 @@ export interface IGame {
 
   getEventTeamMatches(eventCode: string): Promise<IEventTeamMatch[]>;
   exportEventJson(event: EventEntity): Promise<any>;
+
+  clearIds(json: any);
+  beginMerge(json): Promise<IMergeState[]>;
+  completeMerge(matches2018Merge: IMergeState[]): Promise<any>;
+  getTables(): any[];
+
+  importSimple(json: any): Promise<any>;
+
+  deleteEvent(json: any): Promise<any>;
+  
+}
+
+export interface IMergeState {
+  matchNumber: string;
+  teamNumber: string;
+  localSaved: any;
+  fromFile: any;
+  merged: any;
+  same: boolean;
+  resolved: boolean;
+  takeFromFile: boolean;
+  takeLocal: boolean;
 }
 
 export class GamesManager {

@@ -3,6 +3,8 @@ import {
   TeamMatch2018Entity, matches2018AreEqual, make2018match, makeEventMatch,
 } from "../../persistence";
 
+import { IMergeState } from "../index";
+
 export class MatchData {
 	public year: string;
 	public eventCode: string;
@@ -21,7 +23,7 @@ export class MatchData {
   public strategy: string;
 }
 
-export class Match2018MergeState {
+export class Match2018MergeState implements IMergeState {
   public localSaved: TeamMatch2018Entity;
   public fromFile: TeamMatch2018Entity;
   public merged: TeamMatch2018Entity;

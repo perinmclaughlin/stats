@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { PLATFORM } from "aurelia-pal";
 import * as naturalSort from "javascript-natural-sort";
 
-import { IGame, gameManager } from "../index";
+import { IGame, gameManager, IMergeState } from "../index";
 import { Match2018V2MergeDialog } from "./merge-dialog";
 import { FrcStatsContext } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
@@ -33,6 +33,35 @@ class PowerupV2Game implements IGame {
     return this.dbContext.teamMatches2018V2.where("eventCode").equals(eventCode).toArray(matches => {
       matches.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
       return matches;
+    });
+  }
+
+  clearIds(json: any) {
+    json.matches2018.forEach(x => delete x.id);
+  }
+  
+  beginMerge(json): Promise<IMergeState[]> {
+    return Promise.resolve([]);
+  }
+
+  completeMerge(matches2018Merge: IMergeState[]): Promise<any> {
+    return Promise.resolve("yup");
+  }
+
+  getTables(): any[] {
+    return [this.dbContext.teamMatches2018V2];
+  }
+
+  importSimple(json: any): Promise<any> {
+    return this.dbContext.teamMatches2018V2.bulkPut(json.matches2018);
+  }
+
+  deleteEvent(json: any): Promise<any> {
+    return this.dbContext.teamMatches2018V2
+    .where("eventCode")
+    .equals(json.event.eventCode).toArray()
+    .then(localMatches => {
+      return this.dbContext.teamMatches2018V2.bulkDelete(localMatches.map(x => x.id));
     });
   }
 }
