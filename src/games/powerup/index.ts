@@ -4,7 +4,7 @@ import * as naturalSort from "javascript-natural-sort";
 
 import { IGame, gameManager } from "../index";
 import { Match2018MergeDialog } from "./merge-dialog";
-import { Match2018MergeState } from "./model";
+import { Match2018MergeState, PowerupEventJson } from "./model";
 import { FrcStatsContext } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
 
@@ -26,7 +26,7 @@ class PowerupGame implements IGame {
     return Match2018MergeDialog;
   }
 
-  exportEventJson(event) {
+  exportEventJson(event): Promise<PowerupEventJson> {
     return this.jsonExporter.eventToJson(event);
   }
 
@@ -37,11 +37,11 @@ class PowerupGame implements IGame {
     });
   }
 
-  clearIds(json) {
+  clearIds(json: PowerupEventJson) {
     json.matches2018.forEach(x => delete x.id);
   }
 
-  beginMerge(json): Promise<Match2018MergeState[]> {
+  beginMerge(json: PowerupEventJson): Promise<Match2018MergeState[]> {
     if(json.event.year != this.gameCode) {
       throw new Error("invalid json mergement");
     }
@@ -106,11 +106,11 @@ class PowerupGame implements IGame {
     return [this.dbContext.teamMatches2018];
   }
 
-  importSimple(json: any): Promise<any> {
+  importSimple(json: PowerupEventJson): Promise<any> {
       return this.dbContext.teamMatches2018.bulkPut(json.matches2018);
   }
 
-  deleteEvent(json: any): Promise<any> {
+  deleteEvent(json: PowerupEventJson): Promise<any> {
     return this.dbContext.teamMatches2018
     .where("eventCode")
     .equals(json.event.eventCode).toArray()

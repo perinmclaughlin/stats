@@ -3,7 +3,7 @@ import {
   TeamMatch2018Entity, matches2018AreEqual, make2018match, makeEventMatch,
 } from "../../persistence";
 
-import { IMergeState } from "../index";
+import { IMergeState, IEventJson } from "../index";
 
 export class MatchData {
 	public year: string;
@@ -22,6 +22,10 @@ export class MatchData {
   public cubeCount: string;
   public strategy: string;
 }
+
+export interface PowerupEventJson extends IEventJson {
+  matches2018: TeamMatch2018Entity[];
+} 
 
 export class Match2018MergeState implements IMergeState {
   public localSaved: TeamMatch2018Entity;

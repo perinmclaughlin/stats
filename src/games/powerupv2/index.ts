@@ -6,6 +6,7 @@ import { IGame, gameManager, IMergeState } from "../index";
 import { Match2018V2MergeDialog } from "./merge-dialog";
 import { FrcStatsContext } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
+import { PowerupV2EventJson } from "./model";
 
 @autoinject
 class PowerupV2Game implements IGame {
@@ -25,7 +26,7 @@ class PowerupV2Game implements IGame {
     return Match2018V2MergeDialog;
   }
 
-  exportEventJson(event) {
+  exportEventJson(event): Promise<PowerupV2EventJson> {
     return this.jsonExporter.eventToJson(event);
   }
 
@@ -36,11 +37,11 @@ class PowerupV2Game implements IGame {
     });
   }
 
-  clearIds(json: any) {
+  clearIds(json: PowerupV2EventJson) {
     json.matches2018.forEach(x => delete x.id);
   }
   
-  beginMerge(json): Promise<IMergeState[]> {
+  beginMerge(json: PowerupV2EventJson): Promise<IMergeState[]> {
     return Promise.resolve([]);
   }
 
@@ -52,11 +53,11 @@ class PowerupV2Game implements IGame {
     return [this.dbContext.teamMatches2018V2];
   }
 
-  importSimple(json: any): Promise<any> {
+  importSimple(json: PowerupV2EventJson): Promise<any> {
     return this.dbContext.teamMatches2018V2.bulkPut(json.matches2018);
   }
 
-  deleteEvent(json: any): Promise<any> {
+  deleteEvent(json: PowerupV2EventJson): Promise<any> {
     return this.dbContext.teamMatches2018V2
     .where("eventCode")
     .equals(json.event.eventCode).toArray()

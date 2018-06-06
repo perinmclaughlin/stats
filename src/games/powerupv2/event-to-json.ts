@@ -1,5 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { FrcStatsContext, EventEntity, GameEntity } from "../../persistence";
+import { PowerupV2EventJson } from "./model";
 
 @autoinject
 export class JsonExporter {
@@ -7,7 +8,7 @@ export class JsonExporter {
     private dbContext: FrcStatsContext) {
   }
 
-  public eventToJson(event: EventEntity): Promise<any> {
+  public eventToJson(event: EventEntity): Promise<PowerupV2EventJson> {
     let json = {
       teams: [],
       eventTeams: [],

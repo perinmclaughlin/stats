@@ -1,4 +1,4 @@
-import { EventEntity, IEventTeamMatch } from "../persistence";
+import { EventEntity, IEventTeamMatch, EventTeamEntity, TeamEntity, EventMatchEntity } from "../persistence";
 import { Match2018MergeState } from "./powerup/model";
 
 export interface IGame {
@@ -12,16 +12,16 @@ export interface IGame {
   mergeDialogClass(): any;
 
   getEventTeamMatches(eventCode: string): Promise<IEventTeamMatch[]>;
-  exportEventJson(event: EventEntity): Promise<any>;
+  exportEventJson(event: EventEntity): Promise<IEventJson>;
 
-  clearIds(json: any);
-  beginMerge(json): Promise<IMergeState[]>;
+  clearIds(json: IEventJson);
+  beginMerge(json: IEventJson): Promise<IMergeState[]>;
   completeMerge(matches2018Merge: IMergeState[]): Promise<any>;
   getTables(): any[];
 
-  importSimple(json: any): Promise<any>;
+  importSimple(json: IEventJson): Promise<any>;
 
-  deleteEvent(json: any): Promise<any>;
+  deleteEvent(json: IEventJson): Promise<any>;
   
 }
 
@@ -35,6 +35,13 @@ export interface IMergeState {
   resolved: boolean;
   takeFromFile: boolean;
   takeLocal: boolean;
+}
+
+export interface IEventJson {
+  teams: TeamEntity[];
+  eventTeams: EventTeamEntity[];
+  event: EventEntity;
+  eventMatches: EventMatchEntity[];
 }
 
 export class GamesManager {
