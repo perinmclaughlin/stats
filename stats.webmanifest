@@ -1,0 +1,15 @@
+{
+    "name": "3223 Scouting Application",
+    "short_name": "3223stats",
+    "icons": [
+        {
+            "src": "static/3223.png",
+            "sizes": "42x40",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "index.html",
+    "display": "fullscreen",
+    "theme_color": "gold",
+    "background_color": "rgba(44, 90, 113, 1)"
+}
