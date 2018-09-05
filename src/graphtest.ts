@@ -8,6 +8,7 @@ import { makeGraphTestItems } from "./graphtest-utils";
 @autoinject
 export class GraphTest {
 
+    public loading: boolean;
     public margin: object;
     public width: number;
     public height: number;
@@ -59,7 +60,11 @@ export class GraphTest {
             });
         });
 
-        return Promise.all(promises);
+        this.loading = true;
+        Promise.all(promises).then(() => {
+            this.loading = false;
+            this.attachedNotReally();
+        });
     }
 
     private makeLine(x, y) {
@@ -68,7 +73,7 @@ export class GraphTest {
             .y((r: Indexed<TeamRanking>) => y(preDcmpSum(r.a)));
     }
 
-    attached() {
+    attachedNotReally() {
 
         let x = d3.scaleLinear().range([0, this.width]);
         let y = d3.scaleLinear().range([this.height, 0]);

@@ -35,7 +35,8 @@
             grid-template-columns: auto auto;
         }
     </style>
-    <div class='layout1'>
+    <div class='loader' show.bind="loading"></div>
+    <div class='layout1' show.bind="!loading">
 
         <svg width.bind="width + margin.left + margin.right" height.bind="height + margin.top + margin.bottom">
             <g transform.bind="translate(margin.left, margin.top)" id='outerg'>

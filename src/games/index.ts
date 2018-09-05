@@ -1,5 +1,4 @@
 import { EventEntity, IEventTeamMatch, EventTeamEntity, TeamEntity, EventMatchEntity } from "../persistence";
-import { Match2018MergeState } from "./powerup/model";
 
 export interface IGame {
   gameCode: string; // a unique code for identifying this game. internal to this application.
