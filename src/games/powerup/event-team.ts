@@ -1,11 +1,12 @@
 import { autoinject } from "aurelia-framework";
-import { MatchData } from "../model";
+import * as naturalSort from "javascript-natural-sort";
+
+import { MatchData } from "../../model";
 import { 
   TeamEntity, FrcStatsContext, 
   EventMatchEntity, EventTeamEntity, EventEntity,
   TeamMatch2018Entity 
-} from "../persistence";
-import * as naturalSort from "javascript-natural-sort";
+} from "../../persistence";
 
 @autoinject
 export class EventTeam {

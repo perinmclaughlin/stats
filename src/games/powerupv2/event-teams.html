@@ -1,0 +1,55 @@
+<template>
+  <require from="aurelia-bootstrap/tabs/aubs-tab"></require>
+  <require from="aurelia-bootstrap/tabs/aubs-tabset"></require>
+
+  <div class='container-fluid'>
+    <h1> ${event.name} (${event.year})</h1>
+
+    <!--<p> Maybe make a tab for match schedule, and make a tab for team list? </p>-->
+    <ul class='nav nav-tabs'>
+      <li class='nav-item'>
+        <a class='nav-link' route-href="route: event-matches; params.bind: {year: event.year, eventCode: event.eventCode}">Matches</a>
+      </li>
+      <li class='nav-item active'>
+        <a class='nav-link active' href="javascript:void">Teams (${teamsData.length})</a>
+      </li>
+    </ul>
+    <div class='tab-content'>
+      <!--<button class='btn btn-primary' click.delegate="addTeam()">Add a Team</button>-->
+      <table class="table table-hover">
+        <tr>
+          <th class='clickable' click.delegate="sortByTeamNumber()">Team Number</th>
+          <th>Team Name</th>
+          <th>Scouted Match Count</th>
+          <th class='clickable' click.delegate="sortByScale()">Avg Scale Count</th>
+          <th class='clickable' click.delegate="sortBySwitch()">Avg Switch Count</th>
+          <th class='clickable' click.delegate="sortByVault()">Avg Vault Count</th>
+          <th class='clickable' click.delegate="sortByClimb()">Climb Rate</th>
+          <th class='clickable' click.delegate="sortByLift()">Lift Rate</th>
+          <th class='clickable' click.delegate="sortByAutoLine()">Auto Line</th>
+          <th class='clickable' click.delegate="sortByAutoSwitch()">Auto Switch</th>
+          <th class='clickable' click.delegate="sortByAutoScale()">Auto Scale</th>
+          <th>Failures/Fouls</th>
+        </tr>
+        <tr repeat.for="teamData of teamsData">
+          <td>
+            <a style="display: block;" route-href="route.bind:'event-team'; params.bind: {year: teamData.year, eventCode: teamData.eventCode, teamNumber: teamData.teamNumber}">
+              ${teamData.teamNumber}
+            </a>
+          </td>
+          <td>${teamData.teamName}</td>
+          <td>${teamData.matchCount}</td>
+          <td>${teamData.scaleAvg | numeric }</td>
+          <td>${teamData.switchAvg | numeric }</td>
+          <td>${teamData.vaultAvg | numeric }</td>
+          <td>${teamData.climbAvg | numeric }</td>
+          <td>${teamData.liftAvg | numeric }</td>
+          <td>${teamData.autoLineCount }</td>
+          <td>${teamData.autoSwitchCount }</td>
+          <td>${teamData.autoScaleCount }</td>
+          <td>${teamData.failureCount}/${teamData.foulCount}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</template>

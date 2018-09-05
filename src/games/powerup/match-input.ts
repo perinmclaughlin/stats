@@ -1,17 +1,18 @@
 import { autoinject } from "aurelia-framework";
 import { BindingEngine, Disposable } from "aurelia-binding";
-import { MatchData } from "./model";
+import { Router } from "aurelia-router";
 import { DialogService } from "aurelia-dialog";
+import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
+
+import { MatchData } from "./model";
 import { 
   FrcStatsContext, 
   TeamMatch2018Entity, make2018match, 
   TeamEntity, EventEntity, EventMatchEntity,
-} from "./persistence";
-import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
-import { BootstrapRenderer } from "./bootstrap-renderer";
-import { Router } from "aurelia-router";
+} from "../../persistence";
+import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import { PowerupBingoDialog } from "./powerup-bingo";
-import { scrollToTop } from "./utilities/scroll";
+import { scrollToTop } from "../../utilities/scroll";
 
 
 
@@ -184,7 +185,7 @@ export class MatchTeamPage {
             teamNumber: this.model.teamNumber
           });
         }).then(() => {
-          this.router.navigateToRoute("event", {
+          this.router.navigateToRoute("event-matches", {
             year: this.event.year,
             eventCode: this.model.eventCode,
           });

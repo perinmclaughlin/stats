@@ -1,23 +1,23 @@
 import { autoinject } from "aurelia-framework";
 import { BindingEngine, Disposable } from "aurelia-binding";
-import { MatchData } from "./model";
 import { DialogService } from "aurelia-dialog";
+import { Router } from "aurelia-router";
+import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { 
   FrcStatsContext, 
-  TeamMatch2018Entity, make2018match, 
+  TeamMatch2018V2Entity, make2018v2match, 
   TeamEntity, EventEntity, EventMatchEntity,
-} from "./persistence";
-import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
-import { BootstrapRenderer } from "./bootstrap-renderer";
-import { Router } from "aurelia-router";
-import { PowerupBingoDialog } from "./powerup-bingo";
+} from "../../persistence";
+import { MatchData } from "../../model";
+import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
+import { PowerupBingoDialog } from "../powerup/powerup-bingo";
 import { actionTypes, actionTypeMap } from "./action-types";
 
 
 
 @autoinject
 export class MatchTeamPage2 {
-  public model: TeamMatch2018Entity;
+  public model: TeamMatch2018V2Entity;
   public team: TeamEntity;
   public event: EventEntity;
   public eventMatch: EventMatchEntity;
@@ -25,10 +25,8 @@ export class MatchTeamPage2 {
   public partner2: string;
   public isBlue = false;
   public isRed = false;
-  public scaleMechanisms = ["lift", "shooter", "janky lift", "janky shooter", "other" ];
   public errorMessage: string;
   public defaultMax = 100;
-  public actions: any[];
 
   public rules: any[];
   public matchRunning: boolean;
@@ -57,14 +55,9 @@ export class MatchTeamPage2 {
     private router: Router
     ){
     this.validationController = validationControllerFactory.createForCurrentScope();
-    this.actions = [];
   }
 
   public activate(params) {
-    params.year = "2018";
-    params.teamNumber = "4125";
-    params.eventCode = 'wayak';
-    params.matchNumber = '1';
     let promise = Promise.resolve("yup");
     
     return this.load(params).then(() => {
@@ -83,22 +76,6 @@ export class MatchTeamPage2 {
 
   private observeFields() {
     this.observers = [];
-
-    this.observers.push(this.bindingEngine.propertyObserver(this, 'liftedPartner1').subscribe(liftedPartner1 => {
-      if(liftedPartner1 && this.model.lifted.indexOf(this.partner1) == -1) {
-        this.model.lifted.push(this.partner1);
-      }else if(!liftedPartner1 && this.model.lifted.indexOf(this.partner1) != -1) {
-        this.model.lifted = this.model.lifted.filter(teamNumber => teamNumber != this.partner1);
-      }
-    }));
-
-    this.observers.push(this.bindingEngine.propertyObserver(this, 'liftedPartner2').subscribe(liftedPartner2 => {
-      if(liftedPartner2 && this.model.lifted.indexOf(this.partner2) == -1) {
-        this.model.lifted.push(this.partner2);
-      }else if(!liftedPartner2 && this.model.lifted.indexOf(this.partner2) != -1) {
-        this.model.lifted = this.model.lifted.filter(teamNumber => teamNumber != this.partner2);
-      }
-    }));
   }
 
   private unobserveFields() {
@@ -110,11 +87,11 @@ export class MatchTeamPage2 {
 
   public load(params) {
 
-    var matchPromise = this.dbContext.teamMatches2018.where(['eventCode', 'teamNumber', 'matchNumber'])
+    var matchPromise = this.dbContext.teamMatches2018V2.where(['eventCode', 'teamNumber', 'matchNumber'])
       .equals([params.eventCode, params.teamNumber, params.matchNumber]).first()
     .then(match => {
       if(match == null) {
-        match = make2018match(params.eventCode, params.teamNumber, params.matchNumber);
+        match = make2018v2match(params.eventCode, params.teamNumber, params.matchNumber);
       }
 
       this.model = match;
@@ -150,61 +127,7 @@ export class MatchTeamPage2 {
         this.partner2 = others[1];
       }
 
-      if(this.model.lifted == null) {
-        this.model.lifted = [];
-      }
-
-      if(this.model.lifted.indexOf(this.partner1) != -1) {
-        this.liftedPartner1 = true;
-      }
-      if(this.model.lifted.indexOf(this.partner2) != -1) {
-        this.liftedPartner2 = true;
-      }
     });
-  }
-
-  public decrement(prop: string) {
-    let value = parseInt(<any>this.model[prop]);
-    if(value <= 0 || isNaN(value)) {
-      value = 0;
-    }else {
-      value--;
-    }
-
-    this.model[prop] = value;
-  }
-
-  public decrement5(prop: string) {
-    let value = parseInt(<any>this.model[prop]);
-    if(value <= 0 || isNaN(value)) {
-      value = 0;
-    }else {
-      value-=5;
-    }
-
-    this.model[prop] = value;
-  }
-
-  public increment(prop: string) {
-    let value = parseInt(<any>this.model[prop]);
-    if(value < 0 || isNaN(value)) {
-      value = 0;
-    }else {
-      value++;
-    }
-
-    this.model[prop] = value;
-  }
-
-  public increment5(prop: string) {
-    let value = parseInt(<any>this.model[prop]);
-    if(value < 0 || isNaN(value)) {
-      value = 0;
-    }else {
-      value+=5;
-    }
-
-    this.model[prop] = value;
   }
 
   public click() {
@@ -215,10 +138,6 @@ export class MatchTeamPage2 {
       var i = 0;
       if(validationResult.valid) {
         var numericProperties = [
-          'scaleCount', 'scaleCycleTime', 
-          'allySwitchCount', 'allySwitchCycleTime', 
-          'oppoSwitchCount', 'oppoSwitchCycleTime', 
-          'vaultCount', 'vaultCycleTime'
         ];
         for (var prop of numericProperties) {
           if(this.model[prop] == "Infinity") {
@@ -228,14 +147,14 @@ export class MatchTeamPage2 {
           }
         }
     
-        this.dbContext.teamMatches2018.where(['eventCode', 'teamNumber', 'matchNumber'])
+        this.dbContext.teamMatches2018V2.where(['eventCode', 'teamNumber', 'matchNumber'])
           .equals([this.model.eventCode, this.model.teamNumber, this.model.matchNumber]).first()
         .then(savedMatch => {
           if(savedMatch != null) {
             this.model.id = savedMatch.id;
           }
         }).then(() => {
-          return this.dbContext.teamMatches2018.put(this.model);
+          return this.dbContext.teamMatches2018V2.put(this.model);
         }).then(() => {
           return this.load({
             year: this.event.year,
@@ -244,7 +163,7 @@ export class MatchTeamPage2 {
             teamNumber: this.model.teamNumber
           });
         }).then(() => {
-          this.router.navigateToRoute("event", {
+          this.router.navigateToRoute("event-matches", {
             year: this.event.year,
             eventCode: this.model.eventCode,
           });
@@ -257,48 +176,7 @@ export class MatchTeamPage2 {
 
   private setupValidation() {
     this.rules = ValidationRules
-      .ensure("autoScaleCount")
-      .required()
-      .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
-      .ensure("autoSwitchCount")
-      .required()
-      .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
-      .ensure("vaultCount") 
-      .required()
-      .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
-      .ensure("scaleCount")
-      .required()
-      .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
-      .ensure("vaultCycleTime")
-      .required()
-      .satisfiesRule("isNumeric")
-      .ensure("scaleCycleTime")
-      .required()
-      .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
-      .ensure("allySwitchCount")
-      .required()
-      .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
-      .ensure("allySwitchCycleTime")
-      .required()
-      .satisfiesRule("isNumeric")
-      .ensure("oppoSwitchCount")
-      .required()
-      .satisfiesRule("isNumeric")
-      .satisfiesRule("maximum", this.defaultMax)
-      .ensure("oppoSwitchCycleTime")
-      .required()
-      .satisfiesRule("isNumeric")
-      .ensure("scaleDroppedCount")
-      .required()
-      .satisfiesRule("isNumeric")
       .ensure("scaleKnockedOutCount")
-      .required()
       .satisfiesRule("isNumeric")
       .on(this.model)
       .rules;
@@ -340,9 +218,9 @@ export class MatchTeamPage2 {
   }
 
   public saveThing() {
-    this.actions.push({
+    this.model.actions.push({
       time: this.time,
-      actionId: this.actionType,
+      actionTypeId: this.actionType,
     });
 
     this.time = null;

@@ -3,14 +3,10 @@ import { DialogController, DialogService } from "aurelia-dialog";
 import { BindingEngine, Disposable } from "aurelia-binding";
 import * as naturalSort from "javascript-natural-sort";
 import { debounce } from "lodash";
-import { FrcStatsContext, EventMatchEntity, TeamMatch2018Entity, EventEntity } from "../persistence";
-import { EventMatchMergeState, Match2018MergeState } from "../model";
-import { Match2018MergeDialog } from "./match2018-merge/dialog";
-import { EventMatchMergeDialog } from "./event-match-merge/dialog";
-import { JsonExporter } from "./event-to-json";
-import { GoogleDriveApi, FileExistsOutput } from "../google-apis";
 import { PickerResultDoc } from "gapi_module";
-import { TextAreaExportDialog } from "./export-to-textarea";
+import { FrcStatsContext, EventMatchEntity, TeamMatch2018Entity, EventEntity } from "../persistence";
+import { GoogleDriveApi, FileExistsOutput } from "../google-apis";
+import { gameManager } from "../games/index";
 
 // todo: set up validator, prevent double quotes in file names
 @autoinject
@@ -32,7 +28,6 @@ export class JsonExportDialog {
   constructor(
     private controller: DialogController,
     private dialogService: DialogService,
-    private jsonExporter: JsonExporter,
     private gdriveApi: GoogleDriveApi,
     private dbContext: FrcStatsContext,
     private bindingEngine: BindingEngine
@@ -95,7 +90,9 @@ export class JsonExportDialog {
       return;
     }
 
-    this.jsonExporter.eventToJson(this.event).then(json => {
+    let game = gameManager.getGame(this.event.year);
+
+    game.exportEventJson(this.event).then(json => {
       let fileId = this.driveFileExists.exists? this.driveFileExists.fileId : null
       this.hasErrors = false;
       this.waitingOnUpload = true;
@@ -126,7 +123,9 @@ export class JsonExportDialog {
   }
 
   exportRawFile() {
-    this.jsonExporter.eventToJson(this.event).then(json => {
+    let game = gameManager.getGame(this.event.year);
+
+    game.exportEventJson(this.event).then(json => {
       this.downloadJson(this.event, json);
     });
     

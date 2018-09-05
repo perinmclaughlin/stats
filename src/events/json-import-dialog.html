@@ -81,7 +81,7 @@
             <th> Local Saved </th>
             <th> From File </th>
             <th> 
-              ${matches2018Merge.length} Match Records 
+              ${matchesMerge.length} Match Records
               <br/>
               <label>
                 <input type='checkbox' checked.bind='showAllMatchRecords' />
@@ -90,7 +90,7 @@
 
             </th>
           </tr>
-          <tr repeat.for="state of matches2018Merge" show.bind="(!state.same && (state.fromFile == null) == (state.localSaved == null)) || showAllMatchRecords" class="${state.resolved ? 'green' : 'red'}">
+          <tr repeat.for="state of matchesMerge" show.bind="(!state.same && (state.fromFile == null) == (state.localSaved == null)) || showAllMatchRecords" class="${state.resolved ? 'green' : 'red'}">
             <td> ${state.matchNumber} </td>
             <td> ${state.teamNumber} </td>
             <td>

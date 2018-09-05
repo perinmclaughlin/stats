@@ -2,6 +2,7 @@ import Dexie from "dexie";
 
 export class FrcStatsContext extends Dexie {
   teamMatches2018: Dexie.Table<TeamMatch2018Entity, number>;
+  teamMatches2018V2: Dexie.Table<TeamMatch2018V2Entity, number>;
   teams: Dexie.Table<TeamEntity, number>;
   districts: Dexie.Table<DistrictEntity, number>;
   events: Dexie.Table<EventEntity, number>;
@@ -13,6 +14,7 @@ export class FrcStatsContext extends Dexie {
   constructor() {
     super('FrcStats')
 
+    // in below contexts, "year" refers to gameCode, not calendar year
     this.version(1).stores({
       teamMatches2018: '++id, eventCode, teamNumber, matchNumber, [eventCode+matchNumber], [eventCode+teamNumber], &[eventCode+teamNumber+matchNumber]',
       teams: '++id, &teamNumber, districtCode, tbaKey',
@@ -23,6 +25,13 @@ export class FrcStatsContext extends Dexie {
       userPrefs: '++id',
 	    eventMatches: '++id, [year+eventCode], &[year+eventCode+matchNumber]',
     });
+
+    this.version(2).stores({
+      teamMatches2018V2: '++id, eventCode, teamNumber, matchNumber, [eventCode+matchNumber], [eventCode+teamNumber], &[eventCode+teamNumber+matchNumber]',
+    }).upgrade(() => {
+      // yay its a noop
+    });
+
 
 
     this.games.put({
@@ -38,7 +47,13 @@ export class FrcStatsContext extends Dexie {
   }
 }
 
-export interface TeamMatch2018Entity {
+export interface IEventTeamMatch {
+	eventCode: string;
+	teamNumber: string;
+	matchNumber: string;
+}
+
+export interface TeamMatch2018Entity extends IEventTeamMatch, PowerupBingo {
   id?: number;
 	eventCode: string;
 	teamNumber: string;
@@ -77,7 +92,34 @@ export interface TeamMatch2018Entity {
   attemptedClimb: boolean;
   liftedBy: string;
   strategy: string;
+}
 
+export interface TeamMatch2018V2Entity extends IEventTeamMatch, PowerupBingo {
+  id?: number;
+	eventCode: string;
+	teamNumber: string;
+	matchNumber: string;
+
+  actions: PowerUpAction[];
+	isFailure: boolean;
+	failureReason: string;
+	isFoul: boolean;
+	foulReason: string;
+  notes: string;
+  startingPosition: string;
+  autoCrossedLine: boolean;
+  autoNotes: string;
+  scaleMechanism: string;
+  scaleMechanismOther: string;
+  strategy: string;
+}
+
+export interface PowerUpAction {
+  actionTypeId: number;
+  time: number;
+}
+
+export interface PowerupBingo {
   bingoSovietRussia: boolean;
   bingoGrunt: boolean;
   bingoFullHouse: boolean;
@@ -169,6 +211,7 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
     bingoLiftlessClimb: false,
     bingo3xClimb: false,
   };
+
 }
 
 export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Entity) {
@@ -235,6 +278,52 @@ export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Enti
     a.bingoLiftlessClimb == b.bingoLiftlessClimb &&
     a.bingo3xClimb == b.bingo3xClimb 
   );
+}
+
+export function make2018v2match(eventCode, teamNumber, matchNumber): TeamMatch2018V2Entity {
+  return {
+    eventCode: eventCode,
+    teamNumber: teamNumber,
+    matchNumber: matchNumber,
+
+    actions: [],
+    isFailure: false,
+    failureReason: "",
+    isFoul: false,
+    foulReason: "",
+    notes: "",
+    startingPosition: "",
+    autoCrossedLine: false,
+    autoNotes: "",
+    scaleMechanism: "",
+    scaleMechanismOther: "",
+    strategy: "",
+
+    bingoSovietRussia: false,
+    bingoGrunt: false,
+    bingoFullHouse: false,
+    bingoJudges: false,
+    bingoYoink: false,
+    bingoScalePlateHang: false,
+    bingoDieInNull: false,
+    bingoPushedInNull: false,
+    bingoClotheslined: false,
+    bingoWedged: false,
+    bingoPowerUpsExist: false,
+    bingoBoost: false,
+    bingoForceTime: false,
+    bingoClimbPlatform: false,
+    bingoScaleBeach: false,
+    bingoPyramid: false,
+    bingoTimber: false,
+    bingoClimbsGiven: false,
+    bingoPlatformZone: false,
+    bingoSkydivingClub: false,
+    bingoCongaClimb: false,
+    bingoWindchimeClimb: false,
+    bingoLiftlessClimb: false,
+    bingo3xClimb: false,
+  };
 }
 
 export interface EventTeamEntity {

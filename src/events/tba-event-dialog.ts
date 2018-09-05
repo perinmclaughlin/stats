@@ -2,13 +2,16 @@ import { autoinject } from "aurelia-framework";
 import { DialogController } from "aurelia-dialog";
 import { TbaApi, District, tbaEvent } from "../tba-api";
 import { FrcStatsContext, EventMatchEntity } from "../persistence";
+import { gameManager, IGame } from "../games/index";
 
 @autoinject
 export class TbaEventDialog {
   year = "2018";
+  chosenGame: IGame;
   customEventKey = "";
   customIsLoading = false;
   events: any[];
+  games: IGame[];
 
   constructor(
     private dbContext: FrcStatsContext,
@@ -20,6 +23,8 @@ export class TbaEventDialog {
   activate() {
     this.controller.settings.lock = false;
     this.controller.settings.overlayDismiss = true;
+
+    this.games = gameManager.getGames();
 
     this.load();
   }
@@ -37,10 +42,18 @@ export class TbaEventDialog {
   }
 
   yearChanged() {
+    var games = gameManager.getGamesForYear(this.year);
+    if(games.length != 0) {
+      this.chosenGame = games[0];
+    }
     this.load();
   }
 
   importEvent(evnt: tbaEvent) {
+    if(this.chosenGame == null) {
+      alert('bad')
+      return;
+    }
     (<any>evnt).isLoading = true;
     this.saveEvent(evnt).then(x => {
       return this.saveDistrict(evnt.district);
@@ -79,7 +92,7 @@ export class TbaEventDialog {
 		  matches.forEach(match => {
         if(match.comp_level == "qm"){
           let localMatch: EventMatchEntity = {
-            year: this.year,
+            year: this.chosenGame.gameCode,
             eventCode: evnt.event_code,
             matchNumber: ""+match.match_number,
             red1: "",
@@ -119,7 +132,7 @@ export class TbaEventDialog {
       name: evnt.name, 
       districtCode: this.getDistrictCode(evnt.district),
       tbaKey: evnt.key,
-      year: this.year,
+      year: this.chosenGame.gameCode,
     });
   }
 
@@ -147,7 +160,7 @@ export class TbaEventDialog {
     return Promise.all([
       this.dbContext.eventTeams
       .where(["year", "eventCode"])
-      .equals([this.year, evnt.event_code]).toArray(),
+      .equals([this.chosenGame.gameCode, evnt.event_code]).toArray(),
       this.tbaApi.getEventTeams(evnt.key),
     ]).then(results => {
       let localTeams = results[0];
@@ -155,7 +168,7 @@ export class TbaEventDialog {
       // todo: maybe warn if local has extra teams?
       let promises = importedTeams.map(team => {
         this.dbContext.eventTeams.put({
-          year: this.year,
+          year: this.chosenGame.gameCode,
           eventCode: evnt.event_code,
           teamNumber: ""+team.team_number,
         });

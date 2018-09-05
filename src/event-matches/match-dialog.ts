@@ -4,7 +4,7 @@ import { FrcStatsContext, EventTeamEntity, EventMatchEntity, EventEntity, TeamEn
 import { DialogController } from "aurelia-dialog";
 import { DialogService } from "aurelia-dialog";
 import { ConfirmDialog } from "./confirm-dialog";
-import { BootstrapRenderer } from "../bootstrap-renderer";
+import { BootstrapRenderer } from "../utilities/bootstrap-renderer";
 
 @autoinject
 export class MatchDialog {

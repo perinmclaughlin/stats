@@ -1,6 +1,5 @@
 
 import {autoinject, customElement, containerless, bindable, bindingMode} from "aurelia-framework";
-import { EventMatchMergeState } from "./model";
 
 @autoinject
 @customElement("bingo-cell")

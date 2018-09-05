@@ -1,0 +1,89 @@
+<template>
+  <require from="./event-team.css"></require>
+  <div class='container-fluid'>
+    <h1>
+      <b>
+          <a route-href='route: event-team; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode, teamNumber: team.teamNumber}'>
+            ${team.teamNumber} (${team.teamName}) 
+          </a>
+          at 
+          <a route-href='route: event-matches; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode }'>
+            ${event.name} (${event.year})
+          </a>
+      </b>
+    </h1>
+
+    <aubs-tabset active.bind='activeTab'>
+      <aubs-tab header='Matches'>
+        <table class="table table-hover">
+          <tr>
+            <th>Match Number</th>
+            <th>Starting Position</th>
+            <th>Auto Switch Count</th>
+            <th>Auto Scale Count</th>
+            <th>Scale Count</th>
+            <th>Ally Switch Count</th>
+            <th>Opponent Switch Count</th>
+            <th>Vault Count</th>
+            <th>Climbed</th>
+            <th>Lift Count</th>
+            <th>Notes</th>
+          </tr>
+          <tr repeat.for="match of matches2018">
+            <td><a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2018, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
+            <td>${match.startingPosition}</td>
+            <td> ${match.autoSwitchCount} </td>
+            <td> ${match.autoScaleCount} </td>
+            <td>${match.scaleCount}</td>
+            <td>${match.allySwitchCount}</td>
+            <td>${match.oppoSwitchCount}</td>
+            <td>${match.vaultCount}</td>
+            <td>${match.climbed}</td>
+            <td>${match.lifted.length}</td>
+            <td>
+              <div show.bind="match.autoNotes">
+              <b>Auto</b>
+              ${match.autoNotes}
+              </div>
+              <b>teleop</b>
+              ${match.notes}
+              <span show.bind="match.isFailure">
+                <br show.bind="match.notes"/><b>Fail:</b> 
+                ${match.failureReason}
+              </span>
+              <span show.bind="match.isFoul">
+                <br show.bind="match.notes || match.isFailure"/><b>Foul:</b> 
+                ${match.foulReason}
+              </span>
+            </td>
+          </tr>
+        </table>
+      </aubs-tab>
+      <aubs-tab header='Schedule'>
+        <table class='table table-hover'>
+          <tr>
+            <th>Match Number</th>
+            <th>Blue Alliance (1)</th>
+            <th>Blue Alliance (2)</th>
+            <th>Blue Alliance (3)</th>
+            <th>Red Alliance (1)</th>
+            <th>Red Alliance (2)</th>
+            <th>Red Alliance (3)</th>
+          </tr>
+          <tr repeat.for="eventMatch of eventMatches">
+            <td>${eventMatch.matchNumber}</td>
+            <td class='blue ${eventMatch.blue1 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.blue1} </td>
+            <td class='blue ${eventMatch.blue2 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.blue2} </td>
+            <td class='blue ${eventMatch.blue3 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.blue3} </td>
+            <td class='red ${eventMatch.red1 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.red1} </td>
+            <td class='red ${eventMatch.red2 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.red2} </td>
+            <td class='red ${eventMatch.red3 == team.teamNumber ? "this-team" : ""}'> ${eventMatch.red3} </td>
+          </tr>
+        </table>
+      </aubs-tab>
+    </aubs-tabset>
+    <!--<textarea name="team_stats" style="width:50%; height:100px" value.bind="model.foulReason">-->
+
+    </textarea>
+  </div>
+</template>

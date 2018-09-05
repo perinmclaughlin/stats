@@ -1,45 +1,29 @@
 import { autoinject } from "aurelia-framework";
 import { DialogService, DialogOpenResult } from "aurelia-dialog";
-import { HttpClient } from "aurelia-fetch-client";
 
 import { FrcStatsContext, EventEntity, GameEntity } from "../persistence";
 import { TbaEventDialog } from "./tba-event-dialog";
 import { JsonImportDialog } from "./json-import-dialog";
 import { JsonExportDialog } from "./json-export-dialog";
 import { ConfirmDialog } from "../event-matches/confirm-dialog";
-import { JsonExporter } from "./event-to-json";
 import { GoogleDriveApi } from "../google-apis";
+import { gameManager, IGame } from "../games/index";
 
 @autoinject
 export class Events {
   events: EventEntity[];
-  games: Map<string, GameEntity>;
-  http: HttpClient;
+  games: Map<string, IGame>;
 
   constructor(
     private dialogService: DialogService,
-    private jsonExporter: JsonExporter,
     private gdriveApi: GoogleDriveApi,
     private dbContext: FrcStatsContext) {
     this.events = [];
-    this.games = new Map<string, GameEntity>();
-
-    this.http = new HttpClient();
-    this.http.configure(c => {
-        c.defaults.mode = "no-cors";
-    });
+    this.games = gameManager.getGameMap();
   }
 
   public activate() {
-    return Promise.all([
-      this.loadEvents(),
-      this.dbContext.games.toArray()
-    ]).then(results => {
-      this.games.clear();
-      for(var game of results[1]) {
-        this.games[game.year] = game;
-      }
-    });
+      return this.loadEvents();
   }
 
   private loadEvents() {

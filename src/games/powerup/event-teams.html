@@ -8,7 +8,7 @@
     <!--<p> Maybe make a tab for match schedule, and make a tab for team list? </p>-->
     <ul class='nav nav-tabs'>
       <li class='nav-item'>
-        <a class='nav-link' route-href="route: event-matches">Matches</a>
+        <a class='nav-link' route-href="route: event-matches; params.bind: {year: event.year, eventCode: event.eventCode}">Matches</a>
       </li>
       <li class='nav-item active'>
         <a class='nav-link active' href="javascript:void">Teams (${teamsData.length})</a>
