@@ -131,12 +131,6 @@
               "**/*.html"
             ]
           },
-          {
-            "name": "google-api",
-            "path": "../static/",
-            "main": "google-api",
-            "exports": "gapi"
-          },
           "lodash",
           "punycode",
           {

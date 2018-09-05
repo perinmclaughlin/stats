@@ -14,6 +14,7 @@ export class GoogleDriveApi {
   private accessToken: string;
   private monkeyPatchDone = false;
   private http: HttpClient;
+  private gapiScriptPromise: Promise<any>;
 
   constructor() {
     this.http = new HttpClient();
@@ -56,16 +57,36 @@ export class GoogleDriveApi {
 
   private loadClient() {
     if(this.loadPromise == null) {
-      this.loadPromise = new Promise((resolve, reject) => {
+      this.loadPromise = this.loadGapi()
+      .catch(error => {
+        this.loadPromise = null;
+        throw error;
+      })
+      .then(() => new Promise((resolve, reject) => {
         try {
           gapi.load('auth2:client:picker', resolve);
         }catch(ex) {
           reject(ex);
         }
-      });
+      }));
     }
 
     return this.loadPromise;
+  }
+
+  private loadGapi() {
+      if(this.gapiScriptPromise == null) {
+        this.gapiScriptPromise = new Promise((resolve, reject) => {
+          let script = document.createElement("script");
+          script.type = "text/javascript";
+          script.src = "https://apis.google.com/js/api.js";
+          script.addEventListener("load", () => resolve(script), false);
+          script.addEventListener("error", () => reject(script), false);
+          document.body.appendChild(script);
+        });
+      }
+
+      return this.gapiScriptPromise;
   }
 
   private initClient() {
