@@ -1,6 +1,4 @@
-language: ruby
-before_script:
-  gem install rake
+language: minimal
 services: 
   - docker
 script:

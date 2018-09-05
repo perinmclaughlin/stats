@@ -81,7 +81,7 @@ export class JsonImportDialog {
       try{ 
         let reader = new FileReader();
         reader.onload = function() {
-          resolve(JSON.parse(this.result));
+          resolve(JSON.parse(<string>this.result));
         };
         reader.onerror = function(evnt) {
           reject(evnt);
