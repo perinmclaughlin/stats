@@ -15,6 +15,7 @@ gulp.task('generate-service-worker', function (callback) {
   var baseUrl = project.baseUrl[env] || project.baseUrl['default'] || "/";
 
   swPrecache.write(path.join('sw.js'), {
+    maximumFileSizeToCacheInBytes: 5097152,
     staticFileGlobs: [
       'index.html',
       rootDir + '/**/*.{js,html,css}',
