@@ -103,6 +103,11 @@ export class App {
         name: "graphtest", moduleId: PLATFORM.moduleName("graphtest"), 
         nav: true, title: "graph test", adminRoute: false,
       },
+      {
+        route: ["qrtest"],
+        name: "qrtest", moduleId: PLATFORM.moduleName("qrcodes/test"), 
+        nav: true, title: "qrcode test", adminRoute: false,
+      },
     ];
 
     config.map(routes);

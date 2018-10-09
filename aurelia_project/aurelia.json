@@ -19,7 +19,7 @@
       }
     ],
     "options": {
-      "minify": "stage & prod",
+      "minify": false,
       "sourcemaps": "dev & stage"
     },
     "bundles": [
@@ -137,6 +137,32 @@
           "name": "urijs",
           "path": "../node_modules/urijs",
           "main": "./src/URI"
+          },
+          "qrcode-generator",
+          {
+              "name": "zxing",
+              "path": "../node_modules/instascan/src",
+              "main": "zxing"
+          },
+          {
+              "name": "visibilityjs",
+              "path": "../node_modules/visibilityjs/lib",
+              "main": "visibility.timers"
+          },
+          {
+              "name": "fs",
+              "path": "../node_modules/uniq/",
+              "main": "uniq"
+          },
+          {
+              "name": "path",
+              "path": "../node_modules/prr/",
+              "main": "prr"
+          },
+          {
+              "name": "crypto",
+              "path": "../node_modules/ms/",
+              "main": "index"
           }
         ]
       }
