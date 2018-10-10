@@ -19,7 +19,13 @@
       }
     ],
     "options": {
-      "minify": false,
+      "minify": {
+        "prod": {
+            "compress": {
+                "collapse_vars": false
+            }
+        }
+      },
       "sourcemaps": "dev & stage"
     },
     "bundles": [
