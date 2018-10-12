@@ -34,7 +34,7 @@ export class CustomValidationRules {
         if(isNaN(value)) {
           return true;
         }
-        return value < maxValue;
+        return value <= maxValue;
       }, `must be less than or equal to \${$config.maxValue}.`,
       (maxValue) => ({maxValue}),
     );
