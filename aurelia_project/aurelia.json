@@ -19,13 +19,7 @@
       }
     ],
     "options": {
-      "minify": {
-        "prod": {
-            "compress": {
-                "collapse_vars": false
-            }
-        }
-      },
+      "minify": false,
       "sourcemaps": "dev & stage"
     },
     "bundles": [
@@ -221,7 +215,14 @@
     "id": "vscode",
     "displayName": "Visual Studio Code"
   },
-  "unitTestRunner": {
+  "unitTestRunners": [
+      {
+      "id": "karma",
+      "displayName": "Karma",
+      "source": "test/unit/**/*.ts"
+      }
+  ],
+  "integrationTestRunner": {
     "id": "none",
     "displayName": "None"
   },
@@ -236,5 +237,9 @@
     "attributes": "resources/attributes",
     "valueConverters": "resources/value-converters",
     "bindingBehaviors": "resources/binding-behaviors"
+  },
+  "testFramework": {
+    "id": "jasmine",
+    "displayName": "Jasmine"
   }
 }
