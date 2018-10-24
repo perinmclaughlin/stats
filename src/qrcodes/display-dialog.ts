@@ -6,21 +6,23 @@ import { DialogController } from "aurelia-dialog";
 @autoinject
 export class QrCodeDisplayDialog {
     qrCodeElement: Element;
+    dataArray: string[];
+    dataData: any[];
+    i: number = 0;
 
     constructor(public controller: DialogController) {
 
     }
 
     activate(model: QrCodeDisplayInput) {
-
+        this.obtainData(model.data, 287); 
+        this.attached();
     }
 
     click() {
         // I think qrcode-generator is generating Model 2 qr codes? http://www.qrcode.com/en/codes/model12.html
         var passIn = [];
-        for(var i = 0; i < 10; i++){
-            passIn.push(i);
-        }
+        passIn.push(this.dataArray[this.i]);
         
         var qrType : TypeNumber = 12; 
         var errorCorrection : ErrorCorrectionLevel = 'M';
@@ -36,13 +38,34 @@ export class QrCodeDisplayDialog {
     }
 
     obtainData(data: string, chunkSize: number) {
+        
+        this.dataArray = [];
+
         // Convert data.
         var data2 = data;
-        var array = [];
         for(var i = 0; i < Math.ceil(data2.length / chunkSize); i++){
             var printThis = data2.substr(chunkSize * (i), chunkSize);
-            array.push(printThis);
+            this.dataArray.push(printThis);
         }
-        return(array);
+        return(this.dataArray);
+    }
+
+    increment() {
+        if(this.i != this.dataArray.length - 1){
+            this.i = this.i + 1;
+        }
+        this.click();
+    }
+
+    decrement() {
+        if(this.i != 0){
+            this.i = this.i - 1;
+        }
+
+        this.click();
+    }
+
+    attached() {
+        this.click();
     }
 }

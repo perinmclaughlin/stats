@@ -27,8 +27,8 @@ export class Choofy {
         Camera.getCameras().then(cameras => {
             this.cameras = cameras;
             if(cameras.length > 0 ) {
-                this.activeCameraId = cameras[0].id;
-                this.scanner.start(cameras[0]);
+                this.activeCameraId = cameras[1].id;
+                this.scanner.start(cameras[1]);
             }else{
                 console.error('no cameras found');
             }
@@ -38,7 +38,7 @@ export class Choofy {
 
     click() {
         this.dialogService.open({
-            model: {},
+            model: {  data: "njbjkbcfgbskhcniuyrsk46evytiusrytbibvbbbbbbbbbbbbbbbbbbbbbhhbbbbbbbbyvigvtcytufffffgffffffffffffffvbtibyircicrywiyiucrwyuiyriwcyiwycriywiyiwvyiyvwifkititwghwgfghhcbvdhfjwhri3hihfiegugiyc767tvbkaytqlvtybqvnnnnnnnnnbnnnngnnnnnnnnnn8bnnnfhfhfdfhfhfhasdfgLYVTBYBVTBYTVYTBVTYBTVWYBVTYBYcyffbyi" },
             viewModel: QrCodeDisplayDialog
         });
     }
