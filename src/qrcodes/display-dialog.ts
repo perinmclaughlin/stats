@@ -16,7 +16,6 @@ export class QrCodeDisplayDialog {
 
     activate(model: QrCodeDisplayInput) {
         this.obtainData(model.data, 287); 
-        this.attached();
     }
 
     click() {
