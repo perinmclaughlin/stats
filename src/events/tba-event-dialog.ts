@@ -165,36 +165,48 @@ export class TbaEventDialog {
     ]).then(results => {
       let localTeams = results[0];
       let importedTeams = results[1];
+
+      if (importedTeams.length != 0){
+        return {localTeams: localTeams, importedTeams: importedTeams};
+      }else{
+        return this.tbaApi.getEventMatches(evnt.key).then(matches => {
+          let teamKeys = new Map<string, number>();
+          matches.forEach(match => {
+            match.alliances.blue.team_keys.forEach(key => teamKeys.set(key, 1));
+            match.alliances.red.team_keys.forEach(key => teamKeys.set(key, 1));
+          });
+          let promises = Array.from(teamKeys.keys()).map(key => {
+            return this.tbaApi.getTeamByKey(key);
+          });
+
+          return Promise.all(promises).then(importedTeams2 => {
+            return {localTeams: localTeams, importedTeams: importedTeams2};
+          })
+        });
+      }
+    }).then(xx => {
+      let localTeams = xx.localTeams;
+      let importedTeams = xx.importedTeams;
       // todo: maybe warn if local has extra teams?
       let promises = importedTeams.map(team => {
-        this.dbContext.eventTeams.put({
-          year: this.chosenGame.gameCode,
-          eventCode: evnt.event_code,
-          teamNumber: ""+team.team_number,
-        });
-
-        return this.dbContext.teams
-          .where("teamNumber").equals(""+team.team_number)
-          .first().then(localTeam => {
-            if(localTeam != null) return Promise.resolve(null);
-
-            return this.dbContext.teams.put({
-              teamNumber: ""+team.team_number,
-              teamName: ""+team.nickname,
-              description: "",
-              city: team.city,
-              stateprov: team.state_prov,
-              country: team.country,
-              districtCode: this.getDistrictCode(evnt.district),
-			        tbaKey: team.key,
-            });
-          }).catch(error => {
-            console.info('error saving team ', team);
-            throw error;
+          this.dbContext.eventTeams.put({
+            year: this.chosenGame.gameCode,
+            eventCode: evnt.event_code,
+            teamNumber: ""+team.team_number,
           });
-      });
 
-      return Promise.all(promises);
+          return this.dbContext.teams
+            .where("teamNumber").equals(""+team.team_number)
+            .first().then(localTeam => {
+              if(localTeam != null) return Promise.resolve(null);
+
+              return this.dbContext.saveTeam(team, this.getDistrictCode(evnt.district));
+            }).catch(error => {
+              console.info('error saving team ', team);
+              throw error;
+            });
+        });
+        return Promise.all(promises);
     });
   }
 }

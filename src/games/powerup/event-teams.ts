@@ -3,6 +3,7 @@ import { DialogService } from "aurelia-dialog";
 import * as naturalSort from "javascript-natural-sort";
 import { EventEntity, FrcStatsContext, EventTeamEntity, TeamEntity, EventMatchEntity, TeamMatch2018Entity } from "../../persistence";
 import { EventTeamData, MatchData } from "../../model";
+import { AddTeamDialog } from "./add-team-dialog";
 
 @autoinject
 export class EventTeams {
@@ -185,5 +186,13 @@ export class EventTeams {
 
   public sortByAutoLine() {
     this.teamsData.sort((a, b) => b.autoLineCount - a.autoLineCount);
+  }
+
+
+  public addTeams() {
+    AddTeamDialog.open(this.dialogService, {
+      year: this.event.year,
+      eventCode: this.event.eventCode,
+    });
   }
 }

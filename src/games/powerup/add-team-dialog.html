@@ -1,0 +1,33 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+        <button class='btn btn-danger btn-sm float-right' click.delegate='controller.cancel()'>
+          X
+        </button>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <label for='teamNumberTxt'>Team Number</label>
+      <input id='teamNumberTxt' type='text' class='form-control' 
+             value.bind='teamNumber' 
+             change.delegate='teamNumberLookup() & debounce:400'/>
+      <button class='btn btn-secondary' click.delegate='teamNumberLookup()'>Lookup</button>
+
+      <div show.bind='lookupWaiting' class='loader'></div>
+
+      <div show.bind='hasError'>
+        Couldn't get team
+      </div>
+      <div show.bind='!hasError && team != null'>
+        ${team.teamNumber} (${team.teamName})
+
+        <div show.bind='alreadyAdded'>
+          This team is already in this event
+        </div>
+        <div show.bind="!alreadyAdded">
+          <button class='btn btn-primary' click.delegate='add()'>Add</button>
+          <div show.bind='addWaiting' class='loader'></div>
+        </div>
+      </div>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

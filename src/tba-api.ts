@@ -55,8 +55,12 @@ export class TbaApi {
     return this.callAPI('teams/' + year + '/' + pageNum + '/simple');
   }
 
-  getTeam(teamNum) {
+  getTeam(teamNum): Promise<Team> {
     return this.callAPI('team/frc' + teamNum);
+  }
+
+  getTeamByKey(key): Promise<Team> {
+    return this.callAPI('team/' + key);
   }
 
   getTeamSimple(teamNum) {

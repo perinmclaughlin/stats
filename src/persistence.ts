@@ -1,4 +1,5 @@
 import Dexie from "dexie";
+import { Team } from "./tba-api";
 
 export class FrcStatsContext extends Dexie {
   teamMatches2018: Dexie.Table<TeamMatch2018Entity, number>;
@@ -45,6 +46,24 @@ export class FrcStatsContext extends Dexie {
       throw error;
     });
   }
+
+  getTeam(teamNumber: string|number) {
+    return this.teams.where("teamNumber").equals(""+teamNumber).first();
+  }
+
+  saveTeam(team: Team, districtCode: string) {
+    return this.teams.put({
+      teamNumber: ""+team.team_number,
+      teamName: ""+team.nickname,
+      description: ""+team.name,
+      city: team.city,
+      stateprov: team.state_prov,
+      country: team.country,
+      districtCode: districtCode,
+      tbaKey: team.key,
+    });
+  }
+  
 }
 
 export interface IEventTeamMatch {
