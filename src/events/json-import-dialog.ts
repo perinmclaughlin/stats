@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { DialogController, DialogService } from "aurelia-dialog";
 import { BindingEngine, Disposable } from "aurelia-binding";
 import * as naturalSort from "javascript-natural-sort";
-import { FrcStatsContext, EventMatchEntity, EventEntity } from "../persistence";
+import { FrcStatsContext, EventMatchEntity, EventMatchSlots, EventEntity } from "../persistence";
 import { EventMatchMergeState } from "../model";
 import { EventMatchMergeDialog } from "./event-match-merge/dialog";
 import { gameManager, IMergeState } from "../games/index"
@@ -26,6 +26,8 @@ export class JsonImportDialog {
   eventMatchesMerge: EventMatchMergeState[];
   matchesMerge: IMergeState[];
   selectFile = true;
+  hasErrors = false;
+  errorMessages: string[] = [];
 
   constructor(
     private controller: DialogController,
@@ -94,7 +96,17 @@ export class JsonImportDialog {
     readPromise.then((json: any) => {
       this.json = json;
 
-      this.postReadJsonFixups();
+      return this.postReadJsonFixups();
+    }).then(() => {
+      this.validateEventMatches();
+      let game = gameManager.getGame(this.json.event.year);
+      let errorMessages2 = game.validateEventTeamMatches(this.json);
+      if(errorMessages2.length != 0) {
+        this.hasErrors = true;
+        for(var msg of errorMessages2) {
+          this.errorMessages.push(msg);
+        }
+      }
     });
   }
 
@@ -132,43 +144,65 @@ export class JsonImportDialog {
     let eventCode = this.json.event.eventCode;
 
     this.eventMatchesMerge = [];
-    let eventMatchMergeDict = {}
     this.matchesMerge = [];
-    this.dbContext.eventMatches
-      .where(["year", "eventCode"])
-      .equals([year, eventCode]).toArray()
+    this.dbContext.getEventMatches(year, eventCode)
     .then(localEventMatches => {
       this.fromDbEventMatches = localEventMatches;
     }).then(() => {
-      this.fromDbEventMatches.forEach(eventMatch => {
-        let state = EventMatchMergeState.makeFromDb(eventMatch);
-        eventMatchMergeDict[eventMatch.matchNumber] = state;
-      });
-
-      this.json.eventMatches.forEach(eventMatch => {
-        if(eventMatch.matchNumber in eventMatchMergeDict) {
-          let state = eventMatchMergeDict[eventMatch.matchNumber];
-          state.fromFile = eventMatch;
-        }else {
-          let state = EventMatchMergeState.makeFromFile(eventMatch);
-          eventMatchMergeDict[eventMatch.matchNumber] = state;
-        }
-      });
-
-      for(var matchNumber in eventMatchMergeDict) {
-        let state = eventMatchMergeDict[matchNumber]
-        state.setSameness();
-        this.eventMatchesMerge.push(state);
-      }
-
-      this.eventMatchesMerge.sort((a,b) => naturalSort(a.matchNumber, b.matchNumber));
+      this.beginMergeEventMatches();
     }).then(() => {
       let game = gameManager.getGame(this.json.event.year);
       game.beginMerge(this.json).then(m => {
         this.matchesMerge = m;
       });
     });
+  }
 
+  /**
+   * read saved event matches and compare to those in this.json.eventMatches.
+   * set up merge state in this.eventMatchesMerge for event match merge ui.
+   */
+  beginMergeEventMatches() {
+    let eventMatchMergeDict = {}
+    this.fromDbEventMatches.forEach(eventMatch => {
+      let mergeState = EventMatchMergeState.makeFromDb(eventMatch);
+      eventMatchMergeDict[eventMatch.matchNumber] = mergeState;
+    });
+
+    this.json.eventMatches.forEach(eventMatch => {
+      if(eventMatch.matchNumber in eventMatchMergeDict) {
+        let mergeState = eventMatchMergeDict[eventMatch.matchNumber];
+        mergeState.fromFile = eventMatch;
+      }else {
+        let mergeState = EventMatchMergeState.makeFromFile(eventMatch);
+        eventMatchMergeDict[eventMatch.matchNumber] = mergeState;
+      }
+    });
+
+    for(var matchNumber in eventMatchMergeDict) {
+      let mergeState = eventMatchMergeDict[matchNumber]
+      mergeState.setSameness();
+      this.eventMatchesMerge.push(mergeState);
+    }
+
+    this.eventMatchesMerge.sort((a,b) => naturalSort(a.matchNumber, b.matchNumber));
+  }
+
+  validateEventMatches() {
+    this.hasErrors = false;
+    this.errorMessages = [];
+    let teamNumbers = new Map<string, number>();
+    this.json.eventTeams.forEach(team => teamNumbers.set(team.teamNumber, 1));
+    this.json.eventMatches.forEach(eventMatch => {
+      // red1, red2, etc
+      for(var slot of EventMatchSlots) {
+        if(!teamNumbers.has(eventMatch[slot.prop])) {
+          let teamNumber = eventMatch[slot.prop];
+          this.errorMessages.push(`EventMatches: Match ${eventMatch.matchNumber}, ${slot.name}: team ${teamNumber} not in team list`);
+          this.hasErrors = true;
+        }
+      }
+    })
   }
 
   importSimple() {

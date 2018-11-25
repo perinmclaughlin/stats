@@ -3,8 +3,9 @@ import { PLATFORM } from "aurelia-pal";
 import * as naturalSort from "javascript-natural-sort";
 
 import { IGame, gameManager, IMergeState } from "../index";
+import { validateEventTeamMatches } from "../merge-utils";
 import { Match2018V2MergeDialog } from "./merge-dialog";
-import { FrcStatsContext } from "../../persistence";
+import { FrcStatsContext, EventMatchSlots, EventMatchEntity } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
 import { PowerupV2EventJson } from "./model";
 
@@ -64,6 +65,18 @@ class PowerupV2Game implements IGame {
     .then(localMatches => {
       return this.dbContext.teamMatches2018V2.bulkDelete(localMatches.map(x => x.id));
     });
+  }
+
+  validateEventTeamMatches(json: any) {
+    return validateEventTeamMatches(json, json.matches2018, "matches2018");
+  }
+  
+  updateMatch(match: EventMatchEntity, oldMatchNumber: string): Promise<any> {
+    throw new Error("implement");
+  }
+
+  deleteMatch(eventCode: string, oldMatchNumber: string): Promise<any> {
+    throw new Error("implement");
   }
 }
 

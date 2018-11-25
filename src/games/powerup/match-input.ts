@@ -10,6 +10,7 @@ import {
   TeamMatch2018Entity, make2018match, 
   TeamEntity, EventEntity, EventMatchEntity,
 } from "../../persistence";
+import { getTeamNumbers } from "../merge-utils";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import { PowerupBingoDialog } from "./powerup-bingo";
 import { scrollToTop } from "../../utilities/scroll";
@@ -28,6 +29,7 @@ export class MatchTeamPage {
   public isRed = false;
   public scaleMechanisms = ["lift", "shooter", "janky lift", "janky shooter", "other" ];
   public errorMessage: string;
+  public errorNotScheduled = false;
   public defaultMax = 100;
   public maxVault = 9;
 
@@ -118,6 +120,10 @@ export class MatchTeamPage {
       .equals([params.year, params.eventCode, params.matchNumber]).first()
       .then(eventMatch => {
         this.eventMatch = eventMatch;
+        let teamNumbers = getTeamNumbers(eventMatch);
+        if(!teamNumbers.has(params.teamNumber)) {
+          this.errorNotScheduled = true;
+        }
       });
 
     return Promise.all([matchPromise, teamPromise, eventPromise, eventMatchPromise]).then(() => {

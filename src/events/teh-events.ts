@@ -66,9 +66,9 @@ export class Events {
   }
 
   public deleteEvent(event) {
-    this.dialogService.open({
-      viewModel: ConfirmDialog,
-      model: ["Are you SURE that you want to delete that?", "Press 'OKAY' to confirm"],
+    ConfirmDialog.open(this.dialogService, {
+      message: "Are you SURE that you want to delete that?",
+      confirmMessage: "Press 'OKAY' to confirm",
     }).whenClosed(dialogResult => {
       if(!dialogResult.wasCancelled) {
         this.dbContext.transaction("rw", [
