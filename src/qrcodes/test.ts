@@ -37,9 +37,9 @@ export class Choofy {
     }
 
     click() {
-        this.dialogService.open({
-            model: {  data: "njbjkbcfgbskhcniuyrsk46evytiusrytbibvbbbbbbbbbbbbbbbbbbbbbhhbbbbbbbbyvigvtcytufffffgffffffffffffffvbtibyircicrywiyiucrwyuiyriwcyiwycriywiyiwvyiyvwifkititwghwgfghhcbvdhfjwhri3hihfiegugiyc767tvbkaytqlvtybqvnnnnnnnnnbnnnngnnnnnnnnnn8bnnnfhfhfdfhfhfhasdfgLYVTBYBVTBYTVYTBVTYBTVWYBVTYBYcyffbyi" },
-            viewModel: QrCodeDisplayDialog
-        });
+        QrCodeDisplayDialog.open(this.dialogService,
+            { data: "njbjkbcfgbskhcniuyrsk46evytiusrytbibvbbbbbbbbbbbbbbbbbbbbbhhbbbbbbbbyvigvtcytufffffgffffffffffffffvbtibyircicrywiyiucrwyuiyriwcyiwycriywiyiwvyiyvwifkititwghwgfghhcbvdhfjwhri3hihfiegugiyc767tvbkaytqlvtybqvnnnnnnnnnbnnnngnnnnnnnnnn8bnnnfhfhfdfhfhfhasdfgLYVTBYBVTBYTVYTBVTYBTVWYBVTYBYcyffbyi" },
+        )
+    
     }
 }

@@ -9,6 +9,9 @@
     <ux-dialog-body>
       <button click.delegate='decrement()'>previous</button>
       <button click.delegate='increment()'>next</button> ${i+1} of ${dataArray.length}
+      <br>
+      <button click.delegate='decreaseSize()'>shrink</button>
+      <button click.delegate='increaseSize()'>grow</button>
       <div element.ref="qrCodeElement"></div>
     </ux-dialog-body>
     <!--
