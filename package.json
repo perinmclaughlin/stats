@@ -64,7 +64,7 @@
     "uglify-js": "^3.0.19",
     "vinyl-fs": "^2.4.3",
     "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
+    "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.0.2",
     "karma-sourcemap-loader": "^0.3.7",
