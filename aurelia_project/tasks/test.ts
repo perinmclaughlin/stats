@@ -8,7 +8,8 @@ import * as path from 'path';
 let karma = done => {
   new Karma({
     configFile: path.join(__dirname, '/../../karma.conf.js'),
-    singleRun: !CLIOptions.hasFlag('watch')
+    singleRun: !CLIOptions.hasFlag('watch'),
+    browsers: [CLIOptions.hasFlag('browser') ? CLIOptions.getFlagValue('browser') : 'Chrome']
   }, done).start();
 };
 

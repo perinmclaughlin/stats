@@ -39,7 +39,13 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chrome'], // heads up! this gets overwritten in tasks/test.ts
+    customLaunchers: {
+      ChromiumHeadless1: {
+        base: 'ChromiumHeadless',
+        flags: ['--no-sandbox', '--disable-gpu']
+      }
+    },
     singleRun: false,
     // client.args must be a array of string.
     // Leave 'aurelia-root', project.paths.root in this order so we can find
