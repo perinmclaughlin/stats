@@ -6,6 +6,7 @@ import { DialogController, DialogService } from "aurelia-dialog";
 @autoinject
 export class QrCodeDisplayDialog {
     qrCodeElement: Element;
+    modelData: string;
     dataArray: string[];
     dataData: any[];
     i: number = 0;
@@ -18,6 +19,7 @@ export class QrCodeDisplayDialog {
 
     activate(model: QrCodeDisplayInput) {
         this.dataArray = this.makePackets(model.data, this.chunkSize);
+        this.modelData = model.data;
     }
 
     drawQRCode() {
@@ -105,6 +107,7 @@ export class QrCodeDisplayDialog {
             this.chunkSize += 24;
         }
 
+        this.dataArray = this.makePackets(this.modelData, this.chunkSize);
         this.drawQRCode();
     }
 
@@ -116,6 +119,7 @@ export class QrCodeDisplayDialog {
             this.chunkSize -= 24;
         }
 
+        this.dataArray = this.makePackets(this.modelData, this.chunkSize);
         this.drawQRCode();
     }
 
