@@ -1,21 +1,17 @@
 import { autoinject } from "aurelia-framework";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
-import { FrcStatsContext, EventTeamEntity, EventMatchEntity, EventEntity, TeamEntity } from "../persistence";
+import { FrcStatsContext, EventTeamEntity, EventMatchEntity, EventMatchSlots, EventEntity, TeamEntity } from "../persistence";
 import { DialogController } from "aurelia-dialog";
 import { DialogService } from "aurelia-dialog";
 import { ConfirmDialog } from "./confirm-dialog";
 import { BootstrapRenderer } from "../utilities/bootstrap-renderer";
+import { gameManager } from "../games/index"
+import { getTeamNumbers } from "../games/merge-utils";
 
 @autoinject
 export class MatchDialog {
   private x: number;
   private dialog_matchNumber: number;
-  private dialog_teamNumbers_blue0: string;
-  private dialog_teamNumbers_blue1: string;
-  private dialog_teamNumbers_blue2: string;
-  private dialog_teamNumbers_red0: string;
-  private dialog_teamNumbers_red1: string;
-  private dialog_teamNumbers_red2: string;
   public match: EventMatchEntity;
   public prevMatchNumber: string;
   public teams: string[];
@@ -170,11 +166,34 @@ export class MatchDialog {
   }
 
   save() {
+    let game = gameManager.getGame(this.match.year);
     this.validationController.validate({object: this.match, rules: this.rules}).then(validationResult => {
       if(!validationResult.valid) {
         throw new Error("invalid - stop save");
       }
       console.info("validation succeeded");
+    }).then(() => {
+      // check if things will be deleted, need to notify user if so
+
+      return game.getEventTeamMatches(this.match.eventCode).then(teamMatches => {
+        if(this.mode == "edit") {
+          let teamNumbers = getTeamNumbers(this.match);
+          let deletables = teamMatches.filter(teamMatch => teamMatch.matchNumber == this.prevMatchNumber && !teamNumbers.has(teamMatch.teamNumber));
+          if (deletables.length != 0) {
+            let teams = deletables.map(t => t.teamNumber).join(", ");
+
+            return ConfirmDialog.open(this.dialogService, {
+              message: `Warning: data will be deleted `,
+              confirmMessage: `there is saved data for match #${this.prevMatchNumber}, teams ${teams} that WILL BE DELETED if you press OKAY.`,
+            }).whenClosed(dialogResult => {
+              if(dialogResult.wasCancelled) {
+                throw new Error("User canceled, stop saving");
+              }
+            })
+          }
+        }
+      })
+
     }).then(() => {
       console.info(this.match);
       this.dbContext.eventMatches
@@ -185,25 +204,12 @@ export class MatchDialog {
             this.match.id = savedMatch.id;
           }
         }).then(() => {
-          return this.dbContext.eventMatches.put(this.match);
-        }).then(() => {
-          if(this.mode == "edit" && this.prevMatchNumber != this.match.matchNumber) {
-            return this.dbContext.teamMatches2018
-              .where(["eventCode", "matchNumber"])
-              .equals([this.match.eventCode, this.prevMatchNumber])
-              .toArray()
-              .then(matches2018 => {
-                for(var match of matches2018) {
-                  match.matchNumber = this.match.matchNumber;
-                }
-
-                return this.dbContext.teamMatches2018.bulkPut(matches2018);
-              }).then(() => "yup");
-          }else {
-            return Promise.resolve("yup");
+          if(this.mode == "edit") {
+            return game.updateMatch(this.match, this.prevMatchNumber);
           }
         }).then(() => {
-          console.info("dupr I saved");
+          return this.dbContext.eventMatches.put(this.match);
+        }).then(() => {
           this.controller.ok();
         });
     });

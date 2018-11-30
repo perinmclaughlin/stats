@@ -1,6 +1,9 @@
 <template>
   <require from="../../utilities/counter"></require>
-  <div class='container-fluid'>
+  <div show.bind='errorNotScheduled'>
+    Team ${team.teamNumber} is not scheduled to be in match #${model.matchNumber}
+  </div>
+  <div class='container-fluid' show.bind='!errorNotScheduled'>
     <h1>
       <b>
         <u>

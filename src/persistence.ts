@@ -63,7 +63,31 @@ export class FrcStatsContext extends Dexie {
       tbaKey: team.key,
     });
   }
+
+  getEventMatches(year: string, eventCode: string): Promise<EventMatchEntity[]> {
+    return this.eventMatches
+      .where(["year", "eventCode"])
+      .equals([year, eventCode]).toArray();
+  }
+
+  getTeamMatches2018(opts: TeamMatchOpts) {
+    if('matchNumber' in opts) {
+      return this.teamMatches2018
+        .where(["eventCode", "matchNumber"])
+        .equals([opts.eventCode, opts.matchNumber])
+        .toArray()
+    }else{
+      return this.teamMatches2018
+        .where("eventCode")
+        .equals(opts.eventCode).toArray();
+    }
+  }
   
+}
+
+export interface TeamMatchOpts {
+  eventCode: string;
+  matchNumber?: string;
 }
 
 export interface IEventTeamMatch {
@@ -408,6 +432,15 @@ export interface EventMatchEntity {
   blue2: string;
   blue3: string;
 }
+
+export var EventMatchSlots = [
+  { prop: "red1", name: "Red 1"},
+  { prop: "red2", name: "Red 2"},
+  { prop: "red3", name: "Red 3"},
+  { prop: "blue1", name: "Blue 1"},
+  { prop: "blue2", name: "Blue 2"},
+  { prop: "blue3", name: "Blue 3"},
+];
 
 export function makeEventMatch(year: string, eventCode: string, matchNumber: string): EventMatchEntity {
   return {

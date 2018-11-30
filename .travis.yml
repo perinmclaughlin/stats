@@ -2,6 +2,8 @@ language: minimal
 services: 
   - docker
 script:
+  - bash prepare-tests.sh
+  - bash run-tests.sh
   - bash build-docker.sh
 deploy: 
   provider: s3

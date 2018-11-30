@@ -19,13 +19,21 @@
         <h3>${json.event.name}</h3>
       </div>
 
-      <div show.bind="noExisting">
+      <div show.bind="(noExisting || yesExisting) && hasErrors">
+        Errors!
+        <ul>
+          <li repeat.for="msg of errorMessages">
+            ${msg}
+          </li>
+        </ul>
+      </div>
+      <div show.bind="noExisting && !hasErrors">
         There is currently no stored data for this event.
         <button class='btn btn-primary' click.delegate='importSimple()'>
           Import
         </button>
       </div>
-      <div show.bind="yesExisting">
+      <div show.bind="yesExisting && !hasErrors">
         Data for this event already exists. What do you want to do?
 
         <button class='btn btn-primary' click.delegate='beginMerge()'>

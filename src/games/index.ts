@@ -16,12 +16,25 @@ export interface IGame {
   clearIds(json: IEventJson);
   beginMerge(json: IEventJson): Promise<IMergeState[]>;
   completeMerge(matches2018Merge: IMergeState[]): Promise<any>;
+
+  /**
+   * Get all game-specific dexie tables used by this implementation
+   */
   getTables(): any[];
 
   importSimple(json: IEventJson): Promise<any>;
 
   deleteEvent(json: IEventJson): Promise<any>;
+
+  validateEventTeamMatches(json: any): string[];
   
+  /**
+   * update a match. new match could have a different matchNumber and different team numbers.
+   * this method must ensure match-team entities' matchNumber is updated, and if team numbers 
+   * were changed, that match-teams for teams not scheduled in the new match are deleted.
+   */
+  updateMatch(newMatch: EventMatchEntity, oldMatchNumber: string): Promise<any>;
+  deleteMatch(eventCode: string, oldMatchNumber: string): Promise<any>;
 }
 
 export interface IMergeState {

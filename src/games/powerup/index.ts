@@ -3,9 +3,10 @@ import { PLATFORM } from "aurelia-pal";
 import * as naturalSort from "javascript-natural-sort";
 
 import { IGame, gameManager } from "../index";
+import { validateEventTeamMatches, getTeamNumbers } from "../merge-utils";
 import { Match2018MergeDialog } from "./merge-dialog";
 import { Match2018MergeState, PowerupEventJson } from "./model";
-import { FrcStatsContext } from "../../persistence";
+import { FrcStatsContext, EventMatchEntity } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
 
 @autoinject
@@ -31,7 +32,7 @@ class PowerupGame implements IGame {
   }
 
   getEventTeamMatches(eventCode) {
-    return this.dbContext.teamMatches2018.where("eventCode").equals(eventCode).toArray(matches => {
+    return this.dbContext.getTeamMatches2018({eventCode: eventCode}).then(matches => {
       matches.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
       return matches;
     });
@@ -46,9 +47,7 @@ class PowerupGame implements IGame {
       throw new Error("invalid json mergement");
     }
     let matches2018Merge = [];
-    return this.dbContext.teamMatches2018
-      .where("eventCode")
-      .equals(json.event.eventCode).toArray()
+    return this.dbContext.getTeamMatches2018({eventCode: json.event.eventCode})
       .then((fromDbMatches2018 ) => {;
         fromDbMatches2018.forEach(match2018 => {
           let state = Match2018MergeState.makeFromDb(match2018);
@@ -111,12 +110,45 @@ class PowerupGame implements IGame {
   }
 
   deleteEvent(json: PowerupEventJson): Promise<any> {
-    return this.dbContext.teamMatches2018
-    .where("eventCode")
-    .equals(json.event.eventCode).toArray()
+    return this.dbContext.getTeamMatches2018({eventCode: json.event.eventCode})
     .then(localMatches => {
       return this.dbContext.teamMatches2018.bulkDelete(localMatches.map(x => x.id));
     });
+  }
+
+  validateEventTeamMatches(json: any) {
+    return validateEventTeamMatches(json, json.matches2018, "matches2018");
+  }
+
+  updateMatch(matchP: EventMatchEntity, oldMatchNumber: string) {
+    let teamNumbers = getTeamNumbers(matchP);
+    return this.dbContext.getTeamMatches2018({eventCode: matchP.eventCode, matchNumber: oldMatchNumber})
+      .then(matches => {
+        let saveMatches = [];
+        let deleteMatches = [];
+        for(var match of matches) {
+          if(!teamNumbers.has(match.teamNumber)) {
+            deleteMatches.push(match.id);
+          }else if(oldMatchNumber != matchP.matchNumber){
+            match.matchNumber = matchP.matchNumber;
+            saveMatches.push(match);
+          }
+        }
+
+        return Promise.all([
+          this.dbContext.teamMatches2018.bulkPut(saveMatches),
+          this.dbContext.teamMatches2018.bulkDelete(deleteMatches),
+        ]);
+      }).then(() => "yup");
+  }
+
+  deleteMatch(eventCode: string, oldMatchNumber: string): Promise<any> {
+    return this.dbContext.getTeamMatches2018({eventCode: eventCode, matchNumber: oldMatchNumber})
+      .then(matches => {
+        let deleteMatches = matches.map(m => m.id)
+
+        return this.dbContext.teamMatches2018.bulkDelete(deleteMatches);
+      }).then(() => "yup");
   }
 }
 

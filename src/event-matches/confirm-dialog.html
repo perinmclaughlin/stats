@@ -1,17 +1,20 @@
 <template>
     <ux-dialog>
-        <ux-dialog-body>
-            <h1 style="font-size: 300%">
-                ${dialogContext}
-            </h1>
-            <p>
-                ${dialogMessage}
-            </p>
-        </ux-dialog-body>
-        <ux-dialog-footer>
-            <button class="btn btn-primary" click.delegate="controller.ok()">
-                OKAY
-            </button>
-        </ux-dialog-footer>
+      <ux-dialog-header>
+        <button type='button' click.delegate='controller.cancel()'>x</button>
+      </ux-dialog-header>
+      <ux-dialog-body>
+        <h1 style="font-size: 300%">
+          ${dialogContext}
+        </h1>
+        <p>
+        ${dialogMessage}
+        </p>
+      </ux-dialog-body>
+      <ux-dialog-footer>
+        <button class="btn btn-primary" click.delegate="controller.ok()">
+          OKAY
+        </button>
+      </ux-dialog-footer>
     </ux-dialog>
 </template>
