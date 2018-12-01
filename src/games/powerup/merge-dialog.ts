@@ -1,8 +1,8 @@
 import { autoinject } from "aurelia-framework";
-import { DialogController } from "aurelia-dialog";
+import { DialogController, DialogService } from "aurelia-dialog";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
-import { Match2018MergeState } from "./model";
+import { Match2018MergeState, MergeDialogModel } from "./model";
 import { EventMatchEntity } from "../../persistence";
 
 @autoinject
@@ -30,7 +30,7 @@ export class Match2018MergeDialog {
     this.validationController = validationControllerFactory.createForCurrentScope();
   }
 
-  activate(model) {
+  activate(model: MergeDialogModel) {
     this.state = model.state;
 
     for (var prop of Match2018MergeDialog.properties) {
@@ -110,8 +110,6 @@ export class Match2018MergeDialog {
     }
   }
 
-
-
   public resolve() {
     this.validationController.validate({object: this.state.merged, rules: this.rules })
       .then(validationResult => {
@@ -124,5 +122,9 @@ export class Match2018MergeDialog {
           this.state.resolved = false;
         }
       });
+  }
+
+  public static open(dialogService: DialogService, model: MergeDialogModel) {
+    return dialogService.open({model: model, viewModel: Match2018MergeDialog});
   }
 }

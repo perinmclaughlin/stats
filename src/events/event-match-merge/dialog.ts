@@ -25,6 +25,8 @@ export class EventMatchMergeDialog {
   }
 
   activate(model) {
+    this.controller.settings.overlayDismiss = true;
+    this.controller.settings.lock = false;
     this.state = model.state;
 
     this.setupValidation();

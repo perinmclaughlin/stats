@@ -13,6 +13,11 @@ export interface IGame {
   getEventTeamMatches(eventCode: string): Promise<IEventTeamMatch[]>;
   exportEventJson(event: EventEntity): Promise<IEventJson>;
 
+  /**
+   * set the json object to contain exactly one match in the game specific field
+   */
+  setJsonEventTeamMatch(json: any, match: IEventTeamMatch);
+
   clearIds(json: IEventJson);
   beginMerge(json: IEventJson): Promise<IMergeState[]>;
   completeMerge(matches2018Merge: IMergeState[]): Promise<any>;
@@ -35,6 +40,7 @@ export interface IGame {
    */
   updateMatch(newMatch: EventMatchEntity, oldMatchNumber: string): Promise<any>;
   deleteMatch(eventCode: string, oldMatchNumber: string): Promise<any>;
+  deleteTeamMatch(eventCode: string, oldMatchNumber: string, teamNumber: string): Promise<any>;
 }
 
 export interface IMergeState {

@@ -38,6 +38,8 @@ export class JsonImportDialog {
   }
 
   activate(options) {
+    this.controller.settings.lock = false;
+    this.controller.settings.overlayDismiss = true;
     this.setupObservers();
 
     if(options != null) {

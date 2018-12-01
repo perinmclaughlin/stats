@@ -67,3 +67,7 @@ export class Match2018MergeState implements IMergeState {
     return state;
   }
 }
+
+export interface MergeDialogModel {
+  state: Match2018MergeState;
+}

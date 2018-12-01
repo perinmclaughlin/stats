@@ -31,8 +31,12 @@ class PowerupGame implements IGame {
     return this.jsonExporter.eventToJson(event);
   }
 
+  setJsonEventTeamMatch(json: any, match) {
+    json['matches2018'] = [match];
+  }
+
   getEventTeamMatches(eventCode) {
-    return this.dbContext.getTeamMatches2018({eventCode: eventCode}).then(matches => {
+    return this.dbContext.getTeamMatches2018({ eventCode: eventCode }).then(matches => {
       matches.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
       return matches;
     });
@@ -43,12 +47,13 @@ class PowerupGame implements IGame {
   }
 
   beginMerge(json: PowerupEventJson): Promise<Match2018MergeState[]> {
-    if(json.event.year != this.gameCode) {
+    if (json.event.year != this.gameCode) {
       throw new Error("invalid json mergement");
     }
     let matches2018Merge = [];
-    return this.dbContext.getTeamMatches2018({eventCode: json.event.eventCode})
-      .then((fromDbMatches2018 ) => {;
+    return this.dbContext.getTeamMatches2018({ eventCode: json.event.eventCode })
+      .then((fromDbMatches2018) => {
+        ;
         fromDbMatches2018.forEach(match2018 => {
           let state = Match2018MergeState.makeFromDb(match2018);
           state.localSaved = match2018;
@@ -57,20 +62,20 @@ class PowerupGame implements IGame {
 
         json.matches2018.forEach(match2018 => {
           let states = matches2018Merge.filter(a => a.matchNumber == match2018.matchNumber && a.teamNumber == match2018.teamNumber);
-          if(states.length != 0) {
+          if (states.length != 0) {
             let state = states[0];
             state.fromFile = match2018;
-          }else{
+          } else {
             let state = Match2018MergeState.makeFromFile(match2018);
             matches2018Merge.push(state);
           }
         });
 
-        for(var state of matches2018Merge) {
+        for (var state of matches2018Merge) {
           state.setSameness();
         }
 
-        matches2018Merge.sort((a,b) => naturalSort(a.matchNumber, b.matchNumber));
+        matches2018Merge.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
         return matches2018Merge;
       });
   }
@@ -79,23 +84,23 @@ class PowerupGame implements IGame {
     let noop = Promise.resolve("yup");
     return Promise.all(
       matches2018Merge.map(state => {
-        if(!state.resolved) {
+        if (!state.resolved) {
           console.error("item not resolved", state);
           throw new Error("item not resolved");
         }
-        if(state.same || state.takeLocal) {
+        if (state.same || state.takeLocal) {
           return noop;
-        }else if(state.takeFromFile) {
+        } else if (state.takeFromFile) {
           // add record from file
           return this.dbContext.teamMatches2018.put(state.fromFile)
             .then(() => noop); //shaddap typescript
-        }else if(!state.takeLocal && !state.takeFromFile && state.localSaved != null && state.fromFile == null) {
+        } else if (!state.takeLocal && !state.takeFromFile && state.localSaved != null && state.fromFile == null) {
           // delete record from db
           return this.dbContext.teamMatches2018.delete(state.localSaved.id).then(() => noop);
-        }else if(state.merged != null) {
+        } else if (state.merged != null) {
           state.merged.id = state.localSaved.id;
           return this.dbContext.teamMatches2018.put(state.merged).then(() => noop);
-        }else {
+        } else {
           throw new Error("crumb! we missed a case!");
         }
       }));
@@ -106,14 +111,14 @@ class PowerupGame implements IGame {
   }
 
   importSimple(json: PowerupEventJson): Promise<any> {
-      return this.dbContext.teamMatches2018.bulkPut(json.matches2018);
+    return this.dbContext.teamMatches2018.bulkPut(json.matches2018);
   }
 
   deleteEvent(json: PowerupEventJson): Promise<any> {
-    return this.dbContext.getTeamMatches2018({eventCode: json.event.eventCode})
-    .then(localMatches => {
-      return this.dbContext.teamMatches2018.bulkDelete(localMatches.map(x => x.id));
-    });
+    return this.dbContext.getTeamMatches2018({ eventCode: json.event.eventCode })
+      .then(localMatches => {
+        return this.dbContext.teamMatches2018.bulkDelete(localMatches.map(x => x.id));
+      });
   }
 
   validateEventTeamMatches(json: any) {
@@ -122,14 +127,14 @@ class PowerupGame implements IGame {
 
   updateMatch(matchP: EventMatchEntity, oldMatchNumber: string) {
     let teamNumbers = getTeamNumbers(matchP);
-    return this.dbContext.getTeamMatches2018({eventCode: matchP.eventCode, matchNumber: oldMatchNumber})
+    return this.dbContext.getTeamMatches2018({ eventCode: matchP.eventCode, matchNumber: oldMatchNumber })
       .then(matches => {
         let saveMatches = [];
         let deleteMatches = [];
-        for(var match of matches) {
-          if(!teamNumbers.has(match.teamNumber)) {
+        for (var match of matches) {
+          if (!teamNumbers.has(match.teamNumber)) {
             deleteMatches.push(match.id);
-          }else if(oldMatchNumber != matchP.matchNumber){
+          } else if (oldMatchNumber != matchP.matchNumber) {
             match.matchNumber = matchP.matchNumber;
             saveMatches.push(match);
           }
@@ -143,12 +148,24 @@ class PowerupGame implements IGame {
   }
 
   deleteMatch(eventCode: string, oldMatchNumber: string): Promise<any> {
-    return this.dbContext.getTeamMatches2018({eventCode: eventCode, matchNumber: oldMatchNumber})
+    return this.dbContext.getTeamMatches2018({ eventCode: eventCode, matchNumber: oldMatchNumber })
       .then(matches => {
         let deleteMatches = matches.map(m => m.id)
 
         return this.dbContext.teamMatches2018.bulkDelete(deleteMatches);
       }).then(() => "yup");
+  }
+
+  deleteTeamMatch(eventCode: string, oldMatchNumber: string, teamNumber: string): Promise<any> {
+    return this.dbContext.getTeamMatches2018({
+      eventCode: eventCode,
+      matchNumber: oldMatchNumber,
+      teamNumber: teamNumber
+    }).then(matches => {
+      let deleteMatches = matches.map(m => m.id)
+
+      return this.dbContext.teamMatches2018.bulkDelete(deleteMatches);
+    }).then(() => "yup");
   }
 }
 

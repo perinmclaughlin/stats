@@ -64,6 +64,13 @@ export class FrcStatsContext extends Dexie {
     });
   }
 
+  getEvent(year: string, eventCode: string): Promise<EventEntity> {
+    return this.events
+      .where(["year", "eventCode"])
+      .equals([year, eventCode])
+      .first();
+  }
+
   getEventMatches(year: string, eventCode: string): Promise<EventMatchEntity[]> {
     return this.eventMatches
       .where(["year", "eventCode"])
@@ -71,7 +78,12 @@ export class FrcStatsContext extends Dexie {
   }
 
   getTeamMatches2018(opts: TeamMatchOpts) {
-    if('matchNumber' in opts) {
+    if('teamNumber' in opts) {
+      return this.teamMatches2018
+      .where(["eventCode", "teamNumber", "matchNumber"])
+      .equals([opts.eventCode, opts.teamNumber, opts.matchNumber])
+      .toArray()
+    }else if('matchNumber' in opts) {
       return this.teamMatches2018
         .where(["eventCode", "matchNumber"])
         .equals([opts.eventCode, opts.matchNumber])
@@ -88,6 +100,7 @@ export class FrcStatsContext extends Dexie {
 export interface TeamMatchOpts {
   eventCode: string;
   matchNumber?: string;
+  teamNumber?: string;
 }
 
 export interface IEventTeamMatch {
