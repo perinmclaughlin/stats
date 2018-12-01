@@ -40,6 +40,5 @@ export class Choofy {
         QrCodeDisplayDialog.open(this.dialogService,
             { data: "njbjkbcfgbskhcniuyrsk46evytiusrytbibvbbbbbbbbbbbbbbbbbbbbbhhbbbbbbbbyvigvtcytufffffgffffffffffffffvbtibyircicrywiyiucrwyuiyriwcyiwycriywiyiwvyiyvwifkititwghwgfghhcbvdhfjwhri3hihfiegugiyc767tvbkaytqlvtybqvnnnnnnnnnbnnnngnnnnnnnnnn8bnnnfhfhfdfhfhfhasdfgLYVTBYBVTBYTVYTBVTYBTVWYBVTYBYcyffbyi" },
         )
-    
     }
 }

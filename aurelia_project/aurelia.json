@@ -166,6 +166,11 @@
               "main": "prr"
           },
           {
+            "name": "lz-string",
+            "path": "../node_modules/lz-string/libs/",
+            "main": "lz-string"
+          },
+          {
               "name": "crypto",
               "path": "../node_modules/ms/",
               "main": "index"

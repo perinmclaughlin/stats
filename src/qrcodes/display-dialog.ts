@@ -2,6 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { QrCodeDisplayInput } from "./display-input";
 import * as qrcode from "qrcode-generator";
 import { DialogController, DialogService } from "aurelia-dialog";
+import * as lz from "lz-string";
 
 @autoinject
 export class QrCodeDisplayDialog {
@@ -56,7 +57,10 @@ export class QrCodeDisplayDialog {
     makePackets(data: string, chunkSize: number) {
         let packets = [];
         let hash = 0;
-        let chunks = this.obtainData(data, chunkSize - 6);
+
+        console.info(lz);
+
+        let chunks = this.obtainData(lz.compress(data), chunkSize - 6);
 
         for(var i = 0; i < chunks.length; i++){
             let index = this.encodeInt(i);
@@ -64,7 +68,7 @@ export class QrCodeDisplayDialog {
             let hash2 = this.encodeInt(hash);
 
             let packet = index + max + hash2 + chunks[i];
-
+            
             packets.push(packet);
         }
 

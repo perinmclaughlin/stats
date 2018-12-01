@@ -14,6 +14,7 @@ import { getTeamNumbers } from "../merge-utils";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import { PowerupBingoDialog } from "./powerup-bingo";
 import { scrollToTop } from "../../utilities/scroll";
+import { QrCodeDisplayDialog } from "../../qrcodes/display-dialog";
 
 
 
@@ -262,5 +263,14 @@ export class MatchTeamPage {
   public onIncAutoScale() {
     this.model.autoCrossedLine = true;
     this.model.autoAttemptedScale = true;
+  }
+
+  public export() {
+    if(this.model.id == null){
+      return;
+    }
+    QrCodeDisplayDialog.open(this.dialogService,
+      { data: JSON.stringify(this.model) },
+    )
   }
 }
