@@ -1,5 +1,6 @@
 import Dexie from "dexie";
 import { Team } from "./tba-api";
+import { timingSafeEqual } from "crypto";
 
 export class FrcStatsContext extends Dexie {
   teamMatches2018: Dexie.Table<TeamMatch2018Entity, number>;
@@ -32,8 +33,6 @@ export class FrcStatsContext extends Dexie {
     }).upgrade(() => {
       // yay its a noop
     });
-
-
 
     this.games.put({
       year: '2018',
@@ -93,6 +92,21 @@ export class FrcStatsContext extends Dexie {
         .where("eventCode")
         .equals(opts.eventCode).toArray();
     }
+  }
+
+  getUserPrefs(): Promise<UserStateEntity>{
+    return this.userPrefs.toArray().then(userPrefs => {
+      if(userPrefs != null && userPrefs.length != 0){
+        return userPrefs[0];
+      }
+      else{
+        let userPref: UserStateEntity = makeUserPrefs();
+        return this.userPrefs.put(userPref).then(id => {
+          userPref.id = id;
+          return userPref;
+        });
+      }
+    });
   }
   
 }
@@ -430,6 +444,7 @@ export interface UserStateEntity {
   currentEventId: number;
   currentYear: string;
   lastMatchNumber: number;
+  qrType: TypeNumber;
 }
 
 export interface EventMatchEntity {
@@ -468,6 +483,16 @@ export function makeEventMatch(year: string, eventCode: string, matchNumber: str
     blue3: "",
   };
 }
+
+export function makeUserPrefs(): UserStateEntity{
+  return {
+    currentEventId: null,
+    qrType: 12,
+    currentYear: "",
+    lastMatchNumber: null,
+  };
+}
+
 export function eventMatchesAreEqual(a: EventMatchEntity, b: EventMatchEntity): boolean {
   if(a == null && b != null || a != null && b == null) return false;
   return (a.matchNumber == b.matchNumber && a.year == b.year && a.eventCode == b.eventCode &&

@@ -3,6 +3,7 @@ import { QrCodeDisplayInput, qrCodeConfigurations } from "./display-input";
 import * as qrcode from "qrcode-generator";
 import { DialogController, DialogService } from "aurelia-dialog";
 import * as lz from "lz-string";
+import { FrcStatsContext, makeUserPrefs } from "../persistence";
 
 
 
@@ -18,7 +19,7 @@ export class QrCodeDisplayDialog {
   errorCorrection: ErrorCorrectionLevel = 'M';
   qrConfigI = 0;
 
-  constructor(public controller: DialogController) {
+  constructor(public controller: DialogController, private dbContext: FrcStatsContext) {
     this.qrConfigI = qrCodeConfigurations.length-1;
     this.setQrSize();
   }
@@ -26,6 +27,20 @@ export class QrCodeDisplayDialog {
   activate(model: QrCodeDisplayInput) {
     this.dataArray = this.makePackets(model.data, this.chunkSize);
     this.modelData = model.data;
+    return this.dbContext.getUserPrefs().then(userState => {
+      let results = qrCodeConfigurations.findIndex(qrConfig => {
+        return qrConfig.qrType == userState.qrType;
+      });
+
+      if(results == null || results == -1){
+        return;
+      }
+      else{
+        this.qrType = userState.qrType;
+        this.qrConfigI = results;
+        this.setQrSize();
+      }
+    });
   }
 
   drawQRCode() {
