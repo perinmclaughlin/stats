@@ -39,6 +39,7 @@ export class QrCodeDisplayDialog {
         this.qrType = userState.qrType;
         this.qrConfigI = results;
         this.setQrSize();
+        this.dataArray = this.makePackets(model.data, this.chunkSize);
       }
     });
   }
@@ -93,6 +94,9 @@ export class QrCodeDisplayDialog {
       packets.push(packet);
     }
 
+    if(this.i >= this.dataArray.length - 1){
+      this.i = this.dataArray.length - 1;
+    }
     return packets;
   }
 
@@ -105,13 +109,17 @@ export class QrCodeDisplayDialog {
     for(var i = 0; i < Math.ceil(data2.length / chunkSize); i++){
       var printThis = data2.substr(chunkSize * (i), chunkSize);
       this.dataArray.push(printThis);
+      console.info("putting 'printThis' into 'this.dataArray' with length " + printThis.length);
     }
     return(this.dataArray);
   }
 
   increment() {
-    if(this.i != this.dataArray.length - 1){
+    if(this.i < this.dataArray.length - 1){
       this.i = this.i + 1;
+    }
+    else if(this.i >= this.dataArray.length - 1){
+      this.i = this.dataArray.length - 1;
     }
     this.drawQRCode();
   }
@@ -138,7 +146,7 @@ export class QrCodeDisplayDialog {
     this.qrConfigI ++;
     this.setQrSize();
 
-    this.dataArray = this.makePackets(this.modelData, this.chunkSize);
+    this.saveQRcodeSize(this.qrType);
     this.drawQRCode();
   }
 
@@ -150,12 +158,20 @@ export class QrCodeDisplayDialog {
     this.qrConfigI --;
     this.setQrSize();
     
-    this.dataArray = this.makePackets(this.modelData, this.chunkSize);
+    this.saveQRcodeSize(this.qrType);
     this.drawQRCode();
   }
 
   attached() {
     this.drawQRCode();
+  }
+
+  saveQRcodeSize(qrType2: TypeNumber){
+    return this.dbContext.getUserPrefs().then(userState => {
+      userState.qrType = qrType2;
+
+      this.dbContext.userPrefs.put(userState);
+    });
   }
 
   static open(dialogService: DialogService, model: QrCodeDisplayInput) {
