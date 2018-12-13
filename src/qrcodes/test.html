@@ -1,37 +1,47 @@
 <template>
-    <button click.delegate='click()'>Choof</button>
+    <require from="./test.css"></require>
 
     <div class='container'>
         <div class='row'>
             <div class='col'>
                 <div class='row'>
                     <h2>Cameras</h2>
-                    <ul>
+                </div>
+                <div class='row'>
+                    <ul id='cameraList'>
                         <li show.bind="cameras.length==0">No cameras found</li>
-                        <li repeat.for="camera of cameras">
-                            <span if.bind="camera.id == activeCameraId" class='active'>
+                        <li repeat.for="camera of cameras" class='camera ${camera.id == activeCameraId ? "active":""}'
+                            click.delegate='selectCamera(camera)'>
+                            <span>
                                 ${camera.name || "unknown"}
-                            </span>
-                            <span if.bind="camera.id != activeCameraId">
-                                <a click.delegate='selectCamera(camera)'>${camera.name || "unknown"}</a>
                             </span>
                         </li>
                     </ul>
+                </div>
+
+                <div class='row' show.bind='!started && processing'>
+                    <h2>No scan in progress</h2>
+                    <button show.bind='processing' click.delegate='startScan()'>Start New Scan</button>
+                </div>
+                <div class='row' show.bind='!started && !processing'>
+                    <h2>Awaiting first qr code</h2>
+                </div>
+                <div class='row' show.bind='started'>
+                    <h2>Scan in progress</h2>
 
                 </div>
-                <div class='row'>
-                    <h2>Scans</h2>
+                <div class='row' show.bind='started'>
                     <ul>
-                        <li class="empty" show.bind="scans.length === 0">No scans yet</li>
-                        <li repeat.for="scan of scans">${ scan.content }</li>
+                        <li>
+                            ${receivedCount} of ${packetCount} received
+                        </li>
+                        <li show.bind='remaining != null'>still need ${remaining}</li>
                     </ul>
-
                 </div>
 
             </div>
             <div class='col'>
                 <video element.ref="videoElement" autoplay="autoplay"></video>
-
             </div>
 
         </div>

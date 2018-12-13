@@ -36,6 +36,9 @@ export class JsonExportDialog {
 
   activate(model) {
     this.event = model.event;
+
+    this.controller.settings.lock = false;
+    this.controller.settings.overlayDismiss = true;
     this.setupObservers();
     this.fileName = `${this.event.year}-${this.event.eventCode}.json`;
   }

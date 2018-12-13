@@ -4,7 +4,6 @@ import { Router } from "aurelia-router";
 import { DialogService } from "aurelia-dialog";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 
-import { MatchData } from "./model";
 import { 
   FrcStatsContext, 
   TeamMatch2018Entity, make2018match, 
@@ -15,6 +14,7 @@ import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import { PowerupBingoDialog } from "./powerup-bingo";
 import { scrollToTop } from "../../utilities/scroll";
 import { QrCodeDisplayDialog } from "../../qrcodes/display-dialog";
+import { clone } from "lodash";
 
 
 
@@ -265,12 +265,52 @@ export class MatchTeamPage {
     this.model.autoAttemptedScale = true;
   }
 
-  public export() {
+  public exportToQrCode() {
     if(this.model.id == null){
       return;
     }
     QrCodeDisplayDialog.open(this.dialogService,
-      { data: JSON.stringify(this.model) },
+      { data: this.prepareQrCodeData() },
     )
+  }
+
+  public prepareQrCodeData() {
+    let model = clone(this.model);
+    // in future, don't put bingo in the match model. so much wasted space.
+    let bingoProperties = [
+      "bingoSovietRussia",
+      "bingoGrunt",
+      "bingoFullHouse",
+      "bingoJudges",
+      "bingoYoink",
+      "bingoScalePlateHang",
+      "bingoDieInNull",
+      "bingoPushedInNull",
+      "bingoClotheslined",
+      "bingoWedged",
+      "bingoPowerUpsExist",
+      "bingoBoost",
+      "bingoForceTime",
+      "bingoClimbPlatform",
+      "bingoScaleBeach",
+      "bingoPyramid",
+      "bingoTimber",
+      "bingoClimbsGiven",
+      "bingoPlatformZone",
+      "bingoSkydivingClub",
+      "bingoCongaClimb",
+      "bingoWindchimeClimb",
+      "bingoLiftlessClimb",
+      "bingo3xClimb",
+    ]
+    for(var prop of bingoProperties) {
+      delete model[prop];
+    }
+    delete model['id'];
+    model['year'] = this.event.year;
+    console.info(model);
+    let result = JSON.stringify(model);
+    console.info();
+    return result;
   }
 }

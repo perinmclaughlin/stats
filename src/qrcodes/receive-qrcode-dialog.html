@@ -1,0 +1,21 @@
+<template>
+    <ux-dialog>
+        <ux-dialog-header>
+        </ux-dialog-header>
+        <ux-dialog-body>
+            Received data for team ${teamNumber}, match ${matchNumber}
+        </ux-dialog-body>
+        <ux-dialog-footer>
+            <div class='row'>
+            <span show.bind='needsMerge'>data already exists</span>
+            <button click.delegate='simpleSave()' show.bind='!needsMerge'>Save data</button>
+            <button click.delegate='mergeSave()' show.bind='needsMerge'>Merge</button>
+            <button click.delegate='replaceSave()' show.bind='needsMerge'>Replace</button>
+            </div>
+            <div class='row' show.bind='succeeded'>
+                <span>success!</span>
+                <button click.delegate='controller.ok()'>Done</button>
+            </div>
+        </ux-dialog-footer>
+    </ux-dialog>
+</template>

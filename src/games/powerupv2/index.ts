@@ -31,6 +31,10 @@ class PowerupV2Game implements IGame {
     return this.jsonExporter.eventToJson(event);
   }
 
+  setJsonEventTeamMatch(json: any, match){
+    json['matches2018'] = [match];
+  }
+
   getEventTeamMatches(eventCode) {
     return this.dbContext.teamMatches2018V2.where("eventCode").equals(eventCode).toArray(matches => {
       matches.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
@@ -76,6 +80,10 @@ class PowerupV2Game implements IGame {
   }
 
   deleteMatch(eventCode: string, oldMatchNumber: string): Promise<any> {
+    throw new Error("implement");
+  }
+
+  deleteTeamMatch(eventCode: string, oldMatchNumber: string, teamNumber: string): Promise<any> {
     throw new Error("implement");
   }
 }

@@ -1,5 +1,6 @@
 import Dexie from "dexie";
 import { Team } from "./tba-api";
+import { timingSafeEqual } from "crypto";
 
 export class FrcStatsContext extends Dexie {
   teamMatches2018: Dexie.Table<TeamMatch2018Entity, number>;
@@ -33,8 +34,6 @@ export class FrcStatsContext extends Dexie {
       // yay its a noop
     });
 
-
-
     this.games.put({
       year: '2018',
       name: 'FIRST POWER UP',
@@ -64,6 +63,13 @@ export class FrcStatsContext extends Dexie {
     });
   }
 
+  getEvent(year: string, eventCode: string): Promise<EventEntity> {
+    return this.events
+      .where(["year", "eventCode"])
+      .equals([year, eventCode])
+      .first();
+  }
+
   getEventMatches(year: string, eventCode: string): Promise<EventMatchEntity[]> {
     return this.eventMatches
       .where(["year", "eventCode"])
@@ -71,7 +77,12 @@ export class FrcStatsContext extends Dexie {
   }
 
   getTeamMatches2018(opts: TeamMatchOpts) {
-    if('matchNumber' in opts) {
+    if('teamNumber' in opts) {
+      return this.teamMatches2018
+      .where(["eventCode", "teamNumber", "matchNumber"])
+      .equals([opts.eventCode, opts.teamNumber, opts.matchNumber])
+      .toArray()
+    }else if('matchNumber' in opts) {
       return this.teamMatches2018
         .where(["eventCode", "matchNumber"])
         .equals([opts.eventCode, opts.matchNumber])
@@ -82,12 +93,28 @@ export class FrcStatsContext extends Dexie {
         .equals(opts.eventCode).toArray();
     }
   }
+
+  getUserPrefs(): Promise<UserStateEntity>{
+    return this.userPrefs.toArray().then(userPrefs => {
+      if(userPrefs != null && userPrefs.length != 0){
+        return userPrefs[0];
+      }
+      else{
+        let userPref: UserStateEntity = makeUserPrefs();
+        return this.userPrefs.put(userPref).then(id => {
+          userPref.id = id;
+          return userPref;
+        });
+      }
+    });
+  }
   
 }
 
 export interface TeamMatchOpts {
   eventCode: string;
   matchNumber?: string;
+  teamNumber?: string;
 }
 
 export interface IEventTeamMatch {
@@ -417,6 +444,7 @@ export interface UserStateEntity {
   currentEventId: number;
   currentYear: string;
   lastMatchNumber: number;
+  qrType: TypeNumber;
 }
 
 export interface EventMatchEntity {
@@ -455,6 +483,16 @@ export function makeEventMatch(year: string, eventCode: string, matchNumber: str
     blue3: "",
   };
 }
+
+export function makeUserPrefs(): UserStateEntity{
+  return {
+    currentEventId: null,
+    qrType: 12,
+    currentYear: "",
+    lastMatchNumber: null,
+  };
+}
+
 export function eventMatchesAreEqual(a: EventMatchEntity, b: EventMatchEntity): boolean {
   if(a == null && b != null || a != null && b == null) return false;
   return (a.matchNumber == b.matchNumber && a.year == b.year && a.eventCode == b.eventCode &&

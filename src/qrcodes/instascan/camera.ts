@@ -1,4 +1,4 @@
-
+import { uniqBy } from "lodash";
 export function cameraName(label) {
   var clean = label.replace(/\s*\([0-9a-f]+(:[0-9a-f]+)?\)\s*$/, '');
   return clean || label || null;
@@ -54,7 +54,7 @@ export class Camera {
     var devicesPromise = navigator.mediaDevices.enumerateDevices();
 
     return devicesPromise.then(devices => {
-      return devices
+      return uniqBy(devices, d => d.deviceId)
         .filter(d => d.kind === 'videoinput')
         .map(d => new Camera(d.deviceId, cameraName(d.label)));
     });
