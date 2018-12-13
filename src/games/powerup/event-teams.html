@@ -22,6 +22,8 @@
           <th>Team Name</th>
           <th>Scouted Match Count</th>
           <th class='clickable' click.delegate="sortByScale()">Avg Scale Count</th>
+          <th class='clickable' click.delegate="sortByScale2()">Avg2 Scale Count</th>
+          <th class='clickable' click.delegate="sortByScaleWeighted()">Weighted Scale Count</th>
           <th class='clickable' click.delegate="sortBySwitch()">Avg Switch Count</th>
           <th class='clickable' click.delegate="sortByVault()">Avg Vault Count</th>
           <th class='clickable' click.delegate="sortByClimb()">Climb Rate</th>
@@ -40,6 +42,8 @@
           <td>${teamData.teamName}</td>
           <td>${teamData.matchCount}</td>
           <td>${teamData.scaleAvg | numeric }</td>
+          <td>${teamData.scaleAvg2 | numeric }</td>
+          <td>${teamData.scaleWeighted | numeric }</td>
           <td>${teamData.switchAvg | numeric }</td>
           <td>${teamData.vaultAvg | numeric }</td>
           <td>${teamData.climbAvg | numeric }</td>

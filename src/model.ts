@@ -30,7 +30,12 @@ export class EventTeamData {
 	public failureCount: number;
 
 	public scaleCount: number;
-	public scaleAvg: number;
+  public scaleAvg: number;
+  public scaleCount2: number;
+  public scaleAvg2: number;
+  public scaleSum2: number;
+	public scaleMax: number;
+	public scaleWeighted: number;
 
   public switchCount: number;
   public switchAvg: number;

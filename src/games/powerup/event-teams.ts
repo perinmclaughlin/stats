@@ -92,6 +92,10 @@ export class EventTeams {
       teamData.autoSwitchCount = 0;
       teamData.autoScaleCount = 0;
       teamData.autoLineCount = 0;
+      teamData.scaleMax = 0;
+      teamData.scaleAvg2 = 0;
+      teamData.scaleCount2 = 0;
+      teamData.scaleSum2 = 0;
       for(var b of this.matches2018){
         if(b.teamNumber == teamData.teamNumber){
           teamData.cubeAverage += b.cubeCount;
@@ -104,7 +108,15 @@ export class EventTeams {
           
           teamData.matchCount++;
 
-          teamData.scaleCount += parseInt(<any>b.scaleCount);
+          let scaleCount = parseInt(<any>b.scaleCount);
+          teamData.scaleCount += scaleCount;
+          if(teamData.scaleMax < scaleCount) {
+              teamData.scaleMax = scaleCount;
+          }
+          if(scaleCount != 0) {
+            teamData.scaleCount2 ++;
+            teamData.scaleSum2 += scaleCount;
+          }
           teamData.switchCount += parseInt(<any>b.allySwitchCount);
           teamData.switchCount += parseInt(<any>b.oppoSwitchCount);
 
@@ -129,12 +141,18 @@ export class EventTeams {
 
       if(teamData.matchCount == 0) {
         teamData.scaleAvg = 0;
+        teamData.scaleWeighted = 0;
         teamData.switchAvg = 0;
         teamData.vaultAvg = 0;
         teamData.climbAvg = 0;
         teamData.liftAvg = 0;
       }else {
         teamData.scaleAvg = teamData.scaleCount / teamData.matchCount;
+        if(teamData.scaleCount2 != 0) {
+          teamData.scaleAvg2 = teamData.scaleSum2 / teamData.scaleCount2;
+        }
+        
+        teamData.scaleWeighted = teamData.scaleMax * 0.4 + teamData.scaleAvg * 0.6;
         teamData.switchAvg = teamData.switchCount / teamData.matchCount;
         teamData.vaultAvg = teamData.vaultCount / teamData.matchCount;
         teamData.climbAvg = teamData.climbCount / teamData.matchCount;
@@ -158,6 +176,13 @@ export class EventTeams {
 
   public sortByScale() {
     this.teamsData.sort((a, b) => b.scaleAvg - a.scaleAvg);
+  }
+  public sortByScale2() {
+    
+    this.teamsData.sort((a, b) => b.scaleAvg2 - a.scaleAvg2);
+  }
+  public sortByScaleWeighted() {
+    this.teamsData.sort((a, b) => b.scaleWeighted - a.scaleWeighted);
   }
 
   public sortBySwitch() {
