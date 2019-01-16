@@ -146,6 +146,7 @@ export class QrCodeDisplayDialog {
     this.qrConfigI ++;
     this.setQrSize();
 
+    this.dataArray = this.makePackets(this.modelData, this.chunkSize);
     this.saveQRcodeSize(this.qrType);
     this.drawQRCode();
   }
@@ -158,6 +159,7 @@ export class QrCodeDisplayDialog {
     this.qrConfigI --;
     this.setQrSize();
     
+    this.dataArray = this.makePackets(this.modelData, this.chunkSize);
     this.saveQRcodeSize(this.qrType);
     this.drawQRCode();
   }
