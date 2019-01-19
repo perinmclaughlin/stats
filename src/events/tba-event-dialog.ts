@@ -6,7 +6,7 @@ import { gameManager, IGame } from "../games/index";
 
 @autoinject
 export class TbaEventDialog {
-  year = "2018";
+  year = "2019";
   chosenGame: IGame;
   customEventKey = "";
   customIsLoading = false;
@@ -25,6 +25,7 @@ export class TbaEventDialog {
     this.controller.settings.overlayDismiss = true;
 
     this.games = gameManager.getGames();
+    this.yearChanged();
 
     this.load();
   }
