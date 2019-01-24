@@ -107,3 +107,11 @@ export class EventMatchMergeState {
     return state;
   }
 }
+
+export function nextMatchNumber(matchNumber: string): string {
+  return ""+(parseInt(matchNumber) + 1);
+}
+
+export function previousMatchNumber(matchNumber: string): string {
+  return ""+(parseInt(matchNumber) - 1);
+}

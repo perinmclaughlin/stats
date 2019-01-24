@@ -50,6 +50,9 @@ export class App {
       }else{
         instruction.config.moduleId = moduleGetter(game);
       }
+
+      // this is a hack to work around https://github.com/aurelia/router/issues/289
+      delete instruction.config.viewPorts;
     };
 
     let navToGameMatchInput = (instruction) => {

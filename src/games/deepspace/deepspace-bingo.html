@@ -1,0 +1,119 @@
+<template>
+  <require from="../../utilities/bingo-cell"></require>
+  <ux-dialog>
+    <ux-dialog-header>
+        <button class='btn btn-danger btn-sm float-right' click.delegate='controller.cancel()'>
+          X
+        </button>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='bingo-container'>
+        <div class='bingo-item'>
+          Cubes
+        </div>
+        <div class='bingo-item'>
+          Scale
+        </div>
+        <div class='bingo-item'>
+          Power Ups
+        </div>
+        <div class='bingo-item'>
+          Misc
+        </div>
+        <div class='bingo-item'>
+          Climb
+        </div>
+        <bingo-cell value.bind="match.bingoSovietRussia">
+          In Soviet Russia, Power Cube pick up YOU
+        </bingo-cell>
+        <bingo-cell value.bind="match.bingoScalePlateHang">
+          Hang!
+          <div>.. from the scale plate?</div>
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoPowerUpsExist'>
+          There's power ups?
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoScaleBeach'>
+          Oh look a scale.
+
+          <p> Let me beach you on it &gt;:) </p>
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoSkydivingClub'>
+          Skydiving Club
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoGrunt'>
+          halo grunt <br/>
+          Get it off me! Get it off me!
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoDieInNull'>
+          Oh look a null territory.
+          <p>
+          This looks like a good place to die
+          </p>
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoBoost'>
+          Boost!
+          <p> Oh, I need control first? </p>
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoPyramid'>
+          Oh, we're not supposed to touch their pyramid?
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoCongaClimb'>
+          Conga Climb
+        </bingo-cell>
+        <bingo-cell value.bind="match.bingoFullHouse">
+          Full House (9+ cubes)
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoPushedInNull'>
+          Oh look a null territory.
+          <p>
+          Let me help you into it &gt;:)
+          </p>
+        </bingo-cell>
+        <div class='bingo-item red'>
+          <span style='text-decoration: line-through'>Field Fault</span>
+          <p> FREE </p>
+        </div>
+        <bingo-cell value.bind='match.bingoTimber'>
+          Timber!
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoWindchimeClimb'>
+          Windchime Climb
+        </bingo-cell>
+        <bingo-cell value.bind="match.bingoJudges">
+          Into the judges (refs, etc)
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoClotheslined'>
+          Clotheslined
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoForceTime'>
+          Force! And Time!
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoClimbsGiven'>
+          A climb for you, and a climb for you
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoLiftlessClimb'>
+          Rampbot 2x liftless climb
+        </bingo-cell>
+        <bingo-cell value.bind="match.bingoYoink">
+          Yoink!
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoWedged'>
+          Wedged under the scale plate
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoClimbPlatform'>
+          Can't.. climb.. platform..
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingoPlatformZone'>
+          Oh look a platform zone. this looks like a good place to die.
+        </bingo-cell>
+        <bingo-cell value.bind='match.bingo3xClimb'>
+          Rampbot 3x Lift
+
+          <p> Bonus: whoops, there goes one </p>
+        </bingo-cell>
+      </div>
+
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

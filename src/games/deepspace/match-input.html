@@ -1,3 +1,15 @@
 <template>
-    match match
+    <div>
+      Event Name: ${event.name}
+    </div>
+    <div>
+      Match Number: ${model.matchNumber}
+    </div>
+    <div>
+      Team Number: ${model.teamNumber}
+    </div>
+
+    <button click.delegate='addPlacement()'>Add</button>
+
+    <button click.delegate='save()'>Save</button>
 </template>

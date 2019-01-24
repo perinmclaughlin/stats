@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ValidationRules } from "aurelia-validation";
-import { FrcStatsContext, EventMatchEntity } from "./persistence";
+import { FrcStatsContext, EventMatchEntity, qualitativeAnswers } from "./persistence";
 
 @autoinject
 export class CustomValidationRules {
@@ -38,5 +38,13 @@ export class CustomValidationRules {
       }, `must be less than or equal to \${$config.maxValue}.`,
       (maxValue) => ({maxValue}),
     );
+
+    ValidationRules.customRule(
+      "isQualitativeNumeric",
+      (input: number, obj: any) => {
+        return qualitativeAnswers.some(ans => ans.numeric == input);
+      },
+      `invalid qualitative value`
+    )
   }
 }

@@ -5,7 +5,7 @@
   <div class='container'>
     <div class='row'>
       <div class='col'>
-        <div class='btn-group float-right'>
+        <div class='btn-group float-right' style='margin-bottom: 10px;'>
           <button class='btn btn-secondary' click.delegate='tbaImport()'>
             Import from TBA
             <img src="static/tba.png" />
@@ -20,7 +20,7 @@
                 <a class='dropdown-item' href="javascript:void(0)" click.delegate='localImportJson()'>Local File</a>
               </li>
               <li>
-                <a class='dropdown-item' href="javascript:void(0)" click.delegate='gdriveImportJson()'>Google Docs</a>
+                <a class='dropdown-item' href="javascript:void(0)" click.delegate='gdriveImportJson()'>Google Drive</a>
               </li>
             </ul>
           </div>
@@ -32,6 +32,7 @@
         <th>Event</th>
         <th>Game</th>
         <th>Year</th>
+        <th></th>
       </tr>
 
       <tr repeat.for="event of events">

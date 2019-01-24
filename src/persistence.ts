@@ -5,6 +5,7 @@ import { timingSafeEqual } from "crypto";
 export class FrcStatsContext extends Dexie {
   teamMatches2018: Dexie.Table<TeamMatch2018Entity, number>;
   teamMatches2018V2: Dexie.Table<TeamMatch2018V2Entity, number>;
+  teamMatches2019: Dexie.Table<TeamMatch2019Entity, number>;
   teams: Dexie.Table<TeamEntity, number>;
   districts: Dexie.Table<DistrictEntity, number>;
   events: Dexie.Table<EventEntity, number>;
@@ -34,9 +35,26 @@ export class FrcStatsContext extends Dexie {
       // yay its a noop
     });
 
+    this.version(3).stores({
+      teamMatches2019: '++id, eventCode, teamNumber, matchNumber, [eventCode+matchNumber], [eventCode+teamNumber], &[eventCode+teamNumber+matchNumber]'
+    }).upgrade(() => {
+      // err noop again..
+    });
+
     this.games.put({
       year: '2018',
       name: 'FIRST POWER UP',
+    }).catch(error => {
+      if(error.name == 'ConstraintError') {
+        // u weird, chrome
+        return;
+      }
+      throw error;
+    });
+
+    this.games.put({
+      year: '2019',
+      name: 'FIRST DEEP SPACE',
     }).catch(error => {
       if(error.name == 'ConstraintError') {
         // u weird, chrome
@@ -63,6 +81,10 @@ export class FrcStatsContext extends Dexie {
     });
   }
 
+  getEventTeams(year: string, eventCode: string): Promise<EventTeamEntity[]> {
+    return this.eventTeams.where(["year", "eventCode"]).equals([year, eventCode]).toArray();
+  }
+
   getEvent(year: string, eventCode: string): Promise<EventEntity> {
     return this.events
       .where(["year", "eventCode"])
@@ -74,6 +96,12 @@ export class FrcStatsContext extends Dexie {
     return this.eventMatches
       .where(["year", "eventCode"])
       .equals([year, eventCode]).toArray();
+  }
+
+  getEventMatch(year: string, eventCode: string, matchNumber: string): Promise<EventMatchEntity> {
+    return this.eventMatches
+      .where(["year", "eventCode", "matchNumber"])
+      .equals([year, eventCode, matchNumber]).first();
   }
 
   getTeamMatches2018(opts: TeamMatchOpts) {
@@ -89,6 +117,24 @@ export class FrcStatsContext extends Dexie {
         .toArray()
     }else{
       return this.teamMatches2018
+        .where("eventCode")
+        .equals(opts.eventCode).toArray();
+    }
+  }
+
+  getTeamMatches2019(opts: TeamMatchOpts): Promise<TeamMatch2019Entity[]> {
+    if('teamNumber' in opts) {
+      return this.teamMatches2019
+      .where(["eventCode", "teamNumber", "matchNumber"])
+      .equals([opts.eventCode, opts.teamNumber, opts.matchNumber])
+      .toArray()
+    }else if('matchNumber' in opts) {
+      return this.teamMatches2019
+        .where(["eventCode", "matchNumber"])
+        .equals([opts.eventCode, opts.matchNumber])
+        .toArray()
+    }else{
+      return this.teamMatches2019
         .where("eventCode")
         .equals(opts.eventCode).toArray();
     }
@@ -216,6 +262,62 @@ export interface PowerupBingo {
   bingo3xClimb: boolean;
 }
 
+export interface TeamMatch2019Entity extends IEventTeamMatch {
+  id?: number;
+
+  cargoPickup: QualitativeNumeric;
+  hatchPanelPickup: QualitativeNumeric;
+  placements: DeepSpaceEvent[];
+
+  level2ClimbAttempted: boolean;
+  level2ClimbSucceeded: boolean;
+  level3ClimbAttempted: boolean;
+  level3ClimbSucceeded: boolean;
+  level3ClimbBegin: number;
+  level3ClimbEnd: number;
+  lifted: string[];
+  liftedBy: string;
+
+  isFailure: boolean;
+	failureReason: string;
+	isFoul: boolean;
+  foulReason: string;
+  notes: string;
+}
+
+export interface DeepSpaceEvent {
+  eventType: DeepSpaceEventType;
+
+  // eventType == "Gamepiece Placement"
+  gamepiece?: DeepSpaceGamepiece;
+  location?: DeepSpaceLocation;
+  when?: number;
+  sandstorm?: boolean;
+
+  // eventType == "Begin Other Noncycle"
+  description?: string;
+}
+
+export type DeepSpaceEventType = "Begin Defense" | "End Defense" | "Begin Other Noncycle" | "End Other Noncycle" | "Gamepiece Placement";
+export type DeepSpaceGamepiece = "Cargo" | "Hatch Panel";
+export type DeepSpaceLocation = "Cargo Ship" | "Rocket Low" | "Rocket Mid" | "Rocket High";
+
+export var allDeepSpaceGamepieceTypes: DeepSpaceGamepiece[] = ["Cargo", "Hatch Panel"];
+export var allDeepSpaceLocations: DeepSpaceLocation[] = ["Cargo Ship", "Rocket Low", "Rocket Mid", "Rocket High"];
+
+export type QualitativeNumeric = 0 | 10 | 20 | 30 | 40;
+export interface QualitativeAnswer {
+  numeric: QualitativeNumeric;
+  name: string;
+}
+export var qualitativeAnswers : QualitativeAnswer[] = [
+  { numeric: 0, name: "N/A" },
+  { numeric: 10, name: "Poor" },
+  { numeric: 20, name: "Decent"},
+  { numeric: 30, name: "Good" },
+  { numeric: 40, name: "Excellent"}
+]
+
 export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018Entity {
   return {
     autoScaleCount: 0,
@@ -282,6 +384,32 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
     bingo3xClimb: false,
   };
 
+}
+
+
+export function make2019match(eventCode, teamNumber, matchNumber): TeamMatch2019Entity {
+  return {
+    eventCode: eventCode,
+    teamNumber: teamNumber,
+    matchNumber: matchNumber,
+
+    cargoPickup: 0,
+    isFailure: false,
+    failureReason: null,
+    isFoul: false,
+    foulReason: null,
+    hatchPanelPickup: 0,
+    level2ClimbAttempted: false,
+    level2ClimbSucceeded: false,
+    level3ClimbAttempted: false,
+    level3ClimbBegin: 0,
+    level3ClimbEnd: 0,
+    level3ClimbSucceeded: false,
+    lifted: [],
+    liftedBy: null,
+    notes: null,
+    placements: []
+  };
 }
 
 export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Entity) {

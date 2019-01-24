@@ -4,9 +4,10 @@ import * as naturalSort from "javascript-natural-sort";
 
 import { IGame, gameManager, IEventJson, IMergeState } from "../index";
 import { validateEventTeamMatches, getTeamNumbers } from "../merge-utils";
-import { FrcStatsContext, EventMatchEntity, IEventTeamMatch } from "../../persistence";
+import { FrcStatsContext, EventMatchEntity, IEventTeamMatch, TeamMatch2019Entity } from "../../persistence";
 
 export interface DeepSpaceEventJson extends IEventJson{
+  matches2019: TeamMatch2019Entity[]
 }
 
 export interface Match2019MergeState extends IMergeState{
@@ -39,11 +40,14 @@ class DeepSpaceGame implements IGame {
   }
 
   getEventTeamMatches(eventCode): Promise<IEventTeamMatch[]> {
-    return Promise.resolve([]);
+    return this.dbContext.getTeamMatches2019({ eventCode: eventCode }).then(matches => {
+      matches.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));
+      return matches;
+    });
   }
 
   clearIds(json: DeepSpaceEventJson) {
-    throw new Error("implement");
+    json.matches2019.forEach(x => delete x.id);
   }
 
   beginMerge(json: DeepSpaceEventJson): Promise<Match2019MergeState[]> {
@@ -55,15 +59,18 @@ class DeepSpaceGame implements IGame {
   }
 
   getTables(): any[] {
-    throw new Error("implement");
+    return [this.dbContext.teamMatches2019];
   }
 
   importSimple(json: DeepSpaceEventJson): Promise<any> {
-    throw new Error("implement");
+    return this.dbContext.teamMatches2019.bulkPut(json.matches2019);
   }
 
   deleteEvent(json: DeepSpaceEventJson): Promise<any> {
-    throw new Error("implement");
+    return this.dbContext.getTeamMatches2019({ eventCode: json.event.eventCode })
+      .then(localMatches => {
+        return this.dbContext.teamMatches2019.bulkDelete(localMatches.map(x => x.id));
+      });
   }
 
   validateEventTeamMatches(json: any): string[] {
@@ -71,15 +78,46 @@ class DeepSpaceGame implements IGame {
   }
 
   updateMatch(matchP: EventMatchEntity, oldMatchNumber: string): Promise<any> {
-    throw new Error("implement");
+    let teamNumbers = getTeamNumbers(matchP);
+    return this.dbContext.getTeamMatches2019({ eventCode: matchP.eventCode, matchNumber: oldMatchNumber })
+      .then(matches => {
+        let saveMatches = [];
+        let deleteMatches = [];
+        for (var match of matches) {
+          if (!teamNumbers.has(match.teamNumber)) {
+            deleteMatches.push(match.id);
+          } else if (oldMatchNumber != matchP.matchNumber) {
+            match.matchNumber = matchP.matchNumber;
+            saveMatches.push(match);
+          }
+        }
+
+        return Promise.all([
+          this.dbContext.teamMatches2019.bulkPut(saveMatches),
+          this.dbContext.teamMatches2019.bulkDelete(deleteMatches),
+        ]);
+      }).then(() => "yup");
   }
 
   deleteMatch(eventCode: string, oldMatchNumber: string): Promise<any> {
-    throw new Error("implement");
+    return this.dbContext.getTeamMatches2019({ eventCode: eventCode, matchNumber: oldMatchNumber })
+      .then(matches => {
+        let deleteMatches = matches.map(m => m.id)
+
+        return this.dbContext.teamMatches2019.bulkDelete(deleteMatches);
+      }).then(() => "yup");
   }
 
   deleteTeamMatch(eventCode: string, oldMatchNumber: string, teamNumber: string): Promise<any> {
-    throw new Error("implement");
+    return this.dbContext.getTeamMatches2019({
+      eventCode: eventCode,
+      matchNumber: oldMatchNumber,
+      teamNumber: teamNumber
+    }).then(matches => {
+      let deleteMatches = matches.map(m => m.id)
+
+      return this.dbContext.teamMatches2019.bulkDelete(deleteMatches);
+    }).then(() => "yup");
   }
 }
 
