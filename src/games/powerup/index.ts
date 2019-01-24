@@ -13,7 +13,7 @@ import { JsonExporter } from "./event-to-json";
 class PowerupGame implements IGame {
   public gameCode = "2018";
   public year = "2018";
-  public name = "FIRST POWER UP";
+  public name = "POWER UP";
   public matchInputModule = PLATFORM.moduleName("games/powerup/match-input");
   public eventTeamsModule = PLATFORM.moduleName("games/powerup/event-teams");
   public eventTeamModule = PLATFORM.moduleName("games/powerup/event-team");

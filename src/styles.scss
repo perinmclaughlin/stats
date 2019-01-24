@@ -2,8 +2,16 @@
   background-color: #eef;
 }
 
+tr:hover .blue {
+  background-color: #cbdcff;
+}
+
 .red {
   background-color: #fee;
+}
+
+tr:hover .red {
+  background-color: #fadbde;
 }
 
 .green {

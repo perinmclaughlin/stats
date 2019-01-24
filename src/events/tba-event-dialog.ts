@@ -133,6 +133,7 @@ export class TbaEventDialog {
       name: evnt.name, 
       districtCode: this.getDistrictCode(evnt.district),
       tbaKey: evnt.key,
+      calendarYear: ""+evnt.year,
       year: this.chosenGame.gameCode,
     });
   }

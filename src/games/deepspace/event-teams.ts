@@ -3,6 +3,7 @@ import { EventEntity, EventMatchEntity, TeamEntity, EventTeamEntity, TeamMatch20
 import { DialogService } from "aurelia-dialog";
 import * as naturalSort from "javascript-natural-sort";
 import { makeTeamStats, DeepSpaceTeamStatistics } from "./statistics";
+import { gameManager } from "../index";
 
 @autoinject 
 export class EventTeamsPage {
@@ -12,6 +13,7 @@ export class EventTeamsPage {
   public matches2019: TeamMatch2019Entity[];
   public activeTab: number;
   public teamsData: DeepSpaceTeamStatistics[];
+  public gameName: string;
 
   constructor(
     private dbContext: FrcStatsContext,
@@ -24,6 +26,8 @@ export class EventTeamsPage {
   }
 
   public async activate(params) {
+    let game = gameManager.getGame(params.year);
+    this.gameName = game.name;
     this.event = await this.dbContext.getEvent(params.year, params.eventCode);
     await this.getEventMatches();
     await this.getEventTeams();

@@ -17,7 +17,7 @@ export interface Match2019MergeState extends IMergeState{
 class DeepSpaceGame implements IGame {
   public gameCode = "2019";
   public year = "2019";
-  public name = "FIRST DEEP SPACE";
+  public name = "DEEP SPACE";
   public matchInputModule = PLATFORM.moduleName("games/deepspace/match-input");
   public eventTeamsModule = PLATFORM.moduleName("games/deepspace/event-teams");
   public eventTeamModule = PLATFORM.moduleName("games/deepspace/event-team");

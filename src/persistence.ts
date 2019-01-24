@@ -89,7 +89,23 @@ export class FrcStatsContext extends Dexie {
     return this.events
       .where(["year", "eventCode"])
       .equals([year, eventCode])
-      .first();
+      .first().then(event => {
+        if(event != null && event.calendarYear == null) {
+          event.calendarYear = event.year;
+        }
+        return event;
+      });
+  }
+
+  getAllEvents(): Promise<EventEntity[]> {
+    return this.events.toArray().then(events => {
+      for(var event of events) {
+        if(event.calendarYear == null) {
+          event.calendarYear = event.year;
+        }
+      }
+      return events;
+    })
   }
 
   getEventMatches(year: string, eventCode: string): Promise<EventMatchEntity[]> {
@@ -556,6 +572,7 @@ export interface EventEntity {
   name: string;
   districtCode: string;
   year: string;
+  calendarYear: string;
 
   tbaKey?: string;
 }

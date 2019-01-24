@@ -27,7 +27,7 @@ export class Events {
   }
 
   private loadEvents() {
-      return this.dbContext.events.toArray().then(events => {
+      return this.dbContext.getAllEvents().then(events => {
         this.events = events;
       });
   }

@@ -25,6 +25,8 @@ export class QrCodeDisplayDialog {
   }
 
   activate(model: QrCodeDisplayInput) {
+    this.controller.settings.lock = false;
+    this.controller.settings.overlayDismiss = true;
     this.dataArray = this.makePackets(model.data, this.chunkSize);
     this.modelData = model.data;
     return this.dbContext.getUserPrefs().then(userState => {

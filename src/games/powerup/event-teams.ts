@@ -4,6 +4,7 @@ import * as naturalSort from "javascript-natural-sort";
 import { EventEntity, FrcStatsContext, EventTeamEntity, TeamEntity, EventMatchEntity, TeamMatch2018Entity } from "../../persistence";
 import { EventTeamData, MatchData } from "../../model";
 import { AddTeamDialog } from "./add-team-dialog";
+import { gameManager } from "../index";
 
 @autoinject
 export class EventTeams {
@@ -13,6 +14,7 @@ export class EventTeams {
   public matches2018: TeamMatch2018Entity[];
   public activeTab: number;
   public teamsData: EventTeamData[];
+  public gameName: string;
 
   constructor(
     private dbContext: FrcStatsContext,
@@ -25,6 +27,8 @@ export class EventTeams {
   }
    
   activate(params){
+    let game = gameManager.getGame(params.year);
+    this.gameName = game.name;
     return this.getEvent(params).then(() => {
       return Promise.all([
         this.getEventMatches(), 
@@ -36,7 +40,7 @@ export class EventTeams {
   }
   
   getEvent(params) {
-	  return this.dbContext.events.where(["year", "eventCode"]).equals([params.year, params.eventCode]).first().then(event => {
+	  return this.dbContext.getEvent(params.year, params.eventCode).then(event => {
 		  this.event = event;
     });
   }

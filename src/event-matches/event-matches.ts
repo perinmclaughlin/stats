@@ -17,6 +17,7 @@ export class EventMatches {
   public eventTeamMatches: IEventTeamMatch[];
   public activeTab: number;
   public teamsData: EventTeamData[];
+  public gameName: string;
 
   constructor(
     private dbContext: FrcStatsContext,
@@ -29,6 +30,8 @@ export class EventMatches {
   }
    
   activate(params) {
+    let game = gameManager.getGame(params.year);
+    this.gameName = game.name;
 
     return this.getEvent(params).then(() => {
       return Promise.all([
@@ -72,7 +75,7 @@ export class EventMatches {
   }
 
   getEvent(params) {
-	  return this.dbContext.events.where(["year", "eventCode"]).equals([params.year, params.eventCode]).first().then(event => {
+	  return this.dbContext.getEvent(params.year, params.eventCode).then(event => {
 		  this.event = event;
     });
   }
