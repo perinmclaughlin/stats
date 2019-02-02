@@ -126,10 +126,27 @@ export function makeTeamStats(x: TeamMatch2019Entity[]): DeepSpaceTeamStatistics
   //result.avgHatchPanelCountRocketLow = _hatchPanelCount for rocketLow_ / _some time value_;
   //result.avgHatchPanelCycleTimeRocketMid = _hatchPanelCount for rocketMid_ / _some time value_;
   //result.avgHatchPanelCycleTimeRocketHigh = _hatchPanelCount for rocketHigh_ / _some time value_;
-  //result.climbLevel2Attempts = _something_;
-  //result.climbLevel2Successes = _something_;
-  //result.climbLevel3Attempts = _something_;
-  //result.climbLevel3Successes = _something_;
+
+  for(var i = 0; i < x.length; i++) {
+    if(x[i].level2ClimbAttempted) {
+      result.climbLevel2Attempts++;
+    }
+    if(x[i].level3ClimbAttempted) {
+      result.climbLevel3Attempts++;
+    }
+    if(x[i].level2ClimbSucceeded) {
+      result.climbLevel2Successes++;
+    }
+    if(x[i].level3ClimbSucceeded) {
+      result.climbLevel3Successes++;
+    }
+    if(x[i].lifted.length > 0 && x[i].lifted.length != null) {
+      for(var k = 0; k < x[i].lifted.length; k++) {
+        result.liftLevel3Count++;
+      }
+    }
+  }
+
   //result.climbLevel3Time = _some time value_;
   //result.liftLevel2Count = _something_;
   //result.liftLevel3Count = _something_;

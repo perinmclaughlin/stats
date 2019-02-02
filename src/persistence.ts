@@ -298,9 +298,9 @@ export interface TeamMatch2019Entity extends IEventTeamMatch {
   level3ClimbBegin: number;
   /**Determines when the robot finished climbing to the third level of the pedestal. */
   level3ClimbEnd: number;
-  /**Stores the team numbers of the robots lifted by this robot. */
+  /**Stores the team numbers of the robots lifted by this robot to the third level of the pedestal. */
   lifted: string[];
-  /**Stores the team number of the robot that lifted this robot. */
+  /**Stores the team number of the robot that lifted this robot to the third level of the pedestal. */
   liftedBy: string;
   /**Determines whether or not a robot failure occurred. */
   isFailure: boolean;
