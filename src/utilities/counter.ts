@@ -11,6 +11,8 @@ export class Counter {
   @bindable rules: any;
   @bindable display: string;
   @bindable onIncrement: Function;
+  @bindable placeholder: string;
+  @bindable({defaultValue: true}) showLabel: boolean;
   static idCounter = 0;
   id: string;
 

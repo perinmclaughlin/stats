@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
-import { TeamMatch2019Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2019match, EventMatchSlots, DeepSpaceEvent } from "../../persistence";
+import { TeamMatch2019Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2019match, EventMatchSlots, DeepSpaceEvent, qualitativeAnswers, allDeepSpaceLocations, allDeepSpaceGamepieceTypes } from "../../persistence";
 import { Disposable, BindingEngine } from "aurelia-binding";
 import { DialogService } from "aurelia-dialog";
 import { Router } from "aurelia-router";
@@ -28,6 +28,10 @@ export class MatchInputPage {
   public errorNotScheduled = false;
   public hasNextMatch = false;
   public hasPreviousMatch = false;
+  public qualifiedAnswers = qualitativeAnswers;
+  public locationArray = allDeepSpaceLocations;
+  public gamepieceArray = allDeepSpaceGamepieceTypes;
+  public maxWhen = 135;
 
   public rules: any[];
   public placementRules: any[];
@@ -187,14 +191,20 @@ export class MatchInputPage {
   public addPlacement() {
     let placement : DeepSpaceEvent = {
       eventType: "Gamepiece Placement",
-      gamepiece: "Hatch Panel",
+      gamepiece: null,
       location: null,
       sandstorm: false,
       when: null,
     };
 
     this.model.placements.push(placement);
+    console.info(this.model.placements);
   }
+
+  public deleteRow(index:number){
+    this.model.placements.splice(index, 1);
+  }
+
 
   public validateAll() {
     let validationPromises = this.model.placements.map(placement => this.validationController.validate({

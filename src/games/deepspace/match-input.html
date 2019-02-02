@@ -1,15 +1,96 @@
 <template>
-    <div>
-      Event Name: ${event.name}
-    </div>
-    <div>
-      Match Number: ${model.matchNumber}
-    </div>
-    <div>
-      Team Number: ${model.teamNumber}
-    </div>
-
+  <require from="../../utilities/counter"></require>
+  <require from="./match-input.css"></require>
+  <div class='container-fluid' show.bind='!errorNotScheduled'>
+    <h1>
+      <b>
+        <u>
+          <a route-href='route: event-team; params.bind: {year: event.year,
+            eventCode: event.eventCode, teamNumber: team.teamNumber}'>
+            ${team.teamNumber} (${team.teamName})
+          </a>
+        </u>
+      </b>
+    </h1>
+    <h3>
+      <b>
+        <a route-href='route: event-matches; params.bind: {year: event.year,
+          eventCode: event.eventCode }'>
+          ${event.name}
+        </a>
+      </b>
+      match ${model.matchNumber}
+    </h3>
+    <!--Buttons for switching pages, saving, and adding-->
+    <button click.delegate='gotoPreviousMatch()'>Previous Match</button>
     <button click.delegate='addPlacement()'>Add</button>
-
     <button click.delegate='save()'>Save</button>
+    <button click.delegate='gotoNextMatch()'>Next Match</button>
+    <!--Drop down menus for the cargo and hatch pickups-->
+    <div class='row'>
+      <div class='col'>
+        <label>Cargo Pickup</label>
+        <select class='form-control' value.bind='model.cargoPickup'>
+          <option></option>
+          <option repeat.for='a of qualifiedAnswers'>${a.name}</option>
+        </select>
+        <label>Hatch Panel Pickup</label>
+        <select class='form-control' value.bind='model.hatchPanelPickup'>
+          <option></option>
+          <option repeat.for='a of qualifiedAnswers'>${a.name}</option>
+        </select>
+      </div>
+    </div>
+
+    <div id='TacoPlacements'>
+      <div class='gamePieceLabel'>
+        <label>Game Piece</label>
+        <label></label>
+      </div>
+      <div class='goalLabel'>
+        <label>Goal</label>
+      </div>
+      <div class='secondsLabel'>
+        <label>Seconds Left</label>
+      </div>
+      <div class='sandStormLabel'>
+        <label>Sand Storm</label>
+      </div>
+      <div>
+      </div>
+      <template class='row' repeat.for='p of model.placements'>
+        <div class=''>
+          <select class='form-control' value.bind='p.gamepiece'>
+            <option></option>
+            <option repeat.for='r of gamepieceArray'>${r}</option>
+          </select>
+        </div>
+        <div class=''>
+          <select class='form-control' value.bind='p.location'>
+            <option></option>
+            <option repeat.for='m of locationArray'>${m}</option>
+          </select>
+        </div>
+        <div class=''>
+          <counter placeholder='seconds left' show-label.bind='false' model.bind='p' property="when" max.bind="maxWhen"
+            rules.bind="placementRules"></counter>
+        </div>
+        <div class=''>
+          <label>
+            <input type='checkbox' class='' checked.bind='p.sandstorm' />Sandstorm
+          </label>
+        </div>
+        <div class=''>
+          <button type='button' click.delegate='deleteRow($index)' class="btn btn-danger">Delete Row</button>
+        </div>
+      </template>
+    </div>
+
+    <div>
+      <input type='checkbox' class='' checked.bind='model.level2ClimbAttempted' />Level 2 Climb Attempted
+      <input type='checkbox' class='' checked.bind='model.level2Succeeded' />Level 2 Climb Succeeded
+      <input type='checkbox' class='' checked.bind='model.level3ClimbSucceeded' />Level 3 Climb Attempted
+      <input type='checkbox' class='' checked.bind='model.level3ClimbSucceeded' />Level 3 Climb Succeeded
+    </div>
+  </div>
 </template>
