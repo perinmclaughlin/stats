@@ -5,6 +5,7 @@ import * as naturalSort from "javascript-natural-sort";
 import { IGame, gameManager, IEventJson, IMergeState } from "../index";
 import { validateEventTeamMatches, getTeamNumbers } from "../merge-utils";
 import { FrcStatsContext, EventMatchEntity, IEventTeamMatch, TeamMatch2019Entity } from "../../persistence";
+import { JsonExporter } from "./event-to-json";
 
 export interface DeepSpaceEventJson extends IEventJson{
   matches2019: TeamMatch2019Entity[]
@@ -24,15 +25,16 @@ class DeepSpaceGame implements IGame {
 
   constructor(
     private dbContext: FrcStatsContext,
-    private jsonExporter: any) {
+    private jsonExporter: JsonExporter) {
   }
 
   mergeDialogClass() {
     return null;
   }
 
-  exportEventJson(event): Promise<DeepSpaceEventJson> {
-    throw new Error("implement");
+  async exportEventJson(event): Promise<DeepSpaceEventJson> {
+    //throw new Error("implement");
+    return await this.jsonExporter.eventToJson(event);
   }
 
   setJsonEventTeamMatch(json: any, match) {

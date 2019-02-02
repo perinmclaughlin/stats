@@ -22,6 +22,7 @@
     "dexie": "^2.0.1",
     "instascan": "^1.0.0",
     "javascript-natural-sort": "^0.7.1",
+    "karma-firefox-launcher": "^1.1.0",
     "lodash": "^4.17.4",
     "lz-string": "^1.4.4",
     "ms": "^2.1.1",

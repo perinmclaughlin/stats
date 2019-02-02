@@ -6,7 +6,7 @@ describe('qrcode display', () => {
     return new QrCodeImportPage(null, null);
   }
   var makeDisplayDialog = () => {
-    return new QrCodeDisplayDialog(null);
+    return new QrCodeDisplayDialog(null, null);
   }
   it('chunks data', () => {
     let display = makeDisplayDialog();
