@@ -76,7 +76,7 @@ class DeepSpaceGame implements IGame {
   }
 
   validateEventTeamMatches(json: any): string[] {
-    throw new Error("implement");
+    return validateEventTeamMatches(json, json.matches2019, "matches2019");
   }
 
   updateMatch(matchP: EventMatchEntity, oldMatchNumber: string): Promise<any> {
