@@ -280,24 +280,37 @@ export interface PowerupBingo {
 
 export interface TeamMatch2019Entity extends IEventTeamMatch {
   id?: number;
-
+  /** */
   cargoPickup: QualitativeNumeric;
+  /** */
   hatchPanelPickup: QualitativeNumeric;
+  /** */
   placements: DeepSpaceEvent[];
-
+  /**Determines whether or not the robot attempted to climb the second level of the pedestal. */
   level2ClimbAttempted: boolean;
+  /**Determines whether or not the robot successfully climbed to the second level of the pedestal. */
   level2ClimbSucceeded: boolean;
+  /**Determines whether or not the robot attempted to climb to the third level of the pedestal. */
   level3ClimbAttempted: boolean;
+  /**Determines whether or not the robot successfully climbed to the third level of the pedestal. */
   level3ClimbSucceeded: boolean;
+  /**Determines when the robot started to climb to the third level of the pedestal. */
   level3ClimbBegin: number;
+  /**Determines when the robot finished climbing to the third level of the pedestal. */
   level3ClimbEnd: number;
+  /**Stores the team numbers of the robots lifted by this robot. */
   lifted: string[];
+  /**Stores the team number of the robot that lifted this robot. */
   liftedBy: string;
-
+  /**Determines whether or not a robot failure occurred. */
   isFailure: boolean;
-	failureReason: string;
-	isFoul: boolean;
+  /**A more descriptive version of isFailure. */
+  failureReason: string;
+  /**Determines whether or not the robot caused a foul. */
+  isFoul: boolean;
+  /**A more descriptive version of isFoul. */
   foulReason: string;
+  /**Anything deemed important by the user. */
   notes: string;
 }
 
@@ -403,7 +416,7 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
 }
 
 
-export function make2019match(eventCode, teamNumber, matchNumber): TeamMatch2019Entity {
+export function make2019match(eventCode: string, teamNumber: string, matchNumber: string): TeamMatch2019Entity {
   return {
     eventCode: eventCode,
     teamNumber: teamNumber,
