@@ -73,8 +73,8 @@
           <!--This div should be kept empty! Appears above the delete button, and unless you want formatting issues..
               keep it empty.-->
         </div>
-        <div class=''>
-          <select class='form-control' value.bind='p.gamepiece'>
+        <div class='form-group'>
+          <select class='form-control' value.bind='p.gamepiece & validate:placementRules'>
             <option></option>
             <option repeat.for='r of gamepieceArray'>${r}</option>
           </select>

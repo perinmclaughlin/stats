@@ -207,6 +207,7 @@ export class MatchInputPage {
     };
 
     this.model.placements.push(placement);
+    this.validationController.addObject(placement);
     console.info(this.model.placements);
   }
 
