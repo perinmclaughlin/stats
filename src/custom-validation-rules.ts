@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ValidationRules } from "aurelia-validation";
-import { FrcStatsContext, EventMatchEntity, qualitativeAnswers } from "./persistence";
+import { FrcStatsContext, EventMatchEntity, qualitativeAnswers, DeepSpaceGamepiece } from "./persistence";
 
 @autoinject
 export class CustomValidationRules {
@@ -40,11 +40,41 @@ export class CustomValidationRules {
     );
 
     ValidationRules.customRule(
+      "minimum",
+      (input: string, obj: any, minValue) => {
+        let value = parseInt(input);
+        if(isNaN(value)) {
+          return true;
+        }
+        return value >= minValue;
+      }, `must be greater than or equal to \${config.minValue}.`,
+      (minValue) => ({minValue}),
+    );
+
+    ValidationRules.customRule(
       "isQualitativeNumeric",
       (input: number, obj: any) => {
         return qualitativeAnswers.some(ans => ans.numeric == input);
       },
       `invalid qualitative value`
-    )
+    );
+
+    ValidationRules.customRule(
+      "isGamePiece",
+      (input: string, obj: any) => {
+        switch(input) {
+          case "Cargo":
+            return true;
+            break;
+          case "Hatch Panel":
+            return true;
+            break;
+          default:
+            return false;
+            break;
+        }
+      },
+      `not a game piece`
+    );
   }
 }

@@ -19,7 +19,7 @@ if (CLIOptions.hasFlag('watch')) {
   unit = gulp.series(
     build,
     gulp.parallel(
-      done => { watch(); done(); },
+      done => { watch(null); done(); },
       karma
     )
   );

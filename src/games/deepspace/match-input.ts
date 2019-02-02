@@ -35,7 +35,7 @@ export class MatchInputPage {
 
   public rules: any[];
   public placementRules: any[];
-  private validationController: ValidationController;
+  public validationController: ValidationController;
   private renderer: BootstrapRenderer;
   private observers: Disposable[];
 
@@ -149,13 +149,22 @@ export class MatchInputPage {
         .required()
         .satisfiesRule("isQualitativeNumeric")
       .required()
-      .rules;
+      .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbBegin)
+        .satisfiesRule("minimum", 0)
+        .satisfiesRule("maximum", 135)
+      .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbEnd)
+        .satisfiesRule("minimum", 0)
+        .satisfiesRule("maximum", 135)
+    .rules;
 
-      this.placementRules = ValidationRules
+    this.placementRules = ValidationRules
       .ensure((obj: DeepSpaceEvent) => obj.location)
         .required()
         .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
-      .rules;
+      .ensure((obj: DeepSpaceEvent) => obj.gamepiece)
+        .required()
+        .when((obj: DeepSpaceEvent) => obj.gamepiece == "Cargo" || obj.gamepiece == "Hatch Panel")
+    .rules;
 
     this.renderer = new BootstrapRenderer({showMessages: true});
     this.validationController.addRenderer(this.renderer);
@@ -221,6 +230,7 @@ export class MatchInputPage {
 
   public async save() {
     let validationResults = await this.validateAll();
+    console.info(validationResults);
     if (validationResults.every(validationResult => validationResult.valid)) {
       this.fixupNumericProperties();
 

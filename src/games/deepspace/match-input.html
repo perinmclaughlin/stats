@@ -1,6 +1,7 @@
 <template>
   <require from="../../utilities/counter"></require>
   <require from="./match-input.css"></require>
+  <require from="aurelia-validation/validate-binding-behavior"></require>
   <div class='container-fluid' show.bind='!errorNotScheduled'>
     <h1>
       <b>
@@ -22,15 +23,16 @@
       match ${model.matchNumber}
     </h3>
     <!--Buttons for switching pages, saving, and adding-->
-    <button click.delegate='gotoPreviousMatch()'>Previous Match</button>
-    <button click.delegate='addPlacement()'>Add</button>
+    <button click.delegate='gotoPreviousMatch()'>Previous Match</button><br>
+    <button click.delegate='addPlacement()'>Add</button><br>
     <button click.delegate='save()'>Save</button>
+    <span show.bind="errorMessage != null"> ${errorMessage} </span><br>
     <button click.delegate='gotoNextMatch()'>Next Match</button>
     <!--Drop down menus for the cargo and hatch pickups-->
     <div class='row'>
-      <div class='col'>
+      <div class='col form-group'>
         <label>Cargo Pickup</label>
-        <select class='form-control' value.bind='model.cargoPickup'>
+        <select class='form-control' value.bind='model.cargoPickup & validate:rules'>
           <option></option>
           <option repeat.for='a of qualifiedAnswers'>${a.name}</option>
         </select>
