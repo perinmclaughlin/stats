@@ -32,6 +32,8 @@ export class MatchInputPage {
   public locationArray = allDeepSpaceLocations;
   public gamepieceArray = allDeepSpaceGamepieceTypes;
   public maxWhen = 135;
+  public hasSaved: boolean;
+  public slots: any;
 
   public rules: any[];
   public placementRules: any[];
@@ -47,14 +49,16 @@ export class MatchInputPage {
     private router: Router
     ){
     this.validationController = validationControllerFactory.createForCurrentScope();
+    this.hasSaved = false;
+    this.slots = null;
   }
 
   public async activate(params) {
     let promise = Promise.resolve("yup");
     scrollToTop();
+    this.observeFields();
     
     await this.load(params);
-    this.observeFields();
     this.setupValidation();
   }
 
@@ -81,6 +85,20 @@ export class MatchInputPage {
         this.model.lifted = this.model.lifted.filter(teamNumber => teamNumber != this.partner2);
       }
     }));
+
+  }
+
+  private observeModel() {
+    this.observers.push(this.bindingEngine.propertyObserver(this.model, 'level3ClimbAttempted').subscribe(() => {
+      if(!this.model.level3ClimbAttempted) {
+        this.model.level3ClimbSucceeded = false;
+      }
+    }));
+    this.observers.push(this.bindingEngine.propertyObserver(this.model, 'level2ClimbAttempted').subscribe(() => {
+      if(!this.model.level2ClimbAttempted) {
+        this.model.level2ClimbSucceeded = false;
+      }
+    }));
   }
 
   private unobserveFields() {
@@ -102,9 +120,14 @@ export class MatchInputPage {
       this.model = matches[0];
     }
 
+    this.observeModel();
+
     this.team = await this.dbContext.getTeam(params.teamNumber)
     this.event = await this.dbContext.getEvent(params.year, params.eventCode);
     this.eventMatch = await this.dbContext.getEventMatch(params.year, params.eventCode, params.matchNumber);
+    this.slots = EventMatchSlots.filter(slot => 
+      this.eventMatch[slot.prop] == this.model.teamNumber
+    )[0];
     let nextMatch = await this.dbContext.getEventMatch(params.year, params.eventCode, nextMatchNumber(params.matchNumber));
     let prevMatch = await this.dbContext.getEventMatch(params.year, params.eventCode, previousMatchNumber(params.matchNumber));
     this.hasNextMatch = nextMatch != null;
@@ -148,13 +171,16 @@ export class MatchInputPage {
       .ensure((obj: TeamMatch2019Entity) => obj.hatchPanelPickup)
         .required()
         .satisfiesRule("isQualitativeNumeric")
-      .required()
       .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbBegin)
         .satisfiesRule("minimum", 0)
         .satisfiesRule("maximum", 135)
       .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbEnd)
         .satisfiesRule("minimum", 0)
         .satisfiesRule("maximum", 135)
+      .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbSucceeded)
+        .satisfiesRule("attempted", "level3ClimbAttempted")
+      .ensure((obj: TeamMatch2019Entity) => obj.level2ClimbSucceeded)
+        .satisfiesRule("attempted", "level2ClimbAttempted")
     .rules;
 
     this.placementRules = ValidationRules
@@ -240,10 +266,11 @@ export class MatchInputPage {
         teamNumber: this.model.teamNumber,
         matchNumber: this.model.matchNumber,
       });
+      let modelToSave = JSON.parse(JSON.stringify(this.model))
       if (savedMatches.length != 0) {
-        this.model.id = savedMatches[0].id;
+        modelToSave.id = savedMatches[0].id;
       }
-      await this.dbContext.teamMatches2019.put(this.model);
+      await this.dbContext.teamMatches2019.put(modelToSave);
       await this.load({
         year: this.event.year,
         eventCode: this.model.eventCode,
@@ -251,9 +278,17 @@ export class MatchInputPage {
         teamNumber: this.model.teamNumber
       });
       // yay, you saved! we're not taking you anywhere
+      this.hasSaved = true;
+      setTimeout(() => {
+        this.hasSaved = false;
+      }, 3000);
     } else {
-      this.errorMessage = "there are validation errors";
+      this.errorMessage = "There are validation errors!";
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 3000);
       console.info(validationResults.filter(v => !v.valid));
+      this.hasSaved = false;
     }
   }
 

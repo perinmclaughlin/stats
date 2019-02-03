@@ -52,6 +52,21 @@ export class CustomValidationRules {
     );
 
     ValidationRules.customRule(
+      "attempted",
+      (input: boolean, obj: any, attemptedProperty: string) => {
+        let succeeded = input;
+        let attempted = obj[attemptedProperty];
+        if(succeeded && !attempted) {
+          return false;
+        }
+        else {
+          return true;
+        }
+      },
+      `You can't succeed if you don't try!`
+    );
+
+    ValidationRules.customRule(
       "isQualitativeNumeric",
       (input: number, obj: any) => {
         return qualitativeAnswers.some(ans => ans.numeric == input);
