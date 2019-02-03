@@ -64,6 +64,6 @@ export class EventTeamsPage {
         teamMatches.get(teamMatch.teamNumber).push(teamMatch);
       }
     }
-    this.teamsData = this.teams.map(x => makeTeamStats(teamMatches.get(x.team.teamNumber) || []));
+    this.teamsData = this.teams.map(x => makeTeamStats(x.team, teamMatches.get(x.team.teamNumber) || []));
   }
 }

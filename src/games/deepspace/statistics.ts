@@ -1,4 +1,4 @@
-import { QualitativeAnswer, TeamMatch2019Entity, qualitativeAnswers } from "../../persistence";
+import { QualitativeAnswer, TeamMatch2019Entity, qualitativeAnswers, TeamEntity } from "../../persistence";
 import { print } from "util";
 
 export class DeepSpaceTeamStatistics {
@@ -63,7 +63,7 @@ export class DeepSpaceTeamStatistics {
   liftLevel3Count: number;
 }
 
-export function makeTeamStats(x: TeamMatch2019Entity[]): DeepSpaceTeamStatistics {
+export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepSpaceTeamStatistics {
   let result = new DeepSpaceTeamStatistics();
   //Many many vars created just for the for loop below.
   let cargoCount = 0;
