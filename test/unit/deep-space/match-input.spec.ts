@@ -118,5 +118,5 @@ describe('deep space match-input', () => {
   it("validates placement gamepiece", () => {
     placement.gamepiece = null;
     return validateSinglePlacement("gamepiece", "Gamepiece is required.")
-  })
+  });
 })

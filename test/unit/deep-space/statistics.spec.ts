@@ -1,5 +1,5 @@
-import { DeepSpaceTeamStatistics, makeTeamStats } from '../../src/games/deepspace/statistics';
-import { TeamMatch2019Entity, make2019match, TeamEntity } from '../../src/persistence';
+import { DeepSpaceTeamStatistics, makeTeamStats } from '../../../src/games/deepspace/statistics';
+import { TeamMatch2019Entity, make2019match, TeamEntity } from '../../../src/persistence';
 
 describe('make team stats', () => {
   it('should calc matches played', () => {

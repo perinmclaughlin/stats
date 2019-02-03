@@ -2,9 +2,9 @@ language: minimal
 services: 
   - docker
 script:
-  - bash prepare-tests.sh
-  - bash run-tests.sh
-  - bash build-docker.sh
+  - sudo bash prepare-tests.sh
+  - sudo bash run-tests.sh
+  - sudo bash build-docker.sh
 deploy: 
   provider: s3
   # travis-rock-deployer
@@ -17,5 +17,5 @@ deploy:
   skip_cleanup: true
   region: us-east-1
   on:
-    branch: master
+    branch: jest
   

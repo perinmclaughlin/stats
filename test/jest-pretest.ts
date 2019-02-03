@@ -1,0 +1,11 @@
+import 'aurelia-polyfills';
+import {Options} from 'aurelia-loader-nodejs';
+import {globalize} from 'aurelia-pal-nodejs';
+import * as path from 'path';
+import Dexie from "dexie";
+import * as indexedDB from "fake-indexeddb";
+import IDBKeyRange from "fake-indexeddb/lib/FDBKeyRange";
+Options.relativeToDir = path.join(__dirname, 'unit');
+Dexie.dependencies.indexedDB = indexedDB;
+Dexie.dependencies.IDBKeyRange = IDBKeyRange;
+globalize();

@@ -228,8 +228,8 @@
   },
   "unitTestRunners": [
       {
-      "id": "karma",
-      "displayName": "Karma",
+      "id": "jest",
+      "displayName": "Jest",
       "source": "test/unit/**/*.ts"
       }
   ],

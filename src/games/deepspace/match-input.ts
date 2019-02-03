@@ -164,6 +164,7 @@ export class MatchInputPage {
   }
 
   public setupValidation() {
+    /* istanbul ignore next */
     this.rules = ValidationRules
       .ensure((obj: TeamMatch2019Entity) => obj.cargoPickup)
         .required()
@@ -183,6 +184,7 @@ export class MatchInputPage {
         .satisfiesRule("attempted", "level2ClimbAttempted")
     .rules;
 
+    /* istanbul ignore next */
     this.placementRules = ValidationRules
       .ensure((obj: DeepSpaceEvent) => obj.location)
         .required()
