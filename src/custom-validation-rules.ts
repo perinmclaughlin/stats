@@ -73,6 +73,9 @@ export class CustomValidationRules {
     ValidationRules.customRule(
       "isQualitativeNumeric",
       (input: number, obj: any) => {
+        if(input == null) {
+          return true;
+        }
         return qualitativeAnswers.some(ans => ans.numeric == input);
       },
       `invalid qualitative value`

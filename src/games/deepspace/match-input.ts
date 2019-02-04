@@ -163,7 +163,7 @@ export class MatchInputPage {
     }
   }
 
-  private setupValidation() {
+  public setupValidation() {
     this.rules = ValidationRules
       .ensure((obj: TeamMatch2019Entity) => obj.cargoPickup)
         .required()

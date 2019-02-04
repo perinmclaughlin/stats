@@ -4,8 +4,8 @@ import environment from './environment';
 import {PLATFORM} from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 
-export function configure(aurelia: Aurelia) {
-  aurelia.use
+export function configureWazzis(aurelia: Aurelia) {
+  let xx = aurelia.use
     .standardConfiguration()
     .feature(PLATFORM.moduleName('resources/index'))
     .feature(PLATFORM.moduleName('games/powerup/index'))
@@ -21,12 +21,17 @@ export function configure(aurelia: Aurelia) {
   // if the css animator is enabled, add swap-order="after" to all router-view elements
 
   if (environment.debug) {
-    aurelia.use.developmentLogging();
+    xx = aurelia.use.developmentLogging();
   }
 
   if (environment.testing) {
-    aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
+    xx = aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
   }
+  return xx;
+
+}
+export function configure(aurelia: Aurelia) {
+  configureWazzis(aurelia);
 
   aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
 }
