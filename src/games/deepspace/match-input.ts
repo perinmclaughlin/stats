@@ -186,10 +186,15 @@ export class MatchInputPage {
     this.placementRules = ValidationRules
       .ensure((obj: DeepSpaceEvent) => obj.location)
         .required()
+        .satisfiesRule("isDeepSpaceLocation")
         .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
       .ensure((obj: DeepSpaceEvent) => obj.gamepiece)
         .required()
-        .when((obj: DeepSpaceEvent) => obj.gamepiece == "Cargo" || obj.gamepiece == "Hatch Panel")
+        .satisfiesRule("isDeepSpaceGamepiece")
+        .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
+      .ensure((obj: DeepSpaceEvent) => obj.when)
+        .required()
+        .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
     .rules;
 
     this.renderer = new BootstrapRenderer({showMessages: true});
@@ -233,8 +238,6 @@ export class MatchInputPage {
     };
 
     this.model.placements.push(placement);
-    this.validationController.addObject(placement);
-    console.info(this.model.placements);
   }
 
   public deleteRow(index:number){

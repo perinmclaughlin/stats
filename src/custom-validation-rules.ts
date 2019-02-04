@@ -1,6 +1,10 @@
 import { autoinject } from "aurelia-framework";
 import { ValidationRules } from "aurelia-validation";
-import { FrcStatsContext, EventMatchEntity, qualitativeAnswers, DeepSpaceGamepiece } from "./persistence";
+import { FrcStatsContext, EventMatchEntity, qualitativeAnswers, DeepSpaceGamepiece, allDeepSpaceLocations } from "./persistence";
+
+function isEmpty(z) {
+  return z == null || z == "";
+}
 
 @autoinject
 export class CustomValidationRules {
@@ -75,8 +79,11 @@ export class CustomValidationRules {
     );
 
     ValidationRules.customRule(
-      "isGamePiece",
+      "isDeepSpaceGamepiece",
       (input: string, obj: any) => {
+        if (isEmpty(input)) {
+          return true;
+        }
         switch(input) {
           case "Cargo":
             return true;
@@ -88,6 +95,16 @@ export class CustomValidationRules {
             return false;
             break;
         }
+      },
+      `not a game piece`
+    );
+    ValidationRules.customRule(
+      "isDeepSpaceLocation",
+      (input: string, obj: any) => {
+        if (isEmpty(input)) {
+          return true;
+        }
+        return allDeepSpaceLocations.some(loc => loc == input);
       },
       `not a game piece`
     );

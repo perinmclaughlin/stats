@@ -10,8 +10,7 @@
         <u>
           <a route-href='route: event-team; params.bind: {year: event.year,
             eventCode: event.eventCode, teamNumber: team.teamNumber}'>
-            ${team.teamNumber} (${team.teamName})<br>
-            Alliance Slot: ${slots.name}
+            ${team.teamNumber} (${team.teamName})
           </a>
         </u>
       </b>
@@ -23,17 +22,28 @@
           ${event.name}
         </a>
       </b>
-      match ${model.matchNumber}
+      match ${model.matchNumber}, ${slots.name}
     </h3>
 
 
     <!--Buttons for switching pages, saving, and adding-->
-    <div class="btn-group" role="group" aria-label="Buttons">
-      <button class="btn btn-secondary" click.delegate='gotoPreviousMatch()'>Previous Match</button><br>
-      <button class="btn btn-secondary" click.delegate='gotoNextMatch()'>Next Match</button><br>
-      <button class="btn btn-secondary" disabled.bind='model.id==null' click.delegate="exportToQrCode()">Show Team QR
-        Code</button>
-      <button class="btn btn-primary" click.delegate='save()'>Save</button>
+    <div class='row'>
+      <div class='col' style='padding-bottom: 10px;'>
+        <div class="btn-group" role="group" aria-label="Buttons">
+          <button class="btn btn-secondary" click.delegate='gotoPreviousMatch()'>Previous Match</button>
+          <button class="btn btn-secondary" click.delegate='gotoNextMatch()'>Next Match</button>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col'>
+        <div class="btn-group" role="group" aria-label="Buttons">
+          <button class="btn btn-secondary" disabled.bind='model.id==null' click.delegate="exportToQrCode()">
+            Show Team QR Code
+          </button>
+          <button class="btn btn-primary" click.delegate='save()'>Save</button>
+        </div>
+      </div>
     </div>
 
     <div class="Pop-Ups">
@@ -89,17 +99,17 @@
             <option repeat.for='r of gamepieceArray'>${r}</option>
           </select>
         </div>
-        <div class=''>
+        <div class='form-group'>
           <select class='form-control' value.bind='p.location & validate:placementRules'>
             <option></option>
             <option repeat.for='m of locationArray'>${m}</option>
           </select>
         </div>
-        <div class=''>
+        <div class='form-group'>
           <counter placeholder='seconds left' show-label.bind='false' model.bind='p' property="when" max.bind="maxWhen"
             rules.bind="placementRules"></counter>
         </div>
-        <div class=''>
+        <div class='form-group'>
           <label>
             <input type='checkbox' class='' checked.bind='p.sandstorm' />Sandstorm
           </label>
@@ -116,12 +126,10 @@
         <button class="btn btn-secondary" click.delegate='addPlacement()'>Add</button><br>
       </div>
     </div>
-  </div>
 
 
-  <!--Climbing by yourself-->
-  <div id='climbingPlacements'>
-    <div class='row'>
+    <!--Climbing by yourself-->
+    <div id='climbing' class='row'>
       <div class='col'>
         <div class='row'>
           <div class='col'>
@@ -163,104 +171,103 @@
         </div>
       </div>
     </div>
-  </div>
-  <!--Lifting-->
-  <div id='lifting'>
+    <!--Lifting-->
+    <div id='lifting'>
+      <div class='row'>
+        <!--Lifted by another team-->
+        <div class='col-sm-10'>
+          <label>
+            <input type='checkbox' class='' checked.bind='model.liftedBy'>Was Lifted</label>
+          </label>
+        </div>
+        <!--Asking what team lifted them-->
+        <div class='col-sm-10' show.bind='model.liftedBy'>
+          <label>Lifted By:</label>
+          <select class='form-control' value.bind='model.liftedBy'>
+            <option model.bind="partner1">
+              ${partner1}
+            </option>
+            <option model.bind="partner2">
+              ${partner2}
+            </option>
+          </select>
+        </div>
+        <!--Lifted other teams-->
+        <div class='col-sm-7'>
+          <label>
+            <input type='checkbox' class='' checked.bind='liftedSomeone'>Lifted Another Team</label>
+        </div>
+        <!--What teams they lifted-->
+        <div class='col-sm-7' show.bind='liftedSomeone'>
+          <label>
+            Lifted ${partner1}
+            <input type='checkbox' class='form-control' checked.bind='liftedPartner1' />
+          </label>
+          <label>
+            Lifted ${partner2}
+            <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
+          </label>
+        </div>
+      </div>
+    </div>
+
+
+    <!--Fouls-->
     <div class='row'>
-      <!--Lifted by another team-->
-      <div class='col-sm-10'>
-        <label>
-          <input type='checkbox' class='' checked.bind='model.liftedBy'>Was Lifted</label>
-        </label>
-      </div>
-      <!--Asking what team lifted them-->
-      <div class='col-sm-10' show.bind='model.liftedBy'>
-        <label>Lifted By:</label>
-        <select class='form-control' value.bind='model.liftedBy'>
-          <option model.bind="partner1">
-            ${partner1}
-          </option>
-          <option model.bind="partner2">
-            ${partner2}
-          </option>
-        </select>
-      </div>
-      <!--Lifted other teams-->
-      <div class='col-sm-7'>
-        <label>
-          <input type='checkbox' class='' checked.bind='liftedSomeone'>Lifted Another Team</label>
-      </div>
-      <!--What teams they lifted-->
-      <div class='col-sm-7' show.bind='liftedSomeone'>
-        <label>
-          Lifted ${partner1}
-          <input type='checkbox' class='form-control' checked.bind='liftedPartner1' />
-        </label>
-        <label>
-          Lifted ${partner2}
-          <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
-        </label>
-      </div>
-    </div>
-  </div>
-
-
-  <!--Fouls-->
-  <div class='row'>
-    <div class='col'>
-      <div class='row'>
-        <div class='col-sm-2 form-group'>
-          <label class='form-control-label'>Robot Failure?</label>
-          <div>
-            <label>
-              <input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="true">
-              Yes</label>
-            <br>
-            <label>
-              <input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="false">
-              No</label>
-            <br>
+      <div class='col'>
+        <div class='row'>
+          <div class='col-sm-2 form-group'>
+            <label class='form-control-label'>Robot Failure?</label>
+            <div>
+              <label>
+                <input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="true">
+                Yes</label>
+              <br>
+              <label>
+                <input type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="false">
+                No</label>
+              <br>
+            </div>
+          </div>
+          <div class='col-sm-10 form-group' show.bind='model.isFailure'>
+            <label class='form-control-label' for='failureReason'>Failure Reasons: </label>
+            <textarea id='failureReason' class='form-control' rows='5' value.bind="model.failureReason"></textarea>
           </div>
         </div>
-        <div class='col-sm-10 form-group' show.bind='model.isFailure'>
-          <label class='form-control-label' for='failureReason'>Failure Reasons: </label>
-          <textarea id='failureReason' class='form-control' rows='5' value.bind="model.failureReason"></textarea>
-        </div>
       </div>
-    </div>
-    <div class='col'>
-      <div class='row'>
-        <div class='col-sm-2'>
+      <div class='col'>
+        <div class='row'>
+          <div class='col-sm-2'>
 
-          <label class='form-control-label'>Fouls?</label>
-          <div>
-            <label>
-              <input type='radio' class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="true">
-              Yes
-            </label>
-            <br>
-            <br>
-            <label>
-              <input type='radio' class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="false">
-              No
-            </label>
-            <br>
+            <label class='form-control-label'>Fouls?</label>
+            <div>
+              <label>
+                <input type='radio' class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="true">
+                Yes
+              </label>
+              <br>
+              <br>
+              <label>
+                <input type='radio' class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="false">
+                No
+              </label>
+              <br>
+            </div>
+          </div>
+          <div class='col-sm-10' show.bind='model.isFoul'>
+            <label class='form-control-label' for='foulReason'>Foul Reason:</label>
+            <textarea id='foulReason' class='form-control' rows='5' value.bind='model.foulReason'></textarea>
           </div>
         </div>
-        <div class='col-sm-10' show.bind='model.isFoul'>
-          <label class='form-control-label' for='foulReason'>Foul Reason:</label>
-          <textarea id='foulReason' class='form-control' rows='5' value.bind='model.foulReason'></textarea>
-        </div>
       </div>
     </div>
-  </div>
 
-  <!--Notes-->
-  <div class='row'>
-    <div class='col'>
-      <h5>Notes</h5>
-      <textarea id='areaNotes' class='form-control' rows='5' value.bind='model.autoNotes'></textarea>
+    <!--Notes-->
+    <div class='row'>
+      <div class='col'>
+        <h5>Notes</h5>
+        <textarea id='areaNotes' class='form-control' rows='5' value.bind='model.autoNotes'></textarea>
+      </div>
     </div>
-  </div>
   </div>
 </template>
