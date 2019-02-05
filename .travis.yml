@@ -17,5 +17,5 @@ deploy:
   skip_cleanup: true
   region: us-east-1
   on:
-    branch: jest
+    branch: master
   
