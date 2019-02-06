@@ -175,13 +175,18 @@ export class MatchInputPage {
       .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbBegin)
         .satisfiesRule("minimum", 0)
         .satisfiesRule("maximum", 135)
+        .satisfiesRule("isNumeric")
+        .satisfiesRule("isParadox", "level3ClimbEnd")
       .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbEnd)
         .satisfiesRule("minimum", 0)
         .satisfiesRule("maximum", 135)
+        .satisfiesRule("isNumeric")
       .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbSucceeded)
         .satisfiesRule("attempted", "level3ClimbAttempted")
       .ensure((obj: TeamMatch2019Entity) => obj.level2ClimbSucceeded)
         .satisfiesRule("attempted", "level2ClimbAttempted")
+      .ensure((obj: TeamMatch2019Entity) => obj.liftedBy)
+        .satisfiesRule("didNotLiftAndGetLiftedBy", (model: TeamMatch2019Entity) => model.lifted)
     .rules;
 
     /* istanbul ignore next */
@@ -196,6 +201,15 @@ export class MatchInputPage {
         .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
       .ensure((obj: DeepSpaceEvent) => obj.when)
         .required()
+        .satisfies((obj: DeepSpaceEvent) => {
+          if(obj.sandstorm && (obj.when > 15 || obj.when < 0)) {
+            return false;
+          }
+          else {
+            return true;
+          }
+        })
+          .withMessage("Sandstorm only lasts fifteen seconds.")
         .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
     .rules;
 

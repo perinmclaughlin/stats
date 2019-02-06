@@ -15,7 +15,7 @@ export class CustomValidationRules {
         if(value == null || value == "") {
           return true;
         }
-        return /^\d*$/.test(value);
+        return /^-?\d*$/.test(value);
       }, "Your input needs to be a number."
     );
 
@@ -51,8 +51,39 @@ export class CustomValidationRules {
           return true;
         }
         return value >= minValue;
-      }, `must be greater than or equal to \${config.minValue}.`,
+      }, `must be greater than or equal to \${$config.minValue}.`,
       (minValue) => ({minValue}),
+    );
+
+    ValidationRules.customRule(
+      "isParadox", (start: number, obj: any, endPropName: string) => {
+        let end = obj[endPropName];
+        start = parseInt(<any>start);
+        end = parseInt(<any>end);
+        if(isNaN(start) || isNaN(end)) {
+          return true;
+        }
+        return start > end;
+      },
+      `you can't finish something BEFORE you start it!`,
+      () => ({}),
+    );
+
+    ValidationRules.customRule(
+      "didNotLiftAndGetLiftedBy", (input: string, obj: any, getLifted: (a: any) => string[]) => {
+        let didLift = getLifted(obj);
+        if(input == null || obj == null) {
+          return true;
+        }
+        for(var i = 0; i < didLift.length; i++) {
+          if(input == didLift[i]) {
+            return false;
+          }
+        }
+        return true;
+      },
+      `A team cannot lift someone that is lifting them.`,
+      () => ({}),
     );
 
     ValidationRules.customRule(
