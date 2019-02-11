@@ -1,0 +1,30 @@
+<template>
+  <div class='children-are-grid-items ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'
+    if.bind='state.merged.eventType=="Gamepiece Placement"'>
+    <div class='grid-item row-field'>
+      ${displayName}
+    </div>
+    <div class='grid-item'>
+      ${state.localSaved[property]}
+    </div>
+    <div class='grid-item'>
+      <button class='btn btn-secondary btn-sm' click.delegate='state.merged[property]=state.localSaved[property]'>
+        Take
+      </button>
+    </div>
+    <div class='grid-item'>
+      ${state.fromFile[property]}
+    </div>
+    <div class='grid-item'>
+      <button class='btn btn-secondary btn-sm' click.delegate='state.merged[property]=state.fromFile[property]'>
+        Take
+      </button>
+    </div>
+    <div class='grid-item form-group'>
+      <select class='form-control' value.bind='state.merged[property] & validate:rules'>
+        <option></option>
+        <option repeat.for="g of choices" model.bind="g">${g}</option>
+      </select>
+    </div>
+  </div>
+</template>

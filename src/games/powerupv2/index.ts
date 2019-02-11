@@ -5,7 +5,7 @@ import * as naturalSort from "javascript-natural-sort";
 import { IGame, gameManager, IMergeState } from "../index";
 import { validateEventTeamMatches } from "../merge-utils";
 import { Match2018V2MergeDialog } from "./merge-dialog";
-import { FrcStatsContext, EventMatchSlots, EventMatchEntity } from "../../persistence";
+import { FrcStatsContext, EventMatchSlots, EventMatchEntity, EventEntity } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
 import { PowerupV2EventJson } from "./model";
 
@@ -62,10 +62,16 @@ class PowerupV2Game implements IGame {
     return this.dbContext.teamMatches2018V2.bulkPut(json.matches2018);
   }
 
-  deleteEvent(json: PowerupV2EventJson): Promise<any> {
+  deleteEvent(json: PowerupV2EventJson|EventEntity): Promise<any> {
+    let event: EventEntity;
+    if(('event' in json)) {
+      event = json.event;
+    }else{
+      event = json;
+    }
     return this.dbContext.teamMatches2018V2
     .where("eventCode")
-    .equals(json.event.eventCode).toArray()
+    .equals(event.eventCode).toArray()
     .then(localMatches => {
       return this.dbContext.teamMatches2018V2.bulkDelete(localMatches.map(x => x.id));
     });

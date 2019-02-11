@@ -71,6 +71,7 @@ export class Events {
       confirmMessage: "Press 'OKAY' to confirm",
     }).whenClosed(dialogResult => {
       if(!dialogResult.wasCancelled) {
+        let game = gameManager.getGame(event.year);
         this.dbContext.transaction("rw", [
           this.dbContext.events,
           this.dbContext.eventTeams,
@@ -88,6 +89,7 @@ export class Events {
             .delete();
           let promises : Promise<any>[] = [eventPromise, eventTeamsPromise, eventMatchesPromise];
 
+          game.deleteEvent(event);
           if(event.year == "2018") {
             promises.push(
               this.dbContext.teamMatches2018

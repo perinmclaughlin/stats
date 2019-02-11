@@ -1,6 +1,5 @@
 import Dexie from "dexie";
 import { Team } from "./tba-api";
-import { timingSafeEqual } from "crypto";
 
 export class FrcStatsContext extends Dexie {
   teamMatches2018: Dexie.Table<TeamMatch2018Entity, number>;
@@ -431,8 +430,8 @@ export function make2019match(eventCode: string, teamNumber: string, matchNumber
     level2ClimbAttempted: false,
     level2ClimbSucceeded: false,
     level3ClimbAttempted: false,
-    level3ClimbBegin: 0,
-    level3ClimbEnd: 0,
+    level3ClimbBegin: null,
+    level3ClimbEnd: null,
     level3ClimbSucceeded: false,
     lifted: [],
     liftedBy: null,
@@ -505,6 +504,77 @@ export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Enti
     a.bingoLiftlessClimb == b.bingoLiftlessClimb &&
     a.bingo3xClimb == b.bingo3xClimb 
   );
+}
+
+export function matches2019AreEqual(a: TeamMatch2019Entity, b: TeamMatch2019Entity) {
+  if(a == null && b != null || a != null && b == null) return false;
+
+  return (
+    a.eventCode == b.eventCode &&
+    a.teamNumber == b.teamNumber &&
+    a.matchNumber == b.matchNumber &&
+    a.cargoPickup == b.cargoPickup &&
+    a.hatchPanelPickup == b.hatchPanelPickup &&
+    matches2019PlacementsAreEqual(a, b) &&
+    a.level2ClimbAttempted == b.level2ClimbAttempted &&
+    a.level2ClimbSucceeded == b.level2ClimbSucceeded &&
+    a.level3ClimbAttempted == b.level3ClimbAttempted &&
+    a.level3ClimbSucceeded == b.level3ClimbSucceeded &&
+    a.level3ClimbBegin == b.level3ClimbBegin &&
+    a.level3ClimbEnd == b.level3ClimbEnd &&
+    liftedAreEqual(a.lifted, b.lifted) &&
+    a.isFailure == b.isFailure &&
+    a.failureReason == b.failureReason &&
+    a.isFoul == b.isFoul &&
+    a.foulReason == b.foulReason &&
+    a.notes == b.notes &&
+    a.liftedBy == b.liftedBy
+  );
+}
+
+export function liftedAreEqual(lifted1: string[], lifted2: string[]) {
+  if(lifted1 == null || lifted2 == null) {
+    return lifted2 == lifted2;
+  }
+  if(lifted1.length != lifted2.length) {
+    return false;
+  }
+  for(var item of lifted1) {
+    if(lifted2.indexOf(item) == -1) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function matches2019PlacementsAreEqual(a: TeamMatch2019Entity, b: TeamMatch2019Entity) {
+  if(a == null || a.placements == null || b == null || b.placements == null) {
+    return false;
+  }
+
+  if(a.placements.length != b.placements.length) {
+    return false;
+  }
+  for(var i = 0; i < a.placements.length; i++) {
+    let pa = a.placements[i];
+    let pb = b.placements[i];
+    if(pa.eventType != pb.eventType) {
+      return false;
+    }
+    if(pa.eventType == "Gamepiece Placement") {
+      let areEqual = (
+        pa.gamepiece == pb.gamepiece && 
+        pa.location == pb.location &&
+        pa.when == pb.when &&
+        pa.sandstorm == pb.sandstorm
+      )
+      if(!areEqual) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 export function make2018v2match(eventCode, teamNumber, matchNumber): TeamMatch2018V2Entity {

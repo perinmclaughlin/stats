@@ -11,6 +11,7 @@ import { DeepSpaceBingoDialog } from "./deepspace-bingo";
 import { QrCodeDisplayDialog } from "../../qrcodes/display-dialog";
 import { clone } from "lodash";
 import { nextMatchNumber, previousMatchNumber } from "../../model";
+import { setupValidationRules } from "./model";
 
 @autoinject 
 export class MatchInputPage {
@@ -164,54 +165,9 @@ export class MatchInputPage {
   }
 
   public setupValidation() {
-    /* istanbul ignore next */
-    this.rules = ValidationRules
-      .ensure((obj: TeamMatch2019Entity) => obj.cargoPickup)
-        .required()
-        .satisfiesRule("isQualitativeNumeric")
-      .ensure((obj: TeamMatch2019Entity) => obj.hatchPanelPickup)
-        .required()
-        .satisfiesRule("isQualitativeNumeric")
-      .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbBegin)
-        .satisfiesRule("minimum", 0)
-        .satisfiesRule("maximum", 135)
-        .satisfiesRule("isNumeric")
-        .satisfiesRule("isParadox", "level3ClimbEnd")
-      .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbEnd)
-        .satisfiesRule("minimum", 0)
-        .satisfiesRule("maximum", 135)
-        .satisfiesRule("isNumeric")
-      .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbSucceeded)
-        .satisfiesRule("attempted", "level3ClimbAttempted")
-      .ensure((obj: TeamMatch2019Entity) => obj.level2ClimbSucceeded)
-        .satisfiesRule("attempted", "level2ClimbAttempted")
-      .ensure((obj: TeamMatch2019Entity) => obj.liftedBy)
-        .satisfiesRule("didNotLiftAndGetLiftedBy", (model: TeamMatch2019Entity) => model.lifted)
-    .rules;
-
-    /* istanbul ignore next */
-    this.placementRules = ValidationRules
-      .ensure((obj: DeepSpaceEvent) => obj.location)
-        .required()
-        .satisfiesRule("isDeepSpaceLocation")
-        .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
-      .ensure((obj: DeepSpaceEvent) => obj.gamepiece)
-        .required()
-        .satisfiesRule("isDeepSpaceGamepiece")
-        .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
-      .ensure((obj: DeepSpaceEvent) => obj.when)
-        .required()
-        .satisfies((obj: DeepSpaceEvent) => {
-          if(obj.sandstorm && (obj.when > 15 || obj.when < 0)) {
-            return false;
-          }
-          else {
-            return true;
-          }
-        })
-          .withMessage("Sandstorm only lasts fifteen seconds.")
-        .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
-    .rules;
+    let allRules = setupValidationRules();
+    this.rules = allRules.rules;
+    this.placementRules = allRules.placementRules;
 
     this.renderer = new BootstrapRenderer({showMessages: true});
     this.validationController.addRenderer(this.renderer);
@@ -312,18 +268,30 @@ export class MatchInputPage {
   }
 
   private fixupNumericProperties() {
-    // TODO
-    var numericProperties = [
-      'scaleCount', 'scaleCycleTime',
-      'allySwitchCount', 'allySwitchCycleTime',
-      'oppoSwitchCount', 'oppoSwitchCycleTime',
-      'vaultCount', 'vaultCycleTime'
+    let numericProperties = [
+      'cargoPickup', 'hatchPanelPickup',
+      'level3ClimbBegin', 'level3ClimbEnd',
     ];
+    let numericPlacementProperties = [
+      "when"
+    ];
+
+    function fixupProperty(obj, prop: string) {
+      if(obj[prop] == null || obj[prop] == "") {
+        obj[prop] = null;
+      }else if (obj[prop] == "Infinity") {
+        obj[prop] = Infinity;
+      } else if (typeof obj[prop] == "string") {
+        obj[prop] = parseInt(obj[prop]);
+      }
+    }
+
     for (var prop of numericProperties) {
-      if (this.model[prop] == "Infinity") {
-        this.model[prop] = Infinity;
-      } else if (typeof this.model[prop] == "string") {
-        this.model[prop] = parseInt(this.model[prop]);
+      fixupProperty(this.model, prop);
+    }
+    for (var placement of this.model.placements) {
+      for (var prop of numericPlacementProperties) {
+        fixupProperty(placement, prop)
       }
     }
   }

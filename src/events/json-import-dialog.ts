@@ -212,9 +212,10 @@ export class JsonImportDialog {
     this.importSimpleTransaction().then(() => {
       this.doneMessage = "Success!";
       this.done = true;
-    }).catch(() => {
+    }).catch((error) => {
       this.doneMessage = "Failed!";
-      this.done = false;
+      console.error(error);
+      this.done = true;
     });
   }
 

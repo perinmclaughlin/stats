@@ -3,7 +3,7 @@
         ${displayName}
     </div>
     <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
-        ${state.localSaved[property]}
+        ${localDisplayValue}
     </div>
     <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
         <button class='btn btn-secondary btn-sm' click.delegate='state.merged[property]=state.localSaved[property]'>
@@ -11,7 +11,7 @@
         </button>
     </div>
     <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
-        ${state.fromFile[property]}
+        ${fromFileDisplayValue}
     </div>
     <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'>
         <button class='btn btn-secondary btn-sm' click.delegate='state.merged[property]=state.fromFile[property]'>
@@ -19,6 +19,9 @@
         </button>
     </div>
     <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" } form-group'>
-        <input type='checkbox' class='form-control' checked.bind='state.merged[property] & validate:rules' />
+        <select class='form-control' value.bind='state.merged[property] & validate:rules'>
+          <option></option>
+          <option repeat.for='a of qualitativeAnswers' model.bind="a.numeric">${a.name}</option>
+        </select>
     </div>
 </template>

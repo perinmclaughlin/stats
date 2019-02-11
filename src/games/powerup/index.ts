@@ -6,7 +6,7 @@ import { IGame, gameManager } from "../index";
 import { validateEventTeamMatches, getTeamNumbers } from "../merge-utils";
 import { Match2018MergeDialog } from "./merge-dialog";
 import { Match2018MergeState, PowerupEventJson } from "./model";
-import { FrcStatsContext, EventMatchEntity } from "../../persistence";
+import { FrcStatsContext, EventMatchEntity, EventEntity } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
 
 @autoinject
@@ -114,8 +114,15 @@ class PowerupGame implements IGame {
     return this.dbContext.teamMatches2018.bulkPut(json.matches2018);
   }
 
-  deleteEvent(json: PowerupEventJson): Promise<any> {
-    return this.dbContext.getTeamMatches2018({ eventCode: json.event.eventCode })
+  deleteEvent(json: PowerupEventJson|EventEntity): Promise<any> {
+    let event: EventEntity;
+    if(('event' in json)) {
+      event = json.event;
+    }else{
+      event = json;
+    }
+
+    return this.dbContext.getTeamMatches2018({ eventCode: event.eventCode })
       .then(localMatches => {
         return this.dbContext.teamMatches2018.bulkDelete(localMatches.map(x => x.id));
       });

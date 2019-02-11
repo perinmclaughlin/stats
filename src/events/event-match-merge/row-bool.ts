@@ -8,4 +8,5 @@ export class EventMatchMergeRowText {
     @bindable state: EventMatchMergeState;
     @bindable property: string;
     @bindable displayName: string;
+    @bindable rules: any[];
 }

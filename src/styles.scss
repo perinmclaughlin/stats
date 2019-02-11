@@ -8,6 +8,10 @@ tr:hover .blue {
 
 .red {
   background-color: #fee;
+
+  .grid-item {
+    background-color: #fee;
+  }
 }
 
 tr:hover .red {
@@ -16,6 +20,10 @@ tr:hover .red {
 
 .green {
   background-color: #efe;
+
+  .grid-item {
+    background-color: #efe;
+  }
 }
 
 .blue a {
@@ -70,6 +78,10 @@ html, body {
 .grid-container {
   display: grid;
   grid-template-columns: auto auto auto auto auto auto;
+}
+
+.children-are-grid-items {
+  display: contents;
 }
 
 .grid-item {

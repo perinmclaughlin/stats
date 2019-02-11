@@ -29,7 +29,7 @@ export interface IGame {
 
   importSimple(json: IEventJson): Promise<any>;
 
-  deleteEvent(json: IEventJson): Promise<any>;
+  deleteEvent(json: IEventJson|EventEntity): Promise<any>;
 
   validateEventTeamMatches(json: any): string[];
   

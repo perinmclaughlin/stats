@@ -1,5 +1,5 @@
 <template>
-    <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }' show.bind="shown">
+    <div class='grid-item row-field ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }' show.bind="shown">
         ${displayName}
     </div>
     <div class='grid-item ${state.localSaved[property] == state.fromFile[property] ? "green" : "red" }'  show.bind="shown">

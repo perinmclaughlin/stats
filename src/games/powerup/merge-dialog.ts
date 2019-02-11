@@ -3,7 +3,6 @@ import { DialogController, DialogService } from "aurelia-dialog";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import { Match2018MergeState, MergeDialogModel } from "./model";
-import { EventMatchEntity } from "../../persistence";
 
 @autoinject
 export class Match2018MergeDialog {
