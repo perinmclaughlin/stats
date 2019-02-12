@@ -1,11 +1,12 @@
 <template>
   <require from="../aurelia-bootstrap-patches/dropdown/aubs-dropdown"></require>
   <require from="../aurelia-bootstrap-patches/dropdown/aubs-dropdown-toggle"></require>
+  <require from="./teh-events.css"></require>
   <h1>Events</h1>
   <div class='container'>
     <div class='row'>
-      <div class='col'>
-        <div class='btn-group float-right' style='margin-bottom: 10px;'>
+      <div class='col for-md'>
+        <div class='btn-group float-right'>
           <button class='btn btn-secondary' click.delegate='tbaImport()'>
             Import from TBA
             <img src="static/tba.png" />
@@ -26,27 +27,68 @@
           </div>
         </div>
       </div>
-    </div>
-    <table class='table table-hover'>
-      <tr>
-        <th>Event</th>
-        <th>Game</th>
-        <th>Year</th>
-        <th></th>
-      </tr>
-
-      <tr repeat.for="event of events">
-        <td><a route-href="route.bind:'event-matches'; params.bind: {year: event.year, eventCode: event.eventCode}">${event.name}</a></td>
-        <td> ${games.get(event.year).name} </td>
-        <td> ${event.calendarYear} </td>
-        <td>
-          <button class='btn btn-primary' click.delegate="exportEvent(event)">
-            Export json
+      <div class='col for-sm'>
+        <button class='btn btn-secondary' click.delegate='tbaImport()'>
+          Import from TBA
+          <img src="static/tba.png" />
+        </button>
+        <div class='dropdown' aubs-dropdown='auto-close.bind: false; on-toggle.call: toggled(state)'>
+          <button class='btn btn-primary dropdown-toggle' aubs-dropdown-toggle>
+            Import from json
+            <span class="caret"></span>
           </button>
+          <ul class='dropdown-menu'>
+            <li>
+              <a class='dropdown-item' href="javascript:void(0)" click.delegate='localImportJson()'>Local File</a>
+            </li>
+            <li>
+              <a class='dropdown-item' href="javascript:void(0)" click.delegate='gdriveImportJson()'>Google Drive</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <table id='AllEventsTable' class='table table-hover'>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Game</th>
+          <th class='for-md'>Year</th>
+          <th class='for-md'></th>
+        </tr>
+        <tr>
+          <th class='for-sm'></th>
+          <th class='for-sm'>Year</th>
+        </tr>
+      </thead>
 
-          <button class='btn btn-danger' click.delegate="deleteEvent(event)">X</button>
-        </td>
-      </tr>
+
+      <tbody repeat.for="event of events">
+        <tr>
+          <td><a
+              route-href="route.bind:'event-matches'; params.bind: {year: event.year, eventCode: event.eventCode}">${event.name}</a>
+          </td>
+          <td> ${games.get(event.year).name} </td>
+          <td class='for-md'> ${event.calendarYear} </td>
+          <td class='for-md'>
+            <button class='btn btn-primary' click.delegate="exportEvent(event)">
+              Export json
+            </button>
+
+            <button class='btn btn-danger' click.delegate="deleteEvent(event)">X</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='for-sm'>
+            <button class='btn btn-primary' click.delegate="exportEvent(event)">
+              Export json
+            </button>
+
+            <button class='btn btn-danger' click.delegate="deleteEvent(event)">X</button>
+          </td>
+          <td class='for-sm'> ${event.calendarYear} </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>

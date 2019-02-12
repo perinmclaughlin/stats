@@ -9,6 +9,7 @@ import { gameManager } from "./games/index";
 export class App {
   version = environment.version;
   persisted: boolean;
+  toggle: boolean;
 
   constructor(public router: Router, customValidationRules: CustomValidationRules) {
     this.persisted = false;

@@ -2,44 +2,42 @@
   <require from="bootstrap/dist/css/bootstrap.css"></require>
   <require from="./styles.css"></require>
   <div class='body-like'>
-    <header class="navbar navbar-expand navbar-dark bg-dark" style="padding-bottom: 0px; padding-top: 0px;">
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <header class="navbar navbar-expand-sm navbar-dark bg-dark" style="padding-bottom: 0px; padding-top: 0px;">
       <a style="display: block;" class="navbar-brand" route-href="route: events">
-        <img src="static/biglogo.png" style="width: 50px;"/>
+        <img src="static/biglogo.png" style="width: 50px;" />
         All Events
       </a>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <button class="navbar-toggler navbar-toggler" type="button" click.delegate='toggle=!toggle'
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse ${toggle ? 'show': ''}" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" route-href="route: district-rankings">District Rankings</a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link" route-href="route: district-rankings">District Rankings</a>
+          </li>
 
-            <li class='nav-item'>
-              <a class="nav-link" route-href="route: graphtest">Graph Test</a>
-            </li>
+          <li class='nav-item'>
+            <a class="nav-link" route-href="route: graphtest">Graph Test</a>
+          </li>
 
-            <li class='nav-item'>
-              <a class="nav-link" route-href="route: qrtest">QR Code</a>
-            </li>
-
-            <li>
-              <p style="color: red; font-size: 150%" show.bind='!persisted'>
-                Persistence Disabled: DATA LOSS POSSIBLE
-              </p>
-            </li>
+          <li class='nav-item'>
+            <a class="nav-link" route-href="route: qrtest">QR Code</a>
+          </li>
         </ul>
       </div>
     </header>
+    <p style="color: red; font-size: 150%" show.bind='!persisted'>
+      Persistence Disabled: DATA LOSS POSSIBLE
+    </p>
     <router-view></router-view>
   </div>
-  
+
   <footer>
     <div class='text-center'>
-          version: ${version}
-          <br/>
-          persistence: ${persisted}
+      version: ${version}
+      <br />
+      persistence: ${persisted}
     </div>
   </footer>
 </template>

@@ -1,0 +1,35 @@
+@media (max-width: 576px) {
+  .for-md {
+    display: none;
+  }
+  td.for-sm {
+    display: table-cell;
+  }
+  div.for-sm {
+    display: block
+  }
+  #AllEventsTable tbody:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+  }
+  #AllEventsTable tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
+@media (min-width: 576px) {
+  td.for-md {
+    display: table-cell;
+  }
+  div.for-md {
+    display: block;
+  }
+  .for-sm {
+    display: none;
+  }
+}
+.col.for-md, .col.for-sm button{
+  margin-bottom: 10px;
+}
+
+.col.for-sm button{
+  width: 100%;
+}

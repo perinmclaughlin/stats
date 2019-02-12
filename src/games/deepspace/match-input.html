@@ -55,14 +55,14 @@
 
     <!--Drop down menus for the cargo and hatch pickups-->
     <div class='row'>
-      <div class='col form-group'>
+      <div class='col-sm-6 form-group'>
         <label>Cargo Pickup</label>
         <select class='form-control' value.bind='model.cargoPickup & validate:rules'>
           <option></option>
           <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name}</option>
         </select>
       </div>
-      <div class='col form-group'>
+      <div class='col-sm-6 form-group'>
         <label>Hatch Panel Pickup</label>
         <select class='form-control' value.bind='model.hatchPanelPickup & validate:rules'>
           <option></option>
@@ -76,17 +76,16 @@
     <div id='TacoPlacements'>
       <!--Drop down menus-->
       <!--The labels that go above the columns-->
-      <div class='gamePieceLabel' show.bind='model.placements.length !=0'>
+      <div class='gamePieceLabel header' show.bind='model.placements.length !=0'>
         <label>Game Piece</label>
-        <label></label>
       </div>
-      <div class='goalLabel' show.bind='model.placements.length !=0'>
-        <label>Goal</label>
+      <div class='goalLabel header' show.bind='model.placements.length !=0'>
+        <label>Location</label>
       </div>
-      <div class='secondsLabel' show.bind='model.placements.length !=0'>
+      <div class='secondsLabel header' show.bind='model.placements.length !=0'>
         <label>Seconds Left</label>
       </div>
-      <div class='sandStormLabel' show.bind='model.placements.length !=0'>
+      <div class='sandStormLabel header' show.bind='model.placements.length !=0'>
         <label>Sand Storm</label>
       </div>
       <div>
@@ -94,18 +93,21 @@
       </div>
       <template class='row' repeat.for='p of model.placements'>
         <div class='form-group'>
+          <label class='inline-header'>Game Piece</label>
           <select class='form-control' value.bind='p.gamepiece & validate:placementRules'>
             <option></option>
             <option repeat.for='r of gamepieceArray'>${r}</option>
           </select>
         </div>
         <div class='form-group'>
+          <label class='inline-header'>Location</label>
           <select class='form-control' value.bind='p.location & validate:placementRules'>
             <option></option>
             <option repeat.for='m of locationArray'>${m}</option>
           </select>
         </div>
         <div class='form-group'>
+          <label class='inline-header'>Seconds Left</label>
           <counter placeholder='seconds left' show-label.bind='false' model.bind='p' property="when" max.bind="maxWhen"
             rules.bind="placementRules"></counter>
         </div>
@@ -130,7 +132,7 @@
 
     <!--Climbing by yourself-->
     <div id='climbing' class='row'>
-      <div class='col'>
+      <div class='col-sm-6'>
         <div class='row'>
           <div class='col'>
             <label>
@@ -145,7 +147,7 @@
           </div>
         </div>
       </div>
-      <div class='col'>
+      <div class='col-sm-6'>
         <div class='row'>
           <div class='col'>
             <label>
@@ -214,7 +216,7 @@
 
     <!--Fouls-->
     <div class='row'>
-      <div class='col'>
+      <div class='col-sm-6'>
         <div class='row'>
           <div class='col-sm-2 form-group'>
             <label class='form-control-label'>Robot Failure?</label>
@@ -235,7 +237,7 @@
           </div>
         </div>
       </div>
-      <div class='col'>
+      <div class='col-sm-6'>
         <div class='row'>
           <div class='col-sm-2'>
 
