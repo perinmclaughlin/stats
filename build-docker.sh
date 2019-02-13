@@ -11,3 +11,4 @@ cp index.html dist
 cp -r scripts dist
 cp -r static dist
 cp sw.js dist
+cp stats.webmanifest dist
