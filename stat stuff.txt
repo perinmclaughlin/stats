@@ -1,0 +1,9 @@
+Event select for non-pnw
+excel for tableau
+Work on google drive integration
+Easy next match button & more title info
+Slot lock for ease of access
+Qr code auto-sizing
+Perin-proof inputs
+Persistence ALARM
+hide match editor
