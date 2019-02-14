@@ -13,6 +13,9 @@
       <li class='nav-item active'>
         <a class='nav-link active' href="javascript:void">Teams (${teamsData.length})</a>
       </li>
+      <li>
+        <button style="width:200px" class="btn btn-secondary" click.delegate='showDevValues()'><span show.bind='showDevStuff'>Hide </span><span show.bind='!showDevStuff'>Show </span>Dev Values</button>
+      </li>
     </ul>
     <div class='tab-content'>
       <table class="table table-hover">
@@ -20,10 +23,20 @@
           <th class='clickable' click.delegate="sortByTeamNumber()">Team Number</th>
           <th>Team Name</th>
           <th>Scouted Match Count</th>
+          <th>Cargo Pickup</th>
+          <th>Hatch Pickup</th>
+          <th>Avg Cargo Cycle Time</th>
+          <th>Avg Hatch Cycle Time</th>
+          <th>Avg Gamepiece Count</th>
+          <th>Avg Cargo Count</th>
+          <th>Avg Hatch Count</th>
+          <th>Avg Cargo Sandstorm</th>
+          <th>Avg Hatch Sandstorm</th>
+          <th># of Teams Lifted</th>
         </tr>
         <tr repeat.for="teamData of teamsData">
           <td>
-            <a style="display: block;" route-href="route.bind:'event-team'; params.bind: {year: teamData.year, eventCode: teamData.eventCode, teamNumber: teamData.teamNumber}">
+            <a style="display: block;" route-href="route.bind:'event-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: teamData.teamNumber}">
               ${teamData.teamNumber}
             </a>
           </td>
@@ -32,6 +45,36 @@
           </td>
           <td>
             ${teamData.matchCount}
+          </td>
+          <td>
+            ${teamData.cargoPickup.name} <span show.bind='showDevStuff'>(${teamData.cargoPickupRaw})</span>
+          </td>
+          <td>
+            ${teamData.hatchPanelPickup.name} <span show.bind='showDevStuff'>(${teamData.hatchPanelPickupRaw})</span>
+          </td>
+          <td>
+            ${teamData.avgCargoCycleTime}
+          </td>
+          <td>
+            ${teamData.avgHatchPanelCycleTime}
+          </td>
+          <td>
+            ${teamData.avgGamepieceCount} <span show.bind='showDevStuff'>(${teamData.cargoCountRaw + teamData.hatchPanelCountRaw}/${teamData.cargoPlacedMatchCount})</span>
+          </td>
+          <td>
+            ${teamData.avgCargoCount} <span show.bind='showDevStuff'>(${teamData.cargoCountRaw}/${teamData.cargoPlacedMatchCount})</span>
+          </td>
+          <td>
+            ${teamData.avgHatchPanelCount} <span show.bind='showDevStuff'>(${teamData.hatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount})</span>
+          </td>
+          <td>
+            ${teamData.avgSandstormCargoCount} <span show.bind='showDevStuff'>(${teamData.sandstormCargoCountRaw}/${teamData.cargoPlacedMatchCount})</span>
+          </td>
+          <td>
+            ${teamData.avgSandstormHatchPanelCount} <span show.bind='showDevStuff'>(${teamData.sandstormHatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount})</span>
+          </td>
+          <td>
+            ${teamData.teamsLiftedCount}
           </td>
         </tr>
       </table>

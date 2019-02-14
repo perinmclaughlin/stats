@@ -89,8 +89,9 @@ export function setupValidationRules() {
     .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
     .ensure((obj: DeepSpaceEvent) => obj.when)
     .required()
+    .satisfiesRule("isNumeric")
     .satisfies((when: number, obj: DeepSpaceEvent) => {
-      if (obj.sandstorm && (obj.when > 15 || obj.when < 0)) {
+      if((obj.sandstorm && (obj.when > 15 || obj.when < 0)) && (!isNaN(obj.when) || obj.when == Infinity)) {
         return false;
       }
       else {
@@ -98,6 +99,15 @@ export function setupValidationRules() {
       }
     })
     .withMessage("Sandstorm only lasts fifteen seconds.")
+    .satisfies((when: number, obj: DeepSpaceEvent) => {
+      if((!obj.sandstorm && (obj.when > 135 || obj.when < 0)) && (!isNaN(obj.when) || obj.when == Infinity)) {
+        return false
+      }
+      else {
+        return true;
+      }
+    })
+    .withMessage("Teleop only lasts 135 seconds.")
     .when((obj: DeepSpaceEvent) => obj.eventType == "Gamepiece Placement")
     .rules;
 

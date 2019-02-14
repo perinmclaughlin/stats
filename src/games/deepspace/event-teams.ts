@@ -14,6 +14,7 @@ export class EventTeamsPage {
   public activeTab: number;
   public teamsData: DeepSpaceTeamStatistics[];
   public gameName: string;
+  public showDevStuff: boolean;
 
   constructor(
     private dbContext: FrcStatsContext,
@@ -23,6 +24,7 @@ export class EventTeamsPage {
     this.eventMatches = [];
     this.matches2019 = [];
     this.activeTab = 0;
+    this.showDevStuff = false;
   }
 
   public async activate(params) {
@@ -65,5 +67,9 @@ export class EventTeamsPage {
       }
     }
     this.teamsData = this.teams.map(x => makeTeamStats(x.team, teamMatches.get(x.team.teamNumber) || []));
+  }
+
+  public showDevValues() {
+    this.showDevStuff = !this.showDevStuff;
   }
 }

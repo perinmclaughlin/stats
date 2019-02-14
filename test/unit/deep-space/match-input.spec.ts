@@ -55,7 +55,7 @@ describe('deep space match-input', () => {
   }
  
   it('validates valid data', () => {
-    page.validationController.validate({
+    return page.validationController.validate({
       object: data,
       rules: page.rules
     }).then((validationResults) => {
@@ -82,7 +82,7 @@ describe('deep space match-input', () => {
   }
 
   it('validates null hatchPanelPickup', () => {
-    data.hatchPanelPickup = null; 
+    data.hatchPanelPickup = <any>null; 
 
     return validateSingle("hatchPanelPickup", "Hatch Panel Pickup is required.");
   });
@@ -94,7 +94,7 @@ describe('deep space match-input', () => {
   });
 
   it('validates null cargoPickup', () => {
-    data.cargoPickup = null; 
+    data.cargoPickup = <any>null; 
 
     return validateSingle("cargoPickup", "Cargo Pickup is required.");
   });

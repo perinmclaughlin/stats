@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { TeamMatch2019Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2019match, EventMatchSlots, DeepSpaceEvent, qualitativeAnswers, allDeepSpaceLocations, allDeepSpaceGamepieceTypes } from "../../persistence";
-import { Disposable, BindingEngine } from "aurelia-binding";
+import { Disposable, BindingEngine, DirtyCheckProperty } from "aurelia-binding";
 import { DialogService } from "aurelia-dialog";
 import { Router } from "aurelia-router";
 import { scrollToTop } from "../../utilities/scroll";
@@ -11,11 +11,14 @@ import { DeepSpaceBingoDialog } from "./deepspace-bingo";
 import { QrCodeDisplayDialog } from "../../qrcodes/display-dialog";
 import { clone } from "lodash";
 import { nextMatchNumber, previousMatchNumber } from "../../model";
-import { setupValidationRules } from "./model";
+import { setupValidationRules, placementTime, PlacementMergeState } from "./model";
+import { SaveDialog } from "../../utilities/save-dialog";
+import { equals } from "../../utilities/dirty-change-checker";
 
 @autoinject 
 export class MatchInputPage {
   public model: TeamMatch2019Entity;
+  public pristineModel: TeamMatch2019Entity;
   public team: TeamEntity;
   public event: EventEntity;
   public eventMatch: EventMatchEntity;
@@ -35,6 +38,11 @@ export class MatchInputPage {
   public maxWhen = 135;
   public hasSaved: boolean;
   public slots: any;
+  public failureReasonTemp: string;
+  public foulReasonTemp: string;
+  public liftedTemp: string[];
+  public liftedBy: string;
+  public wasLifted: boolean;
 
   public rules: any[];
   public placementRules: any[];
@@ -120,6 +128,8 @@ export class MatchInputPage {
     } else {
       this.model = matches[0];
     }
+
+    this.pristineModel = clone(this.model);
 
     this.observeModel();
 
@@ -208,7 +218,21 @@ export class MatchInputPage {
       sandstorm: false,
       when: null,
     };
-
+    if(this.model.placements.length > 0) {
+      placement.when = this.model.placements[this.model.placements.length - 1].when;
+      placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
+    }
+    else if(this.model.placements.length == 0) {
+      placement.when = 10;
+      placement.sandstorm = true;
+    }
+    //This is basically a joke. Good luck making this happen!
+    else {
+      placement.when = Infinity;
+      placement.sandstorm = <any>'FileNotFound';
+      placement.location = <any>"Fifth Dimension";
+      placement.gamepiece = <any>"Cake";
+    }
     this.model.placements.push(placement);
   }
 
@@ -230,6 +254,83 @@ export class MatchInputPage {
     return Promise.all(validationPromises);
   }
 
+  public async canDeactivate(): Promise<boolean> {
+    console.log("canDeactivate() called");
+    if(this.hasChanges()) {
+      let something = await SaveDialog.open(this.dialogService, {}).whenClosed((nil) => {
+        return nil;
+      });
+      return !something.wasCancelled;
+    }
+    else {
+      return true;
+    }
+  }
+
+  public syncBoolAndReason() {
+
+    if(this.model.isFailure) {
+      this.model.failureReason = this.failureReasonTemp;
+    }
+    else {
+      this.failureReasonTemp = this.model.failureReason;
+      this.model.failureReason = "";
+    }
+
+    return true;
+  }
+
+  public syncLiftedAndEntries() {
+
+    if(this.wasLifted) {
+      this.model.lifted = this.liftedTemp;
+    }
+    else {
+      this.liftedTemp = this.model.lifted;
+      this.model.lifted = [];
+    }
+
+    return true;
+  }
+
+  public syncLiftedBy() {
+
+    if(this.model.liftedBy) {
+      this.model.liftedBy = this.liftedBy;
+    }
+    else {
+      this.liftedBy = this.model.liftedBy;
+      this.model.liftedBy = null;
+    }
+
+    return true;
+  }
+
+  public syncBoolAndReason2() {
+
+    if(this.model.isFoul) {
+      this.model.foulReason = this.foulReasonTemp;
+    }
+    else {
+      this.foulReasonTemp = this.model.foulReason;
+      this.model.foulReason = "";
+    }
+
+    return true;
+  }
+
+  public hasChanges() {
+    let prop = [
+      'cargoPickup', 'hatchPanelPickup', 'placements', 'level2ClimbAttempted', 'level2ClimbSucceeded', 'level3ClimbAttempted', 'level3ClimbSucceeded', 'level3ClimbBegin', 'level3ClimbEnd', 'lifted', 'liftedBy', 'isFailure', 'failureReason', 'isFoul', 'foulReason', 'notes'
+    ];
+    for(var j = 0; j < prop.length; j++) {
+      if(!equals(prop[j], this.model, this.pristineModel)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public async save() {
     let validationResults = await this.validateAll();
     console.info(validationResults);
@@ -240,6 +341,11 @@ export class MatchInputPage {
         eventCode: this.model.eventCode,
         teamNumber: this.model.teamNumber,
         matchNumber: this.model.matchNumber,
+      });
+      this.model.placements.sort((a, b) => {
+        let aTime = placementTime(a)
+        let bTime = placementTime(b);
+        return bTime - aTime;
       });
       let modelToSave = JSON.parse(JSON.stringify(this.model))
       if (savedMatches.length != 0) {

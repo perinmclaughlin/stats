@@ -14,6 +14,8 @@ export class CustomValidationRules {
       (value: string, obj: any) => {
         if(value == null || value == "") {
           return true;
+        } else if(value == <any>Infinity || value == <any>-Infinity) {
+          return true;
         }
         return /^-?\d*$/.test(value);
       }, "Your input needs to be a number."
@@ -72,6 +74,8 @@ export class CustomValidationRules {
     ValidationRules.customRule(
       "didNotLiftAndGetLiftedBy", (input: string, obj: any, getLifted: (a: any) => string[]) => {
         let didLift = getLifted(obj);
+        console.log("didLift is ", didLift);
+        console.log("liftedBy is ", input);
         if(input == null || obj == null) {
           return true;
         }
