@@ -47,33 +47,34 @@
             ${teamData.matchCount}
           </td>
           <td>
-            ${teamData.cargoPickup.name} <span show.bind='showDevStuff'>(${teamData.cargoPickupRaw})</span>
+            <span show.bind='!showDevStuff'>${teamData.cargoPickup.name}</span><span show.bind='showDevStuff'>${teamData.cargoPickupRaw}/40</span>
           </td>
           <td>
-            ${teamData.hatchPanelPickup.name} <span show.bind='showDevStuff'>(${teamData.hatchPanelPickupRaw})</span>
+            <span show.bind='!showDevStuff'>${teamData.hatchPanelPickup.name}</span><span show.bind='showDevStuff'>${teamData.hatchPanelPickupRaw}/40</span>
           </td>
           <td>
-            ${teamData.avgCargoCycleTime}
+            <span show.bind='!showDevStuff'>${teamData.avgCargoCycleTime}</span><span show.bind='showDevStuff'>${teamData.cargoCycleTimeRaw}/60</span>
           </td>
           <td>
-            ${teamData.avgHatchPanelCycleTime}
+            <span show.bind='!showDevStuff'>${teamData.avgHatchPanelCycleTime}</span><span show.bind='showDevStuff'>${teamData.hatchPanelCycleTimeRaw}/60</span>
           </td>
           <td>
-            ${teamData.avgGamepieceCount} <span show.bind='showDevStuff'>(${teamData.cargoCountRaw + teamData.hatchPanelCountRaw}/${teamData.cargoPlacedMatchCount})</span>
+            <span show.bind='!showDevStuff'>${teamData.avgGamepieceCount}</span><span show.bind='showDevStuff'>${teamData.cargoCountRaw + teamData.hatchPanelCountRaw}/${teamData.cargoPlacedMatchCount}</span>
           </td>
           <td>
-            ${teamData.avgCargoCount} <span show.bind='showDevStuff'>(${teamData.cargoCountRaw}/${teamData.cargoPlacedMatchCount})</span>
+            <span show.bind='!showDevStuff'>${teamData.avgCargoCount}</span><span show.bind='showDevStuff'>${teamData.cargoCountRaw}/${teamData.cargoPlacedMatchCount}</span>
           </td>
           <td>
-            ${teamData.avgHatchPanelCount} <span show.bind='showDevStuff'>(${teamData.hatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount})</span>
+            <span show.bind='!showDevStuff'>${teamData.avgHatchPanelCount}</span><span show.bind='showDevStuff'>${teamData.hatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount}</span>
           </td>
           <td>
-            ${teamData.avgSandstormCargoCount} <span show.bind='showDevStuff'>(${teamData.sandstormCargoCountRaw}/${teamData.cargoPlacedMatchCount})</span>
+            <span show.bind='!showDevStuff'>${teamData.avgSandstormCargoCount}</span><span show.bind='showDevStuff'>${teamData.sandstormCargoCountRaw}/${teamData.cargoPlacedMatchCount}</span>
           </td>
           <td>
-            ${teamData.avgSandstormHatchPanelCount} <span show.bind='showDevStuff'>(${teamData.sandstormHatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount})</span>
+            <span show.bind='!showDevStuff'>${teamData.avgSandstormHatchPanelCount}</span><span show.bind='showDevStuff'>${teamData.sandstormHatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount}</span>
           </td>
           <td>
+            <!--${teamData.lifted.length}-->
             ${teamData.teamsLiftedCount}
           </td>
         </tr>

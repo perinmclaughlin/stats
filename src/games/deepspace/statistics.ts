@@ -1,4 +1,4 @@
-import { QualitativeAnswer, TeamMatch2019Entity, qualitativeAnswers, TeamEntity } from "../../persistence";
+import { QualitativeAnswer, TeamMatch2019Entity, qualitativeAnswers, TeamEntity, DeepSpaceLocation } from "../../persistence";
 import { print } from "util";
 
 export class DeepSpaceTeamStatistics {
@@ -21,22 +21,44 @@ export class DeepSpaceTeamStatistics {
   avgSandstormHatchPanelCount: number;
   /**Robot cycle period for placing cargo. */
   avgCargoCycleTime: number;
+  /**Raw cargo cycles per 60 seconds. */
+  cargoCycleTimeRaw: number;
   /**Robot cycle period for placing cargo in the cargo ship. */
   avgCargoCycleTimeCargoShip: number;
+  /**Raw cargo cycles per 60 seconds for cargo ship. */
+  cargoCycleTimeCargoShipRaw: number;
   /**Robot cycle period for placing cargo on the lowest level on the rocket. */
   avgCargoCycleTimeRocketLow: number;
+  /**Raw cargo cycles per 60 seconds for lower rocket. */
+  cargoCycleTimeRocketLowRaw: number;
   /**Robot cycle period for placing cargo on the middle level of the rocket. */
   avgCargoCycleTimeRocketMid: number;
+  /**Raw cargo cycles per 60 seconds for middle rocket. */
+  cargoCycleTimeRocketMidRaw: number;
   /**Robot cycle period for placing cargo on the highest level of the rocket. */
   avgCargoCycleTimeRocketHigh: number;
+  /**Raw cargo cycles per 60 seconds for high rocket. */
+  cargoCycleTimeRocketHighRaw: number;
   /**Robot cycle period for placing hatch panels. */
   avgHatchPanelCycleTime: number;
+  /**Raw hatch panel cycles per 60 seconds. */
+  hatchPanelCycleTimeRaw: number;
+  /**Robot cycle period for placing hatch panels on the cargo ship. */
+  avgHatchPanelCycleTimeCargoShip: number;
+  /**Raw hatch panel cycles per 60 seconds for cargo ship. */
+  hatchPanelCycleTimeCargoShipRaw: number;
   /**Robot cycle period for placing hatch panels on the lowest level of the rocket. */
   avgHatchPanelCycleTimeRocketLow: number;
+  /**Raw hatch panel cycles per 60 seconds for lower rocket. */
+  hatchPanelCycleTimeRocketLowRaw: number;
   /**Robot cycle period for placing hatch panels on the middle level of the rocket. */
   avgHatchPanelCycleTimeRocketMid: number;
+  /**Raw hatch panel cycles per 60 seconds for middle rocket. */
+  hatchPanelCycleTimeRocketMidRaw: number;
   /**Robot cycle period for placing hatch panels on the highest level of the rocket. */
   avgHatchPanelCycleTimeRocketHigh: number;
+  /**Raw hatch panel cycles per 60 seconds for high rocket. */
+  hatchPanelCycleTimeRocketHighRaw: number;
   /**The number of matches where a team placed at least one cargo. */
   cargoPlacedMatchCount: number;
   /**The number of matches where a team placed at least one hatch panel. */
@@ -71,12 +93,32 @@ export class DeepSpaceTeamStatistics {
   cargoCountRaw: number;
   /**The raw value used for avgHatchPanelCount. */
   hatchPanelCountRaw: number;
+  /**The raw value used for avgCargoCycleTimeRocketLow. */
+  cargoCountRocketLowRaw: number;
+  /**The raw value used for avgCargoCycleTimeRocketMid. */
+  cargoCountRocketMidRaw: number;
+  /**The raw value used for avgCargoCycleTimeRocketHigh. */
+  cargoCountRocketHighRaw: number;
+  /**The raw value used for avgCargoCycleTimeCargoShip. */
+  cargoCountCargoShipRaw: number;
+  /**The raw value used for avgHatchPanelCycleTimeRocketLow. */
+  hatchPanelCountRocketLowRaw: number;
+  /**The raw value used for avgHatchPanelCycleTimeRocketMid. */
+  hatchPanelCountRocketMidRaw: number;
+  /**The raw value used for avgHatchPanelCycleTimeRocketHigh. */
+  hatchPanelCountRocketHighRaw: number;
+  /**The raw value used for avgHatchPanelCycleTimeCargoShip. */
+  hatchPanelCountCargoShipRaw: number;
   /**The raw value used for avgSandstormCargoCount. */
   sandstormCargoCountRaw: number;
   /**The raw value used for avgSandstormHatchPanelCount. */
   sandstormHatchPanelCountRaw: number;
   /**The number of teams a team has lifted. */
   teamsLiftedCount: number;
+  /**Stores the locations where a team has placed cargo. Useful for the event-team page. */
+  locationsPlacedCargo: DeepSpaceLocation[];
+  /**Stores the locations where a team has placed hatch panels. Useful for the event-team page. */
+  locationsPlacedHatch: DeepSpaceLocation[];
 }
 
 export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepSpaceTeamStatistics {
@@ -88,6 +130,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   let hatchSandstorm = 0;
   let cargoPickup = 0;
   let hatchPickup = 0;
+
   result.matchCount = 0;
   result.cargoPickupRaw = 0;
   result.hatchPanelPickupRaw = 0;
@@ -96,16 +139,82 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.sandstormCargoCountRaw = 0;
   result.sandstormHatchPanelCountRaw = 0;
   result.teamsLiftedCount = 0;
+  result.cargoCycleTimeRaw = 0;
+  result.cargoCycleTimeCargoShipRaw = 0;
+  result.cargoCycleTimeRocketHighRaw = 0;
+  result.cargoCycleTimeRocketLowRaw = 0;
+  result.cargoCycleTimeRocketMidRaw = 0;
+  result.hatchPanelCycleTimeRaw = 0;
+  result.hatchPanelCycleTimeCargoShipRaw = 0;
+  result.hatchPanelCycleTimeRocketHighRaw = 0;
+  result.hatchPanelCycleTimeRocketLowRaw = 0;
+  result.hatchPanelCycleTimeRocketMidRaw = 0;
 
   result.cargoPlacedMatchCount = 0;
   result.hatchPanelPlacedMatchCount = 0;
   result.matchesPlayed = x.length;
+  result.locationsPlacedCargo = [];
+  result.locationsPlacedHatch = [];
 
   //This for loop is a nightmare.
   for(var i = 0; i < x.length; i++) {
     var alreadyAddedCargo = false;
     var alreadyAddedHatch = false;
     for(var j = 0; j < x[i].placements.length; j++) {
+      if(x[i].lifted.length > 0) {
+        //console.log("x[" + i + "].lifted.length is " + x[i].lifted.length);
+      } else {
+        //console.log("x[" + i + "].lifted.length is either 0, undefined, or NaN");
+      }
+      
+      if(x[i].didLiftLevel3 && x[i].lifted.length > 0) {
+        result.liftLevel3Count += x[i].lifted.length;
+      } else if(!x[i].didLiftLevel3 && x[i].lifted.length > 0) {
+        result.liftLevel2Count += x[i].lifted.length;
+      } else {
+        result.liftLevel2Count += 0;
+        result.liftLevel3Count += 0;
+      }
+
+      result.teamsLiftedCount += (result.liftLevel2Count + result.liftLevel3Count);
+      if(result.locationsPlacedCargo.length > 0) {
+        for(var k = 0; k < result.locationsPlacedCargo.length; k++) {
+          if(x[i].placements[j].gamepiece == "Cargo" && (x[i].placements[j].location == result.locationsPlacedCargo[k])) {
+            //console.log("Did not add ",x[i].placements[j].location , " to locationPlacedCargo");
+          } else if(x[i].placements[j].gamepiece == "Cargo" && (x[i].placements[j].location != result.locationsPlacedCargo[k])) {
+            result.locationsPlacedCargo.push(x[i].placements[j].location);
+            //console.log("Added ",x[i].placements[j].location , " to locationPlacedCargo");
+          } else {
+            //console.log("Stopped adding to locationPlacedCargo");
+          }
+        }
+      }
+      else if(result.locationsPlacedCargo.length == 0) {
+        result.locationsPlacedCargo.push(x[i].placements[j].location);
+        //console.log("Added ",x[i].placements[j].location , " to locationPlacedCargo");
+      } else {
+        //console.log("Did not add to locationsPlacedCargo.");
+      }
+
+      if(result.locationsPlacedHatch.length > 0) {
+        for(var k = 0; k < result.locationsPlacedHatch.length; k++) {
+          if(x[i].placements[j].gamepiece == "Hatch Panel" && (x[i].placements[j].location == result.locationsPlacedHatch[k])) {
+            //console.log("Did not add ",x[i].placements[j].location , " to locationPlacedHatch");
+          } else if(x[i].placements[j].gamepiece == "Hatch Panel" && (x[i].placements[j].location != result.locationsPlacedHatch[k])) {
+            result.locationsPlacedHatch.push(x[i].placements[j].location);
+            //console.log("Added ",x[i].placements[j].location , " to locationPlacedHatch");
+          } else {
+            //console.log("Stopped adding to locationPlacedHatch");
+          }
+        }
+      }
+      else if(result.locationsPlacedHatch.length == 0) {
+        result.locationsPlacedHatch.push(x[i].placements[j].location);
+        //console.log("Added ",x[i].placements[j].location , " to locationPlacedHatch");
+      } else {
+        //console.log("Did not add to locationsPlacedHatch.");
+      }
+
       if(x[i].placements[j].gamepiece == "Cargo") {
         cargoCount++;
         if(!alreadyAddedCargo) {
@@ -148,6 +257,21 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.avgGamepieceCount = (cargoCount + hatchCount) / result.matchesPlayed;
     result.avgSandstormCargoCount = cargoSandstorm / result.matchesPlayed;
     result.avgSandstormHatchPanelCount = hatchSandstorm / result.matchesPlayed;
+
+    result.teamsLiftedCount = result.liftLevel2Count + result.liftLevel3Count;
+    //console.log("\n# of teams lifted to lvl 2: ", result.liftLevel2Count, "\n# of teams lifted to lvl 3: ", result.liftLevel3Count, "\n# of teams lifted: ", result.teamsLiftedCount);
+
+    //Raw cycle times --> NOT ELLERY'S CYCLE TIMES
+    result.cargoCycleTimeRaw = (result.cargoCountRaw / 160) * 60;
+    result.hatchPanelCycleTimeRaw = (result.hatchPanelCountRaw / 160) * 60;
+    result.cargoCycleTimeCargoShipRaw = (result.cargoCountCargoShipRaw / 160) * 60;
+    result.hatchPanelCycleTimeCargoShipRaw = (result.hatchPanelCountCargoShipRaw / 160) * 60;
+    result.cargoCycleTimeRocketLowRaw = (result.cargoCountRocketLowRaw / 160) * 60;
+    result.hatchPanelCycleTimeRocketLowRaw = (result.hatchPanelCountRocketLowRaw / 160) * 60;
+    result.cargoCycleTimeRocketMidRaw = (result.cargoCountRocketMidRaw / 160) * 60;
+    result.hatchPanelCycleTimeRocketMidRaw = (result.hatchPanelCountRocketMidRaw / 160) * 60;
+    result.cargoCycleTimeRocketHighRaw = (result.cargoCountRocketHighRaw / 160) * 60;
+    result.hatchPanelCycleTimeRocketHighRaw = (result.hatchPanelCountRocketHighRaw / 160) * 60;
 
     for(var i = 0; i < x.length; i++) {
       if(x[i].lifted.length == 0) {

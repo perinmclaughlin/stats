@@ -18,18 +18,20 @@
           <table class="table table-hover">
             <tr>
               <th>Match Number</th>
-              <th>Placement</th>
-              <th>Cargo Pickup Ability</th>
-              <th>Hatche Pickup Ability</th>
-              <th>Level Reached</th>
-              <th>Lifted</th>
+              <th>Placement Count (Cargo)</th>
+              <th>Placement Count (Hatch)</th>
+              <th>Cargo Pickup Rating</th>
+              <th>Hatch Pickup Rating</th>
+              <th>Highest Level Reached</th>
+              <th># of Teams Lifted</th>
               <th>Notes</th>
             </tr>
             <tr repeat.for="match of matches2019">
               <td><a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2019, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
-              <td>${match.placements}</td>
+              <td>${match.locationsPlacedCargo}</td>
+              <td>${match.locationsPlacedHatch}</td>
               <td>${match.cargoPickup} </td>
-              <td>${match.hatchPanelPickup} </td>
+              <td>${match.hatchPanelPickup}</td>
               <td>${match.level3ClimbSucceeded ? 3 : (match.level2ClimbSucceeded*2) }</td>
               <td>${match.lifted.length}</td>
               <td>
@@ -74,7 +76,7 @@
       </aubs-tabset>
       <!--<textarea name="team_stats" style="width:50%; height:100px" value.bind="model.foulReason">-->
   
-      </textarea>
+      <!--</textarea>-->
     </div>
   </template>
   

@@ -43,6 +43,7 @@ export class MatchInputPage {
   public liftedTemp: string[];
   public liftedBy: string;
   public wasLifted: boolean;
+  public didLiftLevel3: boolean;
 
   public rules: any[];
   public placementRules: any[];
