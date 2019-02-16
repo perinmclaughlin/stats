@@ -9,7 +9,7 @@ import { scrollToTop } from "../../utilities/scroll";
 import { getTeamNumbers } from "../merge-utils";
 import { DeepSpaceBingoDialog } from "./deepspace-bingo";
 import { QrCodeDisplayDialog } from "../../qrcodes/display-dialog";
-import { clone } from "lodash";
+import { cloneDeep } from "lodash";
 import { nextMatchNumber, previousMatchNumber } from "../../model";
 import { setupValidationRules, placementTime, PlacementMergeState } from "./model";
 import { SaveDialog } from "../../utilities/save-dialog";
@@ -130,7 +130,7 @@ export class MatchInputPage {
       this.model = matches[0];
     }
 
-    this.pristineModel = clone(this.model);
+    this.pristineModel = cloneDeep(this.model);
 
     this.observeModel();
 
@@ -204,7 +204,7 @@ export class MatchInputPage {
   }
 
   public prepareQrCodeData() {
-    let model = clone(this.model);
+    let model = cloneDeep(this.model);
     delete model['id'];
     model['year'] = this.event.year;
     let result = JSON.stringify(model);
@@ -325,12 +325,36 @@ export class MatchInputPage {
   }
 
   public hasChanges() {
-    let prop = [
-      'cargoPickup', 'hatchPanelPickup', 'placements', 'level2ClimbAttempted', 'level2ClimbSucceeded', 'level3ClimbAttempted', 'level3ClimbSucceeded', 'level3ClimbBegin', 'level3ClimbEnd', 'lifted', 'liftedBy', 'isFailure', 'failureReason', 'isFoul', 'foulReason', 'notes'
+    let properties = [
+      'cargoPickup', 'hatchPanelPickup', 'level2ClimbAttempted', 'level2ClimbSucceeded', 'level3ClimbAttempted', 'level3ClimbSucceeded', 
+      'level3ClimbBegin', 'level3ClimbEnd', 'liftedBy', 'isFailure', 'failureReason', 'isFoul', 'foulReason', 'notes'
     ];
-    for(var j = 0; j < prop.length; j++) {
-      if(!equals(prop[j], this.model, this.pristineModel)) {
+    for(var j = 0; j < properties.length; j++) {
+      if(!equals(properties[j], this.model, this.pristineModel)) {
         return true;
+      }
+    }
+
+    if(this.model.lifted.length != this.pristineModel.lifted.length) {
+      return true;
+    }
+
+    for(var i = 0; i< this.model.lifted.length; i++) {
+      if(this.pristineModel.lifted.findIndex(teamNumber => teamNumber == this.model.lifted[i]) == -1) {
+        return true;
+      }
+    }
+
+    if(this.model.placements.length != this.pristineModel.placements.length) {
+      return true;
+    }
+
+    let placementProperties = ['gamepiece', 'location', 'when', 'sandstorm'];
+    for (var i = 0; i < this.model.placements.length; i++) {
+      for (var j = 0; j < placementProperties.length; j++) {
+        if (!equals(placementProperties[j], this.model.placements[i], this.pristineModel.placements[i])) {
+          return true;
+        }
       }
     }
     return false;
