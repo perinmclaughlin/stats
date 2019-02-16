@@ -1,6 +1,7 @@
 <template>
   <!--page formating-->
   <require from="../../utilities/counter"></require>
+  <require from="../../utilities/time-remaining"></require>
   <require from="./match-input.css"></require>
   <require from="aurelia-validation/validate-binding-behavior"></require>
   <div class='container-fluid' show.bind='!errorNotScheduled'>
@@ -108,8 +109,8 @@
         </div>
         <div class='form-group'>
           <label class='inline-header'>Seconds Left</label>
-          <counter placeholder='seconds left' show-label.bind='false' model.bind='p' property="when" max.bind="maxWhen"
-            rules.bind="placementRules"></counter>
+          <time-remaining placeholder='seconds left' show-label.bind='false' model.bind='p' property="when" auto.bind="p.sandstorm" max.bind="maxWhen"
+            rules.bind="placementRules"></time-remaining>
         </div>
         <div class='form-group'>
           <label>

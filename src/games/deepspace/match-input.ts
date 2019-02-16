@@ -220,8 +220,12 @@ export class MatchInputPage {
       when: null,
     };
     if(this.model.placements.length > 0) {
-      placement.when = this.model.placements[this.model.placements.length - 1].when;
-      placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
+      if((this.model.placements[this.model.placements.length -1].when - 5) <= 0) {
+        placement.when = 0;
+      } else {
+        placement.when = this.model.placements[this.model.placements.length - 1].when - 5;
+      }
+      //placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
     }
     else if(this.model.placements.length == 0) {
       placement.when = 10;

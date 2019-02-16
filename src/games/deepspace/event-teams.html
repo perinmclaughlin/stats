@@ -33,6 +33,9 @@
           <th>Avg Cargo Sandstorm</th>
           <th>Avg Hatch Sandstorm</th>
           <th># of Teams Lifted</th>
+          <th>% of Matches (Cargo)</th>
+          <th>% of Matches (Hatch)</th>
+          <th>Defense Rating</th>
         </tr>
         <tr repeat.for="teamData of teamsData">
           <td>
@@ -76,6 +79,15 @@
           <td>
             <!--${teamData.lifted.length}-->
             ${teamData.teamsLiftedCount}
+          </td>
+          <td>
+            ${teamData.cargoPercent}%
+          </td>
+          <td>
+            ${teamData.hatchPanelPercent}%
+          </td>
+          <td>
+            todo
           </td>
         </tr>
       </table>

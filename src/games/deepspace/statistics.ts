@@ -119,6 +119,18 @@ export class DeepSpaceTeamStatistics {
   locationsPlacedCargo: DeepSpaceLocation[];
   /**Stores the locations where a team has placed hatch panels. Useful for the event-team page. */
   locationsPlacedHatch: DeepSpaceLocation[];
+  /**A string representation of locationsPlacedCargo */
+  locationsCargoString: string;
+  /**A string representation of locationsPlacedHatch */
+  locationsHatchString: string;
+  /**The percentage of matches where a team placed cargo. */
+  cargoPercent: number;
+  /**The percentage of matches where a team placed hatch panels. */
+  hatchPanelPercent: number;
+}
+
+function onlyUnique(value, index, self) { 
+  return self.indexOf(value) === index;
 }
 
 export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepSpaceTeamStatistics {
@@ -149,12 +161,18 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.hatchPanelCycleTimeRocketHighRaw = 0;
   result.hatchPanelCycleTimeRocketLowRaw = 0;
   result.hatchPanelCycleTimeRocketMidRaw = 0;
+  result.locationsCargoString = "";
+  result.locationsHatchString = "";
+  result.cargoPercent = 0;
+  result.hatchPanelPercent = 0;
 
   result.cargoPlacedMatchCount = 0;
   result.hatchPanelPlacedMatchCount = 0;
   result.matchesPlayed = x.length;
   result.locationsPlacedCargo = [];
   result.locationsPlacedHatch = [];
+
+  result.matchCount = x.length;
 
   //This for loop is a nightmare.
   for(var i = 0; i < x.length; i++) {
@@ -188,6 +206,20 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
             //console.log("Stopped adding to locationPlacedCargo");
           }
         }
+        //console.log(result.locationsPlacedCargo);
+        let unique = result.locationsPlacedCargo.filter( onlyUnique );
+        //Now we need to create a string that uses proper english syntax.
+        let string = "";
+        result.locationsPlacedCargo = unique;
+        for(var y = 0; y < result.locationsPlacedCargo.length; y++) {
+          if(y == result.locationsPlacedCargo.length - 1) {
+            string = result.locationsCargoString.concat(result.locationsPlacedCargo[y].toString());
+            result.locationsCargoString = string;
+          } else {
+            string = result.locationsCargoString.concat(result.locationsPlacedCargo[y].toString(), ", ");
+            result.locationsCargoString = string;
+          }
+        }
       }
       else if(result.locationsPlacedCargo.length == 0) {
         result.locationsPlacedCargo.push(x[i].placements[j].location);
@@ -205,6 +237,19 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
             //console.log("Added ",x[i].placements[j].location , " to locationPlacedHatch");
           } else {
             //console.log("Stopped adding to locationPlacedHatch");
+          }
+        }
+        console.log(result.locationsPlacedHatch);
+        let unique = result.locationsPlacedHatch.filter( onlyUnique );
+        let string = "";
+        result.locationsPlacedHatch = unique;
+        for(var y = 0; y < result.locationsPlacedHatch.length; y++) {
+          if(y == result.locationsPlacedHatch.length - 1) {
+            string = result.locationsHatchString.concat(result.locationsPlacedHatch[y].toString());
+            result.locationsHatchString = string;
+          } else {
+            string = result.locationsHatchString.concat(result.locationsPlacedHatch[y].toString(), ", ");
+            result.locationsHatchString = string;
           }
         }
       }
@@ -272,6 +317,11 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.hatchPanelCycleTimeRocketMidRaw = (result.hatchPanelCountRocketMidRaw / 160) * 60;
     result.cargoCycleTimeRocketHighRaw = (result.cargoCountRocketHighRaw / 160) * 60;
     result.hatchPanelCycleTimeRocketHighRaw = (result.hatchPanelCountRocketHighRaw / 160) * 60;
+
+    result.hatchPanelPercent = (result.hatchPanelPlacedMatchCount / result.matchCount) * 100;
+    //console.log("calculated hatchPanelPercent by dividing ", result.hatchPanelPlacedMatchCount, " by ", result.matchCount);
+    result.cargoPercent = (result.cargoPlacedMatchCount / result.matchCount) * 100;
+    //console.log("calculated cargoPercent by dividing ", result.cargoPlacedMatchCount, " by ", result.matchCount);
 
     for(var i = 0; i < x.length; i++) {
       if(x[i].lifted.length == 0) {
