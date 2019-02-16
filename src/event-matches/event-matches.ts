@@ -18,6 +18,7 @@ export class EventMatches {
   public activeTab: number;
   public teamsData: EventTeamData[];
   public gameName: string;
+  public beesechurger: boolean;
 
   constructor(
     private dbContext: FrcStatsContext,
@@ -32,6 +33,7 @@ export class EventMatches {
   activate(params) {
     let game = gameManager.getGame(params.year);
     this.gameName = game.name;
+    this.beesechurger = game.eventMatchModule != null;
 
     return this.getEvent(params).then(() => {
       return Promise.all([

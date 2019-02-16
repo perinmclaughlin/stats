@@ -7,6 +7,7 @@ export interface IGame {
   matchInputModule: string;
   eventTeamsModule: string;
   eventTeamModule: string;
+  eventMatchModule: string;
 
   mergeDialogClass(): any;
 

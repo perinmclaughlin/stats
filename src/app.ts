@@ -25,7 +25,7 @@ export class App {
   }
 
   private persist(): Promise<any> {
-    if((<any>navigator).storage && (<any>navigator).storage.persist) {
+    if ((<any>navigator).storage && (<any>navigator).storage.persist) {
       return (<any>navigator).storage.persist();
     }
     return Promise.resolve("yup");
@@ -33,7 +33,7 @@ export class App {
 
   private getPersisted(): Promise<any> {
     let promise = Promise.resolve(false);
-    if((<any>navigator).storage && (<any>navigator).storage.persisted) {
+    if ((<any>navigator).storage && (<any>navigator).storage.persisted) {
       promise = (<any>navigator).storage.persisted();
     }
 
@@ -46,9 +46,9 @@ export class App {
     let setInstruction = (instruction, moduleGetter) => {
       let game = gameManager.getGame(instruction.params.year);
       instruction.config.href = instruction.fragment;
-      if(game == null) {
+      if (game == null) {
         instruction.config.moduleId = PLATFORM.moduleName("errors/404");
-      }else{
+      } else {
         instruction.config.moduleId = moduleGetter(game);
       }
 
@@ -63,53 +63,61 @@ export class App {
     let navToGameEventTeams = (instruction) => {
       setInstruction(instruction, game => game.eventTeamsModule);
     };
-
+    let navToGameMatch = (instruction) => {
+      setInstruction(instruction, game => game.eventMatchModule);
+    };
     let navToGameEventTeam = (instruction) => {
       setInstruction(instruction, game => game.eventTeamModule);
     };
-    
+
     let routes = [
       {
-        route: ["year/:year/event/:eventCode/team/:teamNumber/match/:matchNumber"], 
-        name: "match-team", 
+        route: ["year/:year/event/:eventCode/match/:matchNumber"],
+        name: "match",
+        nav: false, title: "hermes", adminRoute: false,
+        navigationStrategy: navToGameMatch
+      },
+      {
+        route: ["year/:year/event/:eventCode/team/:teamNumber/match/:matchNumber"],
+        name: "match-team",
         nav: false, title: "match-team", adminRoute: false,
         navigationStrategy: navToGameMatchInput
       },
       {
-        route: ["events", ""], 
-        name: "events", moduleId: PLATFORM.moduleName("events/teh-events"), 
+        route: ["events", ""],
+        name: "events", moduleId: PLATFORM.moduleName("events/teh-events"),
         nav: false, title: "events", adminRoute: false,
       },
       {
-        route: ["year/:year/event/:eventCode/matches"], 
-        name: "event-matches", moduleId: PLATFORM.moduleName("event-matches/event-matches"), 
+        route: ["year/:year/event/:eventCode/matches"],
+        name: "event-matches", moduleId: PLATFORM.moduleName("event-matches/event-matches"),
         nav: false, title: "event", adminRoute: false,
       },
       {
-        route: ["year/:year/event/:eventCode/teams"], 
-        name: "event-teams", 
+        route: ["year/:year/event/:eventCode/teams"],
+        name: "event-teams",
         nav: false, title: "event", adminRoute: false,
         navigationStrategy: navToGameEventTeams
       },
       {
         route: ["year/:year/event/:eventCode/team/:teamNumber"],
-        name: "event-team", 
+        name: "event-team",
         nav: false, title: "event-team", adminRoute: false,
         navigationStrategy: navToGameEventTeam,
       },
       {
         route: ["district-rankings"],
-        name: "district-rankings", moduleId: PLATFORM.moduleName("district-rankings"), 
+        name: "district-rankings", moduleId: PLATFORM.moduleName("district-rankings"),
         nav: true, title: "District Rankings", adminRoute: false,
       },
       {
         route: ["graphtest"],
-        name: "graphtest", moduleId: PLATFORM.moduleName("graphtest"), 
+        name: "graphtest", moduleId: PLATFORM.moduleName("graphtest"),
         nav: true, title: "graph test", adminRoute: false,
       },
       {
         route: ["qrtest"],
-        name: "qrtest", moduleId: PLATFORM.moduleName("qrcodes/test"), 
+        name: "qrtest", moduleId: PLATFORM.moduleName("qrcodes/test"),
         nav: true, title: "qrcode test", adminRoute: false,
       },
     ];

@@ -27,7 +27,14 @@
           <th class="options-header">Options</th>  
         </tr>
         <tr repeat.for="eventMatch of eventMatches">
-          <td>${eventMatch.matchNumber}</td>
+           <td class="${scouted(eventMatch, eventMatch.blue1) ? 'blue' : ''}">
+              <a if.bind = "beesechurger" route-href="route.bind:'match'; params.bind: {year: event.year, eventCode: event.eventCode, matchNumber: eventMatch.matchNumber}">
+              ${eventMatch.matchNumber}
+              </a>
+              <span if.bind = "beesechurger == false">
+              ${eventMatch.matchNumber}
+              </span>
+            </td>
           <td class="${scouted(eventMatch, eventMatch.blue1) ? 'blue' : ''}">
             <a route-href="route.bind:'match-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: eventMatch.blue1, matchNumber: eventMatch.matchNumber}">
               ${eventMatch.blue1}

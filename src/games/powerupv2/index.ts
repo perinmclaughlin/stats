@@ -17,6 +17,7 @@ class PowerupV2Game implements IGame {
   public matchInputModule = PLATFORM.moduleName("games/powerupv2/match-input");
   public eventTeamsModule = PLATFORM.moduleName("games/powerupv2/event-teams");
   public eventTeamModule = PLATFORM.moduleName("games/powerupv2/event-team");
+  public eventMatchModule = null;
 
   constructor(
     private jsonExporter: JsonExporter,

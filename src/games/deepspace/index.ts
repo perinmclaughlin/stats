@@ -21,6 +21,7 @@ class DeepSpaceGame implements IGame {
   public matchInputModule = PLATFORM.moduleName("games/deepspace/match-input");
   public eventTeamsModule = PLATFORM.moduleName("games/deepspace/event-teams");
   public eventTeamModule = PLATFORM.moduleName("games/deepspace/event-team");
+  public eventMatchModule = PLATFORM.moduleName("game/deepspace/hermes");
 
   constructor(
     private dbContext: FrcStatsContext,
