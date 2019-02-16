@@ -239,7 +239,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
             //console.log("Stopped adding to locationPlacedHatch");
           }
         }
-        console.log(result.locationsPlacedHatch);
+        //console.log(result.locationsPlacedHatch);
         let unique = result.locationsPlacedHatch.filter( onlyUnique );
         let string = "";
         result.locationsPlacedHatch = unique;
