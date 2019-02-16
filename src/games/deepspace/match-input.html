@@ -58,10 +58,10 @@
     <h3>Grabber Capabilities</h3>
     <div class='row'>
       <div class='col-sm-6 form-group'>
-        <label>Cargo Pickup</label>
+        <label>Cargo Pickup </label>
         <select class='form-control' value.bind='model.cargoPickup & validate:rules'>
           <option></option>
-          <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name}</option>
+          <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name} </option>
         </select>
       </div>
       <div class='col-sm-6 form-group'>
@@ -194,17 +194,18 @@
         <!--Lifted by another team-->
         <div class='col-sm-10'>
           <label>
-            <input type='checkbox' class='' checked.bind='wasLifted'>Was Lifted</label>
+            <input type='checkbox' class='' change.delegate='wasLiftedReset()' checked.bind='model.wasLifted'>Was Lifted</label>
           </label>
         </div>
         <!--Asking what team lifted them-->
-        <div class='col-sm-10 form-group' show.bind='wasLifted'>
+        <div class='col-sm-10 form-group' show.bind='model.wasLifted'>
           <label>Lifted By:</label>
           <select class='form-control' value.bind='model.liftedBy & validate:rules'>
-            <option model.bind="partner1">
+            <option></option>
+            <option value.bind="partner1">
               ${partner1}
             </option>
-            <option model.bind="partner2">
+            <option value.bind="partner2">
               ${partner2}
             </option>
           </select>
@@ -213,10 +214,10 @@
         <!--Lifted other teams-->
         <div class='col-sm-7'>
           <label>
-            <input type='checkbox' class='' checked.bind='liftedSomeone'>Lifted Another Team</label>
+            <input type='checkbox' class='' checked.bind='model.liftedSomeone'>Lifted Another Team</label>
         </div>
         <!--What teams they lifted-->
-        <div class='col-sm-7' show.bind='liftedSomeone'>
+        <div class='col-sm-7 form-group' show.bind='model.liftedSomeone'>
           <label>
             Lifted ${partner1}
             <input type='checkbox' class='form-control' checked.bind='liftedPartner1' />
@@ -225,15 +226,16 @@
             Lifted ${partner2}
             <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
           </label>
+          <input type='hidden' value.one-way='model.lifted & validate:rules' />
         </div>
-        <div class='col-sm-7' show.bind='liftedSomeone'>
+        <div class='col-sm-7' show.bind='model.liftedSomeone'>
           <label>
             Level 2
-            <input type='radio' class='form-control' checked.bind='didLiftLevel3' model.bind='false' />
+            <input type='radio' class='form-control' checked.bind='model.didLiftLevel3' model.bind='false' />
           </label>
           <label>
             Level 3
-            <input type='radio' class='form-control' checked.bind='didLiftLevel3' model.bind='true' />
+            <input type='radio' class='form-control' checked.bind='model.didLiftLevel3' model.bind='true' />
           </label>
         </div>
       </div>

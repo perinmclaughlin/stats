@@ -75,6 +75,24 @@ export function setupValidationRules() {
     .satisfiesRule("attempted", "level2ClimbAttempted")
     .ensure((obj: TeamMatch2019Entity) => obj.liftedBy)
     .satisfiesRule("didNotLiftAndGetLiftedBy", (model: TeamMatch2019Entity) => model.lifted)
+    .ensure ((obj: TeamMatch2019Entity) => obj.liftedBy)
+    .required()
+    .when ((obj:TeamMatch2019Entity) => obj.wasLifted)
+    .ensure ((obj: TeamMatch2019Entity) => obj.lifted)
+    .satisfies((lifted: string[], obj:TeamMatch2019Entity) => {
+      if(obj.liftedSomeone == false){
+        return true
+      }
+      else {
+        if (lifted.length == 0){
+          return false
+        }
+        else{
+          return true
+        }
+      }
+    })
+    .withMessage("select the team lifted")
     .rules;
 
   /* istanbul ignore next */

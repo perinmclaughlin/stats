@@ -74,8 +74,7 @@ export class CustomValidationRules {
     ValidationRules.customRule(
       "didNotLiftAndGetLiftedBy", (input: string, obj: any, getLifted: (a: any) => string[]) => {
         let didLift = getLifted(obj);
-        console.log("didLift is ", didLift);
-        console.log("liftedBy is ", input);
+
         if(input == null || obj == null) {
           return true;
         }
