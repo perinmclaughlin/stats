@@ -1,5 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import * as naturalSort from "javascript-natural-sort";
+import { DeepSpaceTeamStatistics, makeTeamStats } from "../deepspace/statistics"
 
 import { MatchData } from "../../model";
 import { 
@@ -18,9 +19,12 @@ export class EventTeam {
   public activeTab: number = 0;
   public matchTotal: number = 0;
   public foulTotal: number = 0;
+  public isTrue: boolean;
+  public stats: DeepSpaceTeamStatistics;
 
   constructor(private dbContext: FrcStatsContext){
     this.matches2019 = [];
+    this.isTrue = true;
   }
   
   activate(params){
@@ -31,6 +35,7 @@ export class EventTeam {
       return Promise.all([this.getEventMatches(), this.getMatchData()]);
     }).then(() => {
       var i = this;
+      this.getStats();
     });
   }
 
@@ -41,6 +46,10 @@ export class EventTeam {
       .then(team => {
         this.team = team;
       });
+  }
+
+  getStats() {
+    this.stats = makeTeamStats(this.team, this.matches2019);
   }
 
   getEvent(params) {
