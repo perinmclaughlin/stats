@@ -127,6 +127,12 @@ export class DeepSpaceTeamStatistics {
   cargoPercent: number;
   /**The percentage of matches where a team placed hatch panels. */
   hatchPanelPercent: number;
+  /**A rating of how efficient a robot's drivetrain is. */
+  drivetrainStrength: QualitativeAnswer;
+  /**Notes on the vulnerabilities of a robot's drivetrain. */
+  defenseWeaknesses: string;
+  /**The raw value of drivetrainStrength. */
+  drivetrainStrengthRaw: number;
 }
 
 function onlyUnique(value, index, self) { 
@@ -142,14 +148,34 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   let hatchSandstorm = 0;
   let cargoPickup = 0;
   let hatchPickup = 0;
+  let cycleCargo = [];
+  let cycleHatch = [];
+  let cycleCargoLow = [];
+  let cycleCargoShip = [];
+  let cycleCargoMid = [];
+  let cycleCargoHigh = [];
+  let cycleHatchLow = [];
+  let cycleHatchShip = [];
+  let cycleHatchMid = [];
+  let cycleHatchHigh = [];
 
   result.matchCount = 0;
   result.cargoPickupRaw = 0;
   result.hatchPanelPickupRaw = 0;
+
   result.cargoCountRaw = 0;
   result.hatchPanelCountRaw = 0;
   result.sandstormCargoCountRaw = 0;
   result.sandstormHatchPanelCountRaw = 0;
+  result.cargoCountRocketHighRaw = 0;
+  result.cargoCountRocketLowRaw = 0;
+  result.cargoCountRocketMidRaw = 0;
+  result.cargoCountCargoShipRaw = 0;
+  result.hatchPanelCountCargoShipRaw = 0;
+  result.hatchPanelCountRocketHighRaw = 0;
+  result.hatchPanelCountRocketLowRaw = 0;
+  result.hatchPanelCountRocketMidRaw = 0;
+
   result.teamsLiftedCount = 0;
   result.cargoCycleTimeRaw = 0;
   result.cargoCycleTimeCargoShipRaw = 0;
@@ -161,40 +187,54 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.hatchPanelCycleTimeRocketHighRaw = 0;
   result.hatchPanelCycleTimeRocketLowRaw = 0;
   result.hatchPanelCycleTimeRocketMidRaw = 0;
+
+  result.avgCargoCycleTime = 0;
+  result.avgCargoCycleTimeCargoShip = 0;
+  result.avgCargoCycleTimeRocketHigh = 0;
+  result.avgCargoCycleTimeRocketLow = 0;
+  result.avgCargoCycleTimeRocketMid = 0;
+  result.avgHatchPanelCycleTime = 0;
+  result.avgHatchPanelCycleTimeCargoShip = 0;
+  result.avgHatchPanelCycleTimeRocketHigh = 0;
+  result.avgHatchPanelCycleTimeRocketLow = 0;
+  result.avgHatchPanelCycleTimeRocketMid = 0;
+
   result.locationsCargoString = "";
   result.locationsHatchString = "";
   result.cargoPercent = 0;
   result.hatchPanelPercent = 0;
+  result.liftLevel2Count = 0;
+  result.liftLevel3Count = 0;
+  result.drivetrainStrengthRaw = 0;
 
   result.cargoPlacedMatchCount = 0;
   result.hatchPanelPlacedMatchCount = 0;
   result.matchesPlayed = x.length;
   result.locationsPlacedCargo = [];
   result.locationsPlacedHatch = [];
+  result.defenseWeaknesses = "";
 
   result.matchCount = x.length;
+
+  result.teamNumber = team.teamNumber;
+  result.teamName = team.teamName;
 
   //This for loop is a nightmare.
   for(var i = 0; i < x.length; i++) {
     var alreadyAddedCargo = false;
     var alreadyAddedHatch = false;
-    for(var j = 0; j < x[i].placements.length; j++) {
-      if(x[i].lifted.length > 0) {
-        //console.log("x[" + i + "].lifted.length is " + x[i].lifted.length);
-      } else {
-        //console.log("x[" + i + "].lifted.length is either 0, undefined, or NaN");
-      }
-      
-      if(x[i].didLiftLevel3 && x[i].lifted.length > 0) {
-        result.liftLevel3Count += x[i].lifted.length;
-      } else if(!x[i].didLiftLevel3 && x[i].lifted.length > 0) {
-        result.liftLevel2Count += x[i].lifted.length;
-      } else {
-        result.liftLevel2Count += 0;
-        result.liftLevel3Count += 0;
-      }
 
-      result.teamsLiftedCount += (result.liftLevel2Count + result.liftLevel3Count);
+    if(x[i].didLiftLevel3 && x[i].lifted.length > 0) {
+      result.liftLevel3Count += x[i].lifted.length;
+    } else if(!x[i].didLiftLevel3 && x[i].lifted.length > 0) {
+      result.liftLevel2Count += x[i].lifted.length;
+    } else {
+      result.liftLevel2Count += 0;
+      result.liftLevel3Count += 0;
+    }
+    //result.teamsLiftedCount += (result.liftLevel2Count + result.liftLevel3Count);
+
+    for(var j = 0; j < x[i].placements.length; j++) {
       if(result.locationsPlacedCargo.length > 0) {
         for(var k = 0; k < result.locationsPlacedCargo.length; k++) {
           if(x[i].placements[j].gamepiece == "Cargo" && (x[i].placements[j].location == result.locationsPlacedCargo[k])) {
@@ -218,6 +258,35 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
           } else {
             string = result.locationsCargoString.concat(result.locationsPlacedCargo[y].toString(), ", ");
             result.locationsCargoString = string;
+          }
+        }
+        if(j != 0 && x[i].placements[j].gamepiece == "Cargo") {
+          if((!x[i].placements[j].sandstorm && !x[i].placements[j - 1].sandstorm) || (x[i].placements[j].sandstorm && x[i].placements[j - 1].sandstorm)) {
+            cycleCargo.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            if(x[i].placements[j].location == "Cargo Ship") {
+              cycleCargoShip.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket Low") {
+              cycleCargoLow.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket Mid") {
+              cycleCargoMid.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket High") {
+              cycleCargoHigh.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            } else {
+              console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
+            }
+          } else {
+            cycleCargo.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            if(x[i].placements[j].location == "Cargo Ship") {
+              cycleCargoShip.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket Low") {
+              cycleCargoLow.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket Mid") {
+              cycleCargoMid.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket High") {
+              cycleCargoHigh.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            } else {
+              console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
+            }
           }
         }
       }
@@ -252,6 +321,35 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
             result.locationsHatchString = string;
           }
         }
+        if(j != 0 && x[i].placements[j].gamepiece == "Hatch Panel") {
+          if((!x[i].placements[j].sandstorm && !x[i].placements[j - 1].sandstorm) || (x[i].placements[j].sandstorm && x[i].placements[j - 1].sandstorm)) {
+            cycleHatch.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            if(x[i].placements[j].location == "Cargo Ship") {
+              cycleHatchShip.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket Low") {
+              cycleHatchLow.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket Mid") {
+              cycleHatchMid.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket High") {
+              cycleHatchHigh.push(x[i].placements[j - 1].when - x[i].placements[j].when);
+            } else {
+              console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
+            }
+          } else {
+            cycleHatch.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            if(x[i].placements[j].location == "Cargo Ship") {
+              cycleHatchShip.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket Low") {
+              cycleHatchLow.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket Mid") {
+              cycleHatchMid.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            } else if(x[i].placements[j].location == "Rocket High") {
+              cycleHatchHigh.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
+            } else {
+              console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
+            }
+          }
+        }
       }
       else if(result.locationsPlacedHatch.length == 0) {
         result.locationsPlacedHatch.push(x[i].placements[j].location);
@@ -262,16 +360,58 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
 
       if(x[i].placements[j].gamepiece == "Cargo") {
         cargoCount++;
+        //console.log(cargoCount);
         if(!alreadyAddedCargo) {
           result.cargoPlacedMatchCount++;
           alreadyAddedCargo = !alreadyAddedCargo;
         }
+        switch(x[i].placements[j].location) {
+          case "Cargo Ship":
+            result.cargoCountCargoShipRaw++;
+            console.log("result.cargoCountCargoShipRaw for team", team.teamNumber, "is", result.cargoCountCargoShipRaw);
+            break;
+          case "Rocket Low":
+            result.cargoCountRocketLowRaw++;
+            console.log("result.cargoCountRocketLowRaw for team", team.teamNumber, "is", result.cargoCountRocketLowRaw);
+            break;
+          case "Rocket Mid":
+            result.cargoCountRocketMidRaw++;
+            console.log("result.cargoCountRocketMidRaw for team", team.teamNumber, "is", result.cargoCountRocketMidRaw);
+            break;
+          case "Rocket High":
+            result.cargoCountRocketHighRaw++;
+            console.log("result.cargoCountRocketHighRaw for team", team.teamNumber, "is", result.cargoCountRocketHighRaw);
+            break;
+          default:
+            break;
+        }
       }
       if(x[i].placements[j].gamepiece == "Hatch Panel") {
         hatchCount++;
+        //console.log(hatchCount);
         if(!alreadyAddedHatch) {
           result.hatchPanelPlacedMatchCount++;
           alreadyAddedHatch = !alreadyAddedHatch;
+        }
+        switch(x[i].placements[j].location) {
+          case "Cargo Ship":
+            result.hatchPanelCountCargoShipRaw++;
+            console.log("result.hatchPanelCountCargoShipRaw for team", team.teamNumber, "is", result.hatchPanelCountCargoShipRaw);
+            break;
+          case "Rocket Low":
+            result.hatchPanelCountRocketLowRaw++;
+            console.log("result.hatchPanelCountRocketLowRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketLowRaw);
+            break;
+          case "Rocket Mid":
+            result.hatchPanelCountRocketMidRaw++;
+            console.log("result.hatchPanelCountRocketMidRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketMidRaw);
+            break;
+          case "Rocket High":
+            result.hatchPanelCountRocketHighRaw++;
+            console.log("result.hatchPanelCountRocketHighRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketHighRaw);
+            break;
+          default:
+            break;
         }
       }
       if(x[i].placements[j].gamepiece == "Cargo" && x[i].placements[j].sandstorm == true) {
@@ -295,40 +435,135 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.avgSandstormCargoCount = 0;
     result.avgSandstormHatchPanelCount = 0;
     cargoPickup = 0;
+    result.drivetrainStrength = {
+      numeric: 0,
+      name: "N/A"
+    };
   }
   else {
+    result.cargoCountRaw = cargoCount;
+    result.hatchPanelCountRaw = hatchCount;
+
     result.avgCargoCount = cargoCount / result.matchesPlayed;
     result.avgHatchPanelCount = hatchCount / result.matchesPlayed;
     result.avgGamepieceCount = (cargoCount + hatchCount) / result.matchesPlayed;
     result.avgSandstormCargoCount = cargoSandstorm / result.matchesPlayed;
     result.avgSandstormHatchPanelCount = hatchSandstorm / result.matchesPlayed;
 
-    result.teamsLiftedCount = result.liftLevel2Count + result.liftLevel3Count;
+    result.teamsLiftedCount += (result.liftLevel2Count + result.liftLevel3Count);
+    //console.log("result.teamsLiftedCount for", result.teamNumber, "is", result.teamsLiftedCount);
     //console.log("\n# of teams lifted to lvl 2: ", result.liftLevel2Count, "\n# of teams lifted to lvl 3: ", result.liftLevel3Count, "\n# of teams lifted: ", result.teamsLiftedCount);
 
     //Raw cycle times --> NOT ELLERY'S CYCLE TIMES
     result.cargoCycleTimeRaw = (result.cargoCountRaw / 160) * 60;
+    //console.log("result.cargoCycleTimeRaw for team", team.teamNumber, "is", result.cargoCycleTimeRaw);
     result.hatchPanelCycleTimeRaw = (result.hatchPanelCountRaw / 160) * 60;
+    //console.log("result.hatchPanelCycleTimeRaw for team", team.teamNumber, "is", result.hatchPanelCycleTimeRaw);
     result.cargoCycleTimeCargoShipRaw = (result.cargoCountCargoShipRaw / 160) * 60;
+    //console.log("result.cargoCycleTimeCargoShipRaw for team", team.teamNumber, "is", result.cargoCycleTimeCargoShipRaw);
     result.hatchPanelCycleTimeCargoShipRaw = (result.hatchPanelCountCargoShipRaw / 160) * 60;
+    //console.log("result.hatchPanelCycleTimeCargoShipRaw for team", team.teamNumber, "is", result.hatchPanelCycleTimeCargoShipRaw);
     result.cargoCycleTimeRocketLowRaw = (result.cargoCountRocketLowRaw / 160) * 60;
+    //console.log("result.cargoCycleTimeRocketLowRaw for team", team.teamNumber, "is", result.cargoCycleTimeRocketLowRaw);
     result.hatchPanelCycleTimeRocketLowRaw = (result.hatchPanelCountRocketLowRaw / 160) * 60;
+    //console.log("result.hatchPanelCycleTimeRocketLowRaw for team", team.teamNumber, "is", result.hatchPanelCycleTimeRocketLowRaw);
     result.cargoCycleTimeRocketMidRaw = (result.cargoCountRocketMidRaw / 160) * 60;
+    //console.log("result.cargoCycleTimeRocketMidRaw for team", team.teamNumber, "is", result.cargoCycleTimeRocketMidRaw);
     result.hatchPanelCycleTimeRocketMidRaw = (result.hatchPanelCountRocketMidRaw / 160) * 60;
+    //console.log("result.hatchPanelCycleTimeRocketMidRaw for team", team.teamNumber, "is", result.hatchPanelCycleTimeRocketMidRaw);
     result.cargoCycleTimeRocketHighRaw = (result.cargoCountRocketHighRaw / 160) * 60;
+    //console.log("result.cargoCycleTimeRocketHighRaw for team", team.teamNumber, "is", result.cargoCycleTimeRocketHighRaw);
     result.hatchPanelCycleTimeRocketHighRaw = (result.hatchPanelCountRocketHighRaw / 160) * 60;
+    //console.log("result.hatchPanelCycleTimeRocketHighRaw for team", team.teamNumber, "is", result.hatchPanelCycleTimeRocketHighRaw);
 
     result.hatchPanelPercent = (result.hatchPanelPlacedMatchCount / result.matchCount) * 100;
     //console.log("calculated hatchPanelPercent by dividing ", result.hatchPanelPlacedMatchCount, " by ", result.matchCount);
     result.cargoPercent = (result.cargoPlacedMatchCount / result.matchCount) * 100;
     //console.log("calculated cargoPercent by dividing ", result.cargoPlacedMatchCount, " by ", result.matchCount);
 
+    let temp = 0;
+    let increment = 0;
+    for(var u = 0; u < cycleCargo.length; u++) {
+      temp += (cycleCargo[u]);
+      increment++;
+    }
+    result.avgCargoCycleTime = temp / increment;
+//    console.log("result.avgCargoCycleTime for team", team.teamNumber, "is", result.avgCargoCycleTime);
+    temp = 0;
+    increment = 0;
+    for(var u = 0; u < cycleCargoShip.length; u++) {
+      temp += (cycleCargoShip[u]);
+      increment++;
+    }
+    result.avgCargoCycleTimeCargoShip = temp / increment;
+  //  console.log("result.avgCargoCycleTimeCargoShip for team", team.teamNumber, "is", result.avgCargoCycleTimeCargoShip);
+    temp = 0;
+    increment = 0;
+    for(var u = 0; u < cycleCargoLow.length; u++) {
+      temp += (cycleCargoLow[u]);
+      increment++;
+    }
+    result.avgCargoCycleTimeRocketLow = temp / increment;
+    //console.log("result.avgCargoCycleTimeRocketLow for team", team.teamNumber, "is", result.avgCargoCycleTimeRocketLow);
+    temp = 0;
+    increment = 0;
+    for(var u = 0; u < cycleCargoMid.length; u++) {
+      temp += (cycleCargoMid[u]);
+      increment++;
+    }
+    result.avgCargoCycleTimeRocketMid = temp / increment;
+//    console.log("result.avgCargoCycleTimeRocketMid for team", team.teamNumber, "is", result.avgCargoCycleTimeRocketMid);
+    temp = 0;
+    increment = 0;
+    for(var u = 0; u < cycleCargoHigh.length; u++) {
+      temp += (cycleCargoHigh[u]);
+      increment++;
+    }
+    result.avgCargoCycleTimeRocketHigh = temp / increment;
+  //  console.log("result.avgCargoCycleTimeRocketHigh for team", team.teamNumber, "is", result.avgCargoCycleTimeRocketHigh);
+    temp = 0;
+    increment = 0;
+
+    for(var u = 0; u < cycleHatch.length; u++) {
+      temp += (cycleHatch[u]);
+      increment++;
+    }
+    result.avgHatchPanelCycleTime = temp / increment;
+    //console.log("result.avgHatchPanelCycleTime for team", team.teamNumber, "is", result.avgHatchPanelCycleTime);
+    temp = 0;
+    increment = 0;
+    for(var u = 0; u < cycleHatchShip.length; u++) {
+      temp += (cycleHatchShip[u]);
+      increment++;
+    }
+    result.avgHatchPanelCycleTimeCargoShip = temp / increment;
+//    console.log("result.avgHatchPanelCycleTimeCargoShip for team", team.teamNumber, "is", result.avgHatchPanelCycleTimeCargoShip);
+    temp = 0;
+    increment = 0;
+    for(var u = 0; u < cycleHatchLow.length; u++) {
+      temp += (cycleHatchLow[u]);
+      increment++;
+    }
+    result.avgHatchPanelCycleTimeRocketLow = temp / increment;
+  //  console.log("result.avgHatchPanelCycleTimeRocketLow for team", team.teamNumber, "is", result.avgHatchPanelCycleTimeRocketLow);
+    temp = 0;
+    increment = 0;
+    for(var u = 0; u < cycleHatchMid.length; u++) {
+      temp += (cycleHatchMid[u]);
+      increment++;
+    }
+    result.avgHatchPanelCycleTimeRocketMid = temp / increment;
+    //console.log("result.avgHatchPanelCycleTimeRocketMid for team", team.teamNumber, "is", result.avgHatchPanelCycleTimeRocketMid);
+    temp = 0;
+    increment = 0;
+    for(var u = 0; u < cycleHatchHigh.length; u++) {
+      temp += (cycleHatchHigh[u]);
+      increment++;
+    }
+    result.avgHatchPanelCycleTimeRocketHigh = temp / increment;
+    //console.log("result.avgHatchPanelCycleTimeRocketHigh for team", team.teamNumber, "is", result.avgHatchPanelCycleTimeRocketHigh);
+
     for(var i = 0; i < x.length; i++) {
-      if(x[i].lifted.length == 0) {
-        result.teamsLiftedCount = 0;
-      } else {
-        result.teamsLiftedCount += x[i].lifted.length;
-      }
       if(x[i].level2ClimbAttempted) {
         result.climbLevel2Attempts++;
       }
@@ -348,7 +583,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       }
       cargoPickup += x[i].cargoPickup;
       hatchPickup += x[i].hatchPanelPickup;
-      result.matchCount++;
+      //result.drivetrainStrengthRaw += x[i];
     }
 
     cargoPickup = cargoPickup / result.matchesPlayed;
@@ -358,25 +593,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.sandstormCargoCountRaw = cargoSandstorm;
     result.sandstormHatchPanelCountRaw = hatchSandstorm;
   }
-
-  result.cargoCountRaw = cargoCount;
-  result.hatchPanelCountRaw = hatchCount;
-
-/* Until we can verify that the commented-out lines below will work, they will not be implemented. */
-  //result.avgCargoCycleTime = result.avgCargoCount / _Match Time_;
-  result.avgCargoCycleTime = 0;
-  //result.avgHatchPanelCycleTime = result.avgHatchPanelCount / _Match Time_;
-  result.avgHatchPanelCycleTime = 0;
-/* And there is noooo way these lines will work (in fact, they are structured to not work), but I am */
-/* sure that it will be figured out. Eventually.                                                     */
-  //result.avgCargoCycleTimeCargoShip = _cargoCount for cargo ship_ / _some time value_;
-  //result.avgCargoCountRocketLow = _cargoCount for rocketLow_ / _some time value_;
-  //result.avgCargoCycleTimeRocketMid = _cargoCount for rocketMid_ / _some time value_;
-  //result.avgCargoCycleTimeRocketHigh = _cargoCount for rocketHigh_ / _some time value_;
-  //result.avgHatchPanelCycleTimeCargoShip = _hatchPanelCount for cargo ship_ / _some time value_;
-  //result.avgHatchPanelCountRocketLow = _hatchPanelCount for rocketLow_ / _some time value_;
-  //result.avgHatchPanelCycleTimeRocketMid = _hatchPanelCount for rocketMid_ / _some time value_;
-  //result.avgHatchPanelCycleTimeRocketHigh = _hatchPanelCount for rocketHigh_ / _some time value_;
 
   //result.climbLevel3Time = _some time value_;
   //result.liftLevel2Count = _something_;

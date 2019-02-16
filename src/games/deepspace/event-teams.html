@@ -18,7 +18,7 @@
         <button style="width:200px" class="btn btn-secondary" click.delegate='showDevValues()'><span show.bind='showDevStuff'>Hide </span><span show.bind='!showDevStuff'>Show </span>Dev Values</button>
       </li>
     </ul>
-    <div class='tab-content'>
+    <div class='tab-content' style="overflow: scroll">
       <table class="table table-hover">
         <tr style="font-size: 100%">
           <th class="column-small" class='clickable' click.delegate="sortByTeamNumber()">Team Number</th>
@@ -28,6 +28,14 @@
           <th class="column-medium">Hatch Pickup</th>
           <th class="column-large">Avg Cargo Cycle Time</th>
           <th class="column-large">Avg Hatch Cycle Time</th>
+          <th class="column-large">Avg Cargo Cycle Time (Cargo Ship)</th>
+          <th class="column-large">Avg Hatch Cycle Time (Cargo Ship)</th>
+          <th class="column-large">Avg Cargo Cycle Time (Rocket Low)</th>
+          <th class="column-large">Avg Hatch Cycle Time (Rocket Low)</th>
+          <th class="column-large">Avg Cargo Cycle Time (Rocket Mid)</th>
+          <th class="column-large">Avg Hatch Cycle Time (Rocket Mid)</th>
+          <th class="column-large">Avg Cargo Cycle Time (Rocket High)</th>
+          <th class="column-large">Avg Hatch Cycle Time (Rocket High)</th>
           <th class="column-medium">Avg Gamepiece Count</th>
           <th class="column-medium">Avg Cargo Count</th>
           <th class="column-medium">Avg Hatch Count</th>
@@ -61,6 +69,30 @@
           </td>
           <td>
             <span show.bind='!showDevStuff'>${teamData.avgHatchPanelCycleTime | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.hatchPanelCycleTimeRaw | numeric:"0.0000"}/60</span>
+          </td>
+          <td>
+            <span show.bind='!showDevStuff'>${teamData.avgCargoCycleTimeCargoShip | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.cargoCycleTimeCargoShipRaw | numeric:"0.0000"}/60</span>
+          </td>
+          <td>
+            <span show.bind='!showDevStuff'>${teamData.avgHatchPanelCycleTimeCargoShip | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.hatchPanelCycleTimeCargoShipRaw | numeric:"0.0000"}/60</span>
+          </td>
+          <td>
+            <span show.bind='!showDevStuff'>${teamData.avgCargoCycleTimeRocketLow | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.cargoCycleTimeRocketLowRaw | numeric:"0.0000"}/60</span>
+          </td>
+          <td>
+            <span show.bind='!showDevStuff'>${teamData.avgHatchPanelCycleTimeRocketLow | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.hatchPanelCycleTimeRocketLowRaw | numeric:"0.0000"}/60</span>
+          </td>
+          <td>
+            <span show.bind='!showDevStuff'>${teamData.avgCargoCycleTimeRocketMid | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.cargoCycleTimeRocketMidRaw | numeric:"0.0000"}/60</span>
+          </td>
+          <td>
+            <span show.bind='!showDevStuff'>${teamData.avgHatchPanelCycleTimeRocketMid | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.hatchPanelCycleTimeRocketMidRaw | numeric:"0.0000"}/60</span>
+          </td>
+          <td>
+            <span show.bind='!showDevStuff'>${teamData.avgCargoCycleTimeRocketHigh | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.cargoCycleTimeRocketHighRaw | numeric:"0.0000"}/60</span>
+          </td>
+          <td>
+            <span show.bind='!showDevStuff'>${teamData.avgHatchPanelCycleTimeRocketHigh | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.hatchPanelCycleTimeRocketHighRaw | numeric:"0.0000"}/60</span>
           </td>
           <td>
             <span show.bind='!showDevStuff'>${teamData.avgGamepieceCount | numeric:"0.0000"}</span><span show.bind='showDevStuff'>${teamData.cargoCountRaw + teamData.hatchPanelCountRaw}/${teamData.cargoPlacedMatchCount}</span>

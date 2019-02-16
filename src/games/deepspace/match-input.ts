@@ -130,7 +130,7 @@ export class MatchInputPage {
       this.model = matches[0];
     }
 
-    this.pristineModel = clone(this.model);
+    this.pristineModel = JSON.parse(JSON.stringify(this.model));
 
     this.observeModel();
 
@@ -225,7 +225,12 @@ export class MatchInputPage {
       } else {
         placement.when = this.model.placements[this.model.placements.length - 1].when - 5;
       }
-      //placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
+      if((this.model.placements[this.model.placements.length - 1].when - 5) < 0 && this.model.placements[this.model.placements.length - 1].sandstorm) {
+        placement.sandstorm = !this.model.placements[this.model.placements.length - 1].sandstorm;
+        placement.when = 135 + (this.model.placements[this.model.placements.length - 1].when);
+      } else {
+        placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
+      }
     }
     else if(this.model.placements.length == 0) {
       placement.when = 10;

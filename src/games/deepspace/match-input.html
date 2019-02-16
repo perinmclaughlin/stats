@@ -55,6 +55,7 @@
     <br>
 
     <!--Drop down menus for the cargo and hatch pickups-->
+    <h3>Grabber Capabilities</h3>
     <div class='row'>
       <div class='col-sm-6 form-group'>
         <label>Cargo Pickup</label>
@@ -71,7 +72,20 @@
         </select>
       </div>
     </div>
-
+    <h3>Defensive Capabilities</h3>
+    <div class='row'>
+      <div class='col-sm-6 form-group'>
+        <label>Drivetrain Strength</label>
+        <select class='form-control' value.bind='model.drivetrainStrength & validate:rules'>
+          <option></option>
+          <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name}</option>
+        </select>
+      </div>
+      <div class='col-sm-6 form-group'>
+        <label>Weaknesses</label>
+        <textarea id='defenseWeaknesses' class='form-control' rows='1' value.bind="model.defenseWeaknesses"></textarea>
+      </div>
+    </div>
 
     <!--This is what should appear when you press the add button-->
     <div id='TacoPlacements'>
@@ -214,8 +228,12 @@
         </div>
         <div class='col-sm-7' show.bind='liftedSomeone'>
           <label>
-            Lifted to Level 3
-            <input type='checkbox' class='form-control' checked.bind='didLiftLevel3' />
+            Level 2
+            <input type='radio' class='form-control' checked.bind='didLiftLevel3' model.bind='false' />
+          </label>
+          <label>
+            Level 3
+            <input type='radio' class='form-control' checked.bind='didLiftLevel3' model.bind='true' />
           </label>
         </div>
       </div>
