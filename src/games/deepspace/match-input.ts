@@ -15,7 +15,7 @@ import { setupValidationRules, placementTime, PlacementMergeState } from "./mode
 import { SaveDialog } from "../../utilities/save-dialog";
 import { equals } from "../../utilities/dirty-change-checker";
 
-@autoinject 
+@autoinject
 export class MatchInputPage {
   public model: TeamMatch2019Entity;
   public pristineModel: TeamMatch2019Entity;
@@ -42,7 +42,6 @@ export class MatchInputPage {
   public foulReasonTemp: string;
   public liftedTemp: string[];
   public liftedBy: string;
-  public wasLifted: boolean;
   public didLiftLevel3: boolean;
 
   public rules: any[];
@@ -57,7 +56,7 @@ export class MatchInputPage {
     private dbContext: FrcStatsContext,
     validationControllerFactory: ValidationControllerFactory,
     private router: Router
-    ){
+  ) {
     this.validationController = validationControllerFactory.createForCurrentScope();
     this.hasSaved = false;
     this.slots = null;
@@ -67,7 +66,7 @@ export class MatchInputPage {
     let promise = Promise.resolve("yup");
     scrollToTop();
     this.observeFields();
-    
+
     await this.load(params);
     this.setupValidation();
   }
@@ -81,17 +80,17 @@ export class MatchInputPage {
     this.observers = [];
 
     this.observers.push(this.bindingEngine.propertyObserver(this, 'liftedPartner1').subscribe(liftedPartner1 => {
-      if(liftedPartner1 && this.model.lifted.indexOf(this.partner1) == -1) {
+      if (liftedPartner1 && this.model.lifted.indexOf(this.partner1) == -1) {
         this.model.lifted.push(this.partner1);
-      }else if(!liftedPartner1 && this.model.lifted.indexOf(this.partner1) != -1) {
+      } else if (!liftedPartner1 && this.model.lifted.indexOf(this.partner1) != -1) {
         this.model.lifted = this.model.lifted.filter(teamNumber => teamNumber != this.partner1);
       }
     }));
 
     this.observers.push(this.bindingEngine.propertyObserver(this, 'liftedPartner2').subscribe(liftedPartner2 => {
-      if(liftedPartner2 && this.model.lifted.indexOf(this.partner2) == -1) {
+      if (liftedPartner2 && this.model.lifted.indexOf(this.partner2) == -1) {
         this.model.lifted.push(this.partner2);
-      }else if(!liftedPartner2 && this.model.lifted.indexOf(this.partner2) != -1) {
+      } else if (!liftedPartner2 && this.model.lifted.indexOf(this.partner2) != -1) {
         this.model.lifted = this.model.lifted.filter(teamNumber => teamNumber != this.partner2);
       }
     }));
@@ -100,19 +99,19 @@ export class MatchInputPage {
 
   private observeModel() {
     this.observers.push(this.bindingEngine.propertyObserver(this.model, 'level3ClimbAttempted').subscribe(() => {
-      if(!this.model.level3ClimbAttempted) {
+      if (!this.model.level3ClimbAttempted) {
         this.model.level3ClimbSucceeded = false;
       }
     }));
     this.observers.push(this.bindingEngine.propertyObserver(this.model, 'level2ClimbAttempted').subscribe(() => {
-      if(!this.model.level2ClimbAttempted) {
+      if (!this.model.level2ClimbAttempted) {
         this.model.level2ClimbSucceeded = false;
       }
     }));
   }
 
   private unobserveFields() {
-    for(var observer of this.observers) {
+    for (var observer of this.observers) {
       observer.dispose();
     }
     this.observers = [];
@@ -137,7 +136,7 @@ export class MatchInputPage {
     this.team = await this.dbContext.getTeam(params.teamNumber)
     this.event = await this.dbContext.getEvent(params.year, params.eventCode);
     this.eventMatch = await this.dbContext.getEventMatch(params.year, params.eventCode, params.matchNumber);
-    this.slots = EventMatchSlots.filter(slot => 
+    this.slots = EventMatchSlots.filter(slot =>
       this.eventMatch[slot.prop] == this.model.teamNumber
     )[0];
     let nextMatch = await this.dbContext.getEventMatch(params.year, params.eventCode, nextMatchNumber(params.matchNumber));
@@ -162,6 +161,15 @@ export class MatchInputPage {
       this.partner1 = others[0];
       this.partner2 = others[1];
     }
+    if (this.model.lifted == null || !Array.isArray(this.model.lifted)){
+      this.liftedPartner2 = false;
+      this.liftedPartner1 = false;
+    } 
+    else{
+    this.liftedPartner2 = this.model.lifted.findIndex((teamNumber) => teamNumber == this.partner2) != -1;
+    this.liftedPartner1 = this.model.lifted.findIndex((teamNumber) => teamNumber == this.partner1) != -1;
+    }
+    
 
     if (this.model.lifted == null) {
       this.model.lifted = [];
@@ -180,7 +188,7 @@ export class MatchInputPage {
     this.rules = allRules.rules;
     this.placementRules = allRules.placementRules;
 
-    this.renderer = new BootstrapRenderer({showMessages: true});
+    this.renderer = new BootstrapRenderer({ showMessages: true });
     this.validationController.addRenderer(this.renderer);
   }
 
@@ -190,12 +198,12 @@ export class MatchInputPage {
 
   public showBingo() {
     DeepSpaceBingoDialog.open(this.dialogService, {
-        match: this.model,
+      match: this.model,
     });
   }
 
   public exportToQrCode() {
-    if(this.model.id == null){
+    if (this.model.id == null) {
       return;
     }
     QrCodeDisplayDialog.open(this.dialogService,
@@ -212,22 +220,22 @@ export class MatchInputPage {
   }
 
   public addPlacement() {
-    let placement : DeepSpaceEvent = {
+    let placement: DeepSpaceEvent = {
       eventType: "Gamepiece Placement",
       gamepiece: null,
       location: null,
       sandstorm: false,
       when: null,
     };
-    if(this.model.placements.length > 0) {
-      if((this.model.placements[this.model.placements.length -1].when - 5) <= 0) {
+    if (this.model.placements.length > 0) {
+      if ((this.model.placements[this.model.placements.length - 1].when - 5) <= 0) {
         placement.when = 0;
       } else {
         placement.when = this.model.placements[this.model.placements.length - 1].when - 5;
       }
       //placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
     }
-    else if(this.model.placements.length == 0) {
+    else if (this.model.placements.length == 0) {
       placement.when = 10;
       placement.sandstorm = true;
     }
@@ -241,7 +249,7 @@ export class MatchInputPage {
     this.model.placements.push(placement);
   }
 
-  public deleteRow(index:number){
+  public deleteRow(index: number) {
     this.model.placements.splice(index, 1);
   }
 
@@ -261,7 +269,7 @@ export class MatchInputPage {
 
   public async canDeactivate(): Promise<boolean> {
     console.log("canDeactivate() called");
-    if(this.hasChanges()) {
+    if (this.hasChanges()) {
       let something = await SaveDialog.open(this.dialogService, {}).whenClosed((nil) => {
         return nil;
       });
@@ -274,7 +282,7 @@ export class MatchInputPage {
 
   public syncBoolAndReason() {
 
-    if(this.model.isFailure) {
+    if (this.model.isFailure) {
       this.model.failureReason = this.failureReasonTemp;
     }
     else {
@@ -287,7 +295,7 @@ export class MatchInputPage {
 
   public syncLiftedAndEntries() {
 
-    if(this.wasLifted) {
+    if (this.model.wasLifted) {
       this.model.lifted = this.liftedTemp;
     }
     else {
@@ -300,7 +308,7 @@ export class MatchInputPage {
 
   public syncLiftedBy() {
 
-    if(this.model.liftedBy) {
+    if (this.model.liftedBy) {
       this.model.liftedBy = this.liftedBy;
     }
     else {
@@ -313,7 +321,7 @@ export class MatchInputPage {
 
   public syncBoolAndReason2() {
 
-    if(this.model.isFoul) {
+    if (this.model.isFoul) {
       this.model.foulReason = this.foulReasonTemp;
     }
     else {
@@ -323,29 +331,36 @@ export class MatchInputPage {
 
     return true;
   }
-
+  public wasLiftedReset() {
+  if (!this.model.wasLifted) {
+    this.model.liftedBy = null
+    
+  }
+  }
   public hasChanges() {
     let properties = [
-      'cargoPickup', 'hatchPanelPickup', 'level2ClimbAttempted', 'level2ClimbSucceeded', 'level3ClimbAttempted', 'level3ClimbSucceeded', 
+      'cargoPickup', 'liftedSomeone', 'wasLifted', 'hatchPanelPickup', 'level2ClimbAttempted', 'level2ClimbSucceeded', 'level3ClimbAttempted', 'level3ClimbSucceeded',
       'level3ClimbBegin', 'level3ClimbEnd', 'liftedBy', 'isFailure', 'failureReason', 'isFoul', 'foulReason', 'notes'
     ];
-    for(var j = 0; j < properties.length; j++) {
-      if(!equals(properties[j], this.model, this.pristineModel)) {
+    for (var j = 0; j < properties.length; j++) {
+      if (!equals(properties[j], this.model, this.pristineModel)) {
         return true;
       }
     }
 
-    if(this.model.lifted.length != this.pristineModel.lifted.length) {
+    if(Array.isArray(this.model.lifted)) {
+    if (this.model.lifted.length != this.pristineModel.lifted.length) {
       return true;
     }
 
-    for(var i = 0; i< this.model.lifted.length; i++) {
-      if(this.pristineModel.lifted.findIndex(teamNumber => teamNumber == this.model.lifted[i]) == -1) {
+    for (var i = 0; i < this.model.lifted.length; i++) {
+      if (this.pristineModel.lifted.findIndex(teamNumber => teamNumber == this.model.lifted[i]) == -1) {
         return true;
       }
     }
+  }
 
-    if(this.model.placements.length != this.pristineModel.placements.length) {
+    if (this.model.placements.length != this.pristineModel.placements.length) {
       return true;
     }
 
@@ -361,11 +376,11 @@ export class MatchInputPage {
   }
 
   public async save() {
+
     let validationResults = await this.validateAll();
-    console.info(validationResults);
+    
     if (validationResults.every(validationResult => validationResult.valid)) {
       this.fixupNumericProperties();
-
       let savedMatches = await this.dbContext.getTeamMatches2019({
         eventCode: this.model.eventCode,
         teamNumber: this.model.teamNumber,
@@ -412,9 +427,9 @@ export class MatchInputPage {
     ];
 
     function fixupProperty(obj, prop: string) {
-      if(obj[prop] == null || obj[prop] == "") {
+      if ((obj[prop] == null || obj[prop] == "") &&obj[prop] !== 0) {
         obj[prop] = null;
-      }else if (obj[prop] == "Infinity") {
+      } else if (obj[prop] == "Infinity") {
         obj[prop] = Infinity;
       } else if (typeof obj[prop] == "string") {
         obj[prop] = parseInt(obj[prop]);
@@ -434,7 +449,7 @@ export class MatchInputPage {
   public async gotoMatch(matchNumber: string) {
     let eventCode = this.model.eventCode;
     let year = this.event.year;
-    let slot = EventMatchSlots.filter(slot => 
+    let slot = EventMatchSlots.filter(slot =>
       this.eventMatch[slot.prop] == this.model.teamNumber
     )[0];
     let nextEventMatch = await this.dbContext.getEventMatch(this.event.year, this.event.eventCode, matchNumber);

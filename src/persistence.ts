@@ -299,6 +299,8 @@ export interface TeamMatch2019Entity extends IEventTeamMatch {
   level3ClimbEnd: number;
   /**Stores the team numbers of the robots lifted by this robot to the third level of the pedestal. */
   lifted: string[];
+  wasLifted: boolean;
+  liftedSomeone: boolean;
   /**Stores the team number of the robot that lifted this robot to the third level of the pedestal. */
   liftedBy: string;
   /**Determines whether or not a robot failure occurred. */
@@ -437,6 +439,8 @@ export function make2019match(eventCode: string, teamNumber: string, matchNumber
     level3ClimbSucceeded: false,
     lifted: [],
     liftedBy: null,
+    wasLifted: false,
+    liftedSomeone: false,
     notes: null,
     placements: [],
     didLiftLevel3: false
