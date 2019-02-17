@@ -43,6 +43,9 @@ export class MatchInputPage {
   public liftedTemp: string[];
   public liftedBy: string;
   public didLiftLevel3: boolean;
+  public secondsStartTemp: number;
+  public secondsEndTemp: number;
+  public level3SucceedTemp: boolean;
 
   public rules: any[];
   public placementRules: any[];
@@ -298,6 +301,25 @@ export class MatchInputPage {
     return true;
   }
 
+  public syncLevel3Entries() {
+    if(!this.model.level3ClimbAttempted) {
+      this.secondsStartTemp = this.model.level3ClimbBegin;
+      this.secondsEndTemp = this.model.level3ClimbEnd;
+      this.level3SucceedTemp = cloneDeep(this.model.level3ClimbSucceeded);
+      this.model.level3ClimbSucceeded = false;
+      this.model.level3ClimbBegin = null;
+      this.model.level3ClimbEnd = null;
+      //console.log("this.model.level3ClimbBegin is now", this.model.level3ClimbBegin);
+      //console.log("this.model.level3ClimbEnd is now", this.model.level3ClimbEnd);
+    } else {
+      this.model.level3ClimbBegin = this.secondsStartTemp;
+      this.model.level3ClimbEnd = this.secondsEndTemp;
+      this.model.level3ClimbSucceeded = this.level3SucceedTemp;
+      //console.log("this.model.level3ClimbBegin is now", this.model.level3ClimbBegin);
+      //console.log("this.model.level3ClimbEnd is now", this.model.level3ClimbEnd);
+    }
+  }
+
   public syncLiftedAndEntries() {
 
     if (this.model.wasLifted) {
@@ -306,6 +328,9 @@ export class MatchInputPage {
     else {
       this.liftedTemp = this.model.lifted;
       this.model.lifted = [];
+      this.liftedPartner1 = false;
+      this.liftedPartner2 = false;
+      this.model.didLiftLevel3 = false;
     }
 
     return true;

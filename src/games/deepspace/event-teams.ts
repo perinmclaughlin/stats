@@ -72,4 +72,49 @@ export class EventTeamsPage {
   public showDevValues() {
     this.showDevStuff = !this.showDevStuff;
   }
+
+  public sortByTeamNumber() {
+    this.teamsData.sort((a,b) => naturalSort(a.teamNumber, b.teamNumber));
+  }
+
+  public sortByCargoCycle() {
+    console.info(this.teamsData.map(x => x.avgCargoCycleTime));
+    this.teamsData.sort((a,b) => b.avgCargoCycleTime - a.avgCargoCycleTime);
+  }
+
+  public sortByCargoCycleShip() {
+    this.teamsData.sort((a,b) => b.avgCargoCycleTimeCargoShip - a.avgCargoCycleTimeCargoShip);
+  }
+
+  public sortByCargoCycleLow() {
+    this.teamsData.sort((a,b) => b.avgCargoCycleTimeRocketLow - a.avgCargoCycleTimeRocketLow);
+  }
+
+  public sortByCargoCycleMid() {
+    this.teamsData.sort((a,b) => b.avgCargoCycleTimeRocketMid - a.avgCargoCycleTimeRocketMid);
+  }
+
+  public sortByCargoCycleHigh() {
+    this.teamsData.sort((a,b) => b.avgCargoCycleTimeRocketHigh - a.avgCargoCycleTimeRocketHigh);
+  }
+
+  public sortByHatchCycle() {
+    this.teamsData.sort((a,b) => b.avgHatchPanelCycleTime - a.avgHatchPanelCycleTime);
+  }
+
+  public sortByHatchCycleShip() {
+    this.teamsData.sort((a,b) => b.avgHatchPanelCycleTimeCargoShip - a.avgHatchPanelCycleTimeCargoShip);
+  }
+
+  public sortByHatchCycleLow() {
+    this.teamsData.sort((a,b) => b.avgHatchPanelCycleTimeRocketLow - a.avgHatchPanelCycleTimeRocketLow);
+  }
+
+  public sortByHatchCycleMid() {
+    this.teamsData.sort((a,b) => b.avgHatchPanelCycleTimeRocketMid - a.avgHatchPanelCycleTimeRocketMid);
+  }
+
+  public sortByHatchCycleHigh() {
+    this.teamsData.sort((a,b) => b.avgHatchPanelCycleTimeRocketHigh - a.avgHatchPanelCycleTimeRocketHigh);
+  }
 }

@@ -368,19 +368,19 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
         switch(x[i].placements[j].location) {
           case "Cargo Ship":
             result.cargoCountCargoShipRaw++;
-            console.log("result.cargoCountCargoShipRaw for team", team.teamNumber, "is", result.cargoCountCargoShipRaw);
+            //console.log("result.cargoCountCargoShipRaw for team", team.teamNumber, "is", result.cargoCountCargoShipRaw);
             break;
           case "Rocket Low":
             result.cargoCountRocketLowRaw++;
-            console.log("result.cargoCountRocketLowRaw for team", team.teamNumber, "is", result.cargoCountRocketLowRaw);
+            //console.log("result.cargoCountRocketLowRaw for team", team.teamNumber, "is", result.cargoCountRocketLowRaw);
             break;
           case "Rocket Mid":
             result.cargoCountRocketMidRaw++;
-            console.log("result.cargoCountRocketMidRaw for team", team.teamNumber, "is", result.cargoCountRocketMidRaw);
+            //console.log("result.cargoCountRocketMidRaw for team", team.teamNumber, "is", result.cargoCountRocketMidRaw);
             break;
           case "Rocket High":
             result.cargoCountRocketHighRaw++;
-            console.log("result.cargoCountRocketHighRaw for team", team.teamNumber, "is", result.cargoCountRocketHighRaw);
+            //console.log("result.cargoCountRocketHighRaw for team", team.teamNumber, "is", result.cargoCountRocketHighRaw);
             break;
           default:
             break;
@@ -396,19 +396,19 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
         switch(x[i].placements[j].location) {
           case "Cargo Ship":
             result.hatchPanelCountCargoShipRaw++;
-            console.log("result.hatchPanelCountCargoShipRaw for team", team.teamNumber, "is", result.hatchPanelCountCargoShipRaw);
+            //console.log("result.hatchPanelCountCargoShipRaw for team", team.teamNumber, "is", result.hatchPanelCountCargoShipRaw);
             break;
           case "Rocket Low":
             result.hatchPanelCountRocketLowRaw++;
-            console.log("result.hatchPanelCountRocketLowRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketLowRaw);
+            //console.log("result.hatchPanelCountRocketLowRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketLowRaw);
             break;
           case "Rocket Mid":
             result.hatchPanelCountRocketMidRaw++;
-            console.log("result.hatchPanelCountRocketMidRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketMidRaw);
+            //console.log("result.hatchPanelCountRocketMidRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketMidRaw);
             break;
           case "Rocket High":
             result.hatchPanelCountRocketHighRaw++;
-            console.log("result.hatchPanelCountRocketHighRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketHighRaw);
+            //console.log("result.hatchPanelCountRocketHighRaw for team", team.teamNumber, "is", result.hatchPanelCountRocketHighRaw);
             break;
           default:
             break;
@@ -485,9 +485,14 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     let increment = 0;
     for(var u = 0; u < cycleCargo.length; u++) {
       temp += (cycleCargo[u]);
+      //console.log("For team", result.teamNumber, "temp is currently", temp);
+      //console.log("For team", result.teamNumber, "cycleCargo[",u,"] is", cycleCargo[u]);
       increment++;
     }
-    result.avgCargoCycleTime = temp / increment;
+    if(increment != 0) {
+      result.avgCargoCycleTime = temp / increment;
+      //console.log("temp for team", result.teamNumber, "is", temp,", and increment is", increment);
+    }
 //    console.log("result.avgCargoCycleTime for team", team.teamNumber, "is", result.avgCargoCycleTime);
     temp = 0;
     increment = 0;
@@ -495,7 +500,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleCargoShip[u]);
       increment++;
     }
-    result.avgCargoCycleTimeCargoShip = temp / increment;
+    if(increment != 0) {
+      result.avgCargoCycleTimeCargoShip = temp / increment;
+    }
   //  console.log("result.avgCargoCycleTimeCargoShip for team", team.teamNumber, "is", result.avgCargoCycleTimeCargoShip);
     temp = 0;
     increment = 0;
@@ -503,7 +510,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleCargoLow[u]);
       increment++;
     }
-    result.avgCargoCycleTimeRocketLow = temp / increment;
+    if(increment != 0) {
+      result.avgCargoCycleTimeRocketLow = temp / increment;
+    }
     //console.log("result.avgCargoCycleTimeRocketLow for team", team.teamNumber, "is", result.avgCargoCycleTimeRocketLow);
     temp = 0;
     increment = 0;
@@ -511,7 +520,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleCargoMid[u]);
       increment++;
     }
-    result.avgCargoCycleTimeRocketMid = temp / increment;
+    if(increment != 0) {
+      result.avgCargoCycleTimeRocketMid = temp / increment;
+    }
 //    console.log("result.avgCargoCycleTimeRocketMid for team", team.teamNumber, "is", result.avgCargoCycleTimeRocketMid);
     temp = 0;
     increment = 0;
@@ -519,7 +530,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleCargoHigh[u]);
       increment++;
     }
-    result.avgCargoCycleTimeRocketHigh = temp / increment;
+    if(increment != 0) {
+      result.avgCargoCycleTimeRocketHigh = temp / increment;
+    }
   //  console.log("result.avgCargoCycleTimeRocketHigh for team", team.teamNumber, "is", result.avgCargoCycleTimeRocketHigh);
     temp = 0;
     increment = 0;
@@ -528,7 +541,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleHatch[u]);
       increment++;
     }
-    result.avgHatchPanelCycleTime = temp / increment;
+    if(increment != 0) {
+      result.avgHatchPanelCycleTime = temp / increment;
+    }
     //console.log("result.avgHatchPanelCycleTime for team", team.teamNumber, "is", result.avgHatchPanelCycleTime);
     temp = 0;
     increment = 0;
@@ -536,7 +551,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleHatchShip[u]);
       increment++;
     }
-    result.avgHatchPanelCycleTimeCargoShip = temp / increment;
+    if(increment != 0) {
+      result.avgHatchPanelCycleTimeCargoShip = temp / increment;
+    }
 //    console.log("result.avgHatchPanelCycleTimeCargoShip for team", team.teamNumber, "is", result.avgHatchPanelCycleTimeCargoShip);
     temp = 0;
     increment = 0;
@@ -544,7 +561,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleHatchLow[u]);
       increment++;
     }
-    result.avgHatchPanelCycleTimeRocketLow = temp / increment;
+    if(increment != 0) {
+      result.avgHatchPanelCycleTimeRocketLow = temp / increment;
+    }
   //  console.log("result.avgHatchPanelCycleTimeRocketLow for team", team.teamNumber, "is", result.avgHatchPanelCycleTimeRocketLow);
     temp = 0;
     increment = 0;
@@ -552,7 +571,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleHatchMid[u]);
       increment++;
     }
-    result.avgHatchPanelCycleTimeRocketMid = temp / increment;
+    if(increment != 0) {
+      result.avgHatchPanelCycleTimeRocketMid = temp / increment;
+    }
     //console.log("result.avgHatchPanelCycleTimeRocketMid for team", team.teamNumber, "is", result.avgHatchPanelCycleTimeRocketMid);
     temp = 0;
     increment = 0;
@@ -560,7 +581,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       temp += (cycleHatchHigh[u]);
       increment++;
     }
-    result.avgHatchPanelCycleTimeRocketHigh = temp / increment;
+    if(increment != 0) {
+      result.avgHatchPanelCycleTimeRocketHigh = temp / increment;
+    }
     //console.log("result.avgHatchPanelCycleTimeRocketHigh for team", team.teamNumber, "is", result.avgHatchPanelCycleTimeRocketHigh);
 
     for(var i = 0; i < x.length; i++) {
@@ -592,6 +615,37 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.hatchPanelPickupRaw = hatchPickup;
     result.sandstormCargoCountRaw = cargoSandstorm;
     result.sandstormHatchPanelCountRaw = hatchSandstorm;
+
+    if(isNaN(result.avgCargoCycleTime)) {
+      result.avgCargoCycleTime = 0;
+    }
+    if(isNaN(result.avgCargoCycleTimeCargoShip)) {
+      result.avgCargoCycleTimeCargoShip = 0;
+    }
+    if(isNaN(result.avgCargoCycleTimeRocketHigh)) {
+      result.avgCargoCycleTimeRocketHigh = 0;
+    }
+    if(isNaN(result.avgCargoCycleTimeRocketLow)) {
+      result.avgCargoCycleTimeRocketLow = 0;
+    }
+    if(isNaN(result.avgCargoCycleTimeRocketMid)) {
+      result.avgCargoCycleTimeRocketMid = 0;
+    }
+    if(isNaN(result.avgHatchPanelCycleTime)) {
+      result.avgHatchPanelCycleTime = 0;
+    }
+    if(isNaN(result.avgHatchPanelCycleTimeCargoShip)) {
+      result.avgHatchPanelCycleTimeCargoShip = 0;
+    }
+    if(isNaN(result.avgHatchPanelCycleTimeRocketHigh)) {
+      result.avgHatchPanelCycleTimeRocketHigh = 0;
+    }
+    if(isNaN(result.avgHatchPanelCycleTimeRocketLow)) {
+      result.avgHatchPanelCycleTimeRocketLow = 0;
+    }
+    if(isNaN(result.avgHatchPanelCycleTimeRocketMid)) {
+      result.avgHatchPanelCycleTimeRocketMid = 0;
+    }
   }
 
   //result.climbLevel3Time = _some time value_;

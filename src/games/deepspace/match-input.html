@@ -166,7 +166,7 @@
         <div class='row'>
           <div class='col'>
             <label>
-              <input type='checkbox' class='' checked.bind='model.level3ClimbAttempted'> Level 3 Climb Attempted</label>
+              <input type='checkbox' class='' change.delegate='syncLevel3Entries()' checked.bind='model.level3ClimbAttempted'> Level 3 Climb Attempted</label>
             </label>
           </div>
           <div class='col' show.bind='model.level3ClimbAttempted'>
@@ -214,7 +214,7 @@
         <!--Lifted other teams-->
         <div class='col-sm-7'>
           <label>
-            <input type='checkbox' class='' checked.bind='model.liftedSomeone'>Lifted Another Team</label>
+            <input type='checkbox' class='' change.delegate='syncLiftedAndEntries()' checked.bind='model.liftedSomeone'>Lifted Another Team</label>
         </div>
         <!--What teams they lifted-->
         <div class='col-sm-7 form-group' show.bind='model.liftedSomeone'>
