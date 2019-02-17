@@ -40,6 +40,12 @@ export class FrcStatsContext extends Dexie {
       // err noop again..
     });
 
+    this.version(4).stores({
+      events: '++id, eventCode, &[year+eventCode]',
+    }).upgrade(() => {
+      // bugger, y I never notice this?
+    });
+
     this.games.put({
       year: '2018',
       name: 'FIRST POWER UP',
