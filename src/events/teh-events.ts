@@ -72,12 +72,14 @@ export class Events {
     }).whenClosed(dialogResult => {
       if(!dialogResult.wasCancelled) {
         let game = gameManager.getGame(event.year);
-        this.dbContext.transaction("rw", [
+        let x = [
           this.dbContext.events,
           this.dbContext.eventTeams,
           this.dbContext.eventMatches,
-          this.dbContext.teamMatches2018,
-        ], () => {
+        ];
+        let x2 = game.getTables();
+        x.push.apply(x, x2);
+        this.dbContext.transaction("rw", x, () => {
           let eventPromise = this.dbContext.events.delete(event.id);
           let eventTeamsPromise = this.dbContext.eventTeams
             .where(["year", "eventCode"])
