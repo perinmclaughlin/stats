@@ -410,7 +410,6 @@ export class MatchInputPage {
     let validationResults = await this.validateAll();
     
     if (validationResults.every(validationResult => validationResult.valid)) {
-      this.fixupNumericProperties();
       let savedMatches = await this.dbContext.getTeamMatches2019({
         eventCode: this.model.eventCode,
         teamNumber: this.model.teamNumber,
@@ -422,6 +421,7 @@ export class MatchInputPage {
         return bTime - aTime;
       });
       let modelToSave = JSON.parse(JSON.stringify(this.model))
+      this.fixupNumericProperties(modelToSave);
       if (savedMatches.length != 0) {
         modelToSave.id = savedMatches[0].id;
       }
@@ -447,7 +447,7 @@ export class MatchInputPage {
     }
   }
 
-  private fixupNumericProperties() {
+  private fixupNumericProperties(model: any) {
     let numericProperties = [
       'cargoPickup', 'hatchPanelPickup',
       'level3ClimbBegin', 'level3ClimbEnd',
@@ -457,7 +457,7 @@ export class MatchInputPage {
     ];
 
     function fixupProperty(obj, prop: string) {
-      if ((obj[prop] == null || obj[prop] == "") &&obj[prop] !== 0) {
+      if ((obj[prop] == null || obj[prop] == "") && obj[prop] !== 0) {
         obj[prop] = null;
       } else if (obj[prop] == "Infinity") {
         obj[prop] = Infinity;
@@ -467,11 +467,13 @@ export class MatchInputPage {
     }
 
     for (var prop of numericProperties) {
-      fixupProperty(this.model, prop);
+      fixupProperty(model, prop);
     }
-    for (var placement of this.model.placements) {
+    for (var placement of model.placements) {
       for (var prop of numericPlacementProperties) {
+      console.info(`fixup placement ${prop} before: `, placement[prop]);
         fixupProperty(placement, prop)
+      console.info(`fixup placement ${prop} after: `, placement[prop]);
       }
     }
   }

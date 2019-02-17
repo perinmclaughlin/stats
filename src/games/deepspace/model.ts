@@ -182,7 +182,7 @@ export class PlacementMergeState implements IMergeState {
 }
 
 export function placementTime(event: DeepSpaceEvent) {
-  let result = event.when;
+  let result = +event.when;
   if (event.sandstorm) {
     result += 135;
   }

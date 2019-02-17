@@ -27,10 +27,23 @@
               <th>Notes</th>
             </tr>
             <tr repeat.for="match of matches2019">
-              <td><a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2019, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">${match.matchNumber}</a></td>
-              <td><span repeat.for="a of stats.locationsPlacedCargo" show.bind='isTrue'>${a}<span show.bind="!$last"><br></span></span></td>
-              <!--<td repeat.for="a of match.locationsPlacedCargo">${a}, </td>-->
-              <td><span repeat.for="b of stats.locationsPlacedHatch" show.bind='isTrue'>${b}<span show.bind="!$last"><br></span></span></td>
+              <td>
+                <a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2019, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">
+                  ${match.matchNumber}
+                </a>
+              </td>
+              <td>
+                <span repeat.for="a of stats.locationsPlacedCargo" show.bind='isTrue'>
+                  ${a}
+                  <span show.bind="!$last"><br></span>
+                </span>
+              </td>
+              <td>
+                <span repeat.for="b of stats.locationsPlacedHatch" show.bind='isTrue'>
+                  ${b}
+                  <span show.bind="!$last"><br></span>
+                </span>
+              </td>
               <td>${match.cargoPickup} </td>
               <td>${match.hatchPanelPickup}</td>
               <td>${match.level3ClimbSucceeded ? 3 : (match.level2ClimbSucceeded*2) }</td>
