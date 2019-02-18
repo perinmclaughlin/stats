@@ -369,7 +369,7 @@ export class MatchInputPage {
   }
   public hasChanges() {
     let properties = [
-      'cargoPickup', 'liftedSomeone', 'wasLifted', 'hatchPanelPickup', 'level2ClimbAttempted', 'level2ClimbSucceeded', 'level3ClimbAttempted', 'level3ClimbSucceeded',
+      'cargoPickup', 'drivetrainStrength', 'defenseWeaknesses', 'liftedSomeone', 'wasLifted', 'hatchPanelPickup', 'level2ClimbAttempted', 'level2ClimbSucceeded', 'level3ClimbAttempted', 'level3ClimbSucceeded',
       'level3ClimbBegin', 'level3ClimbEnd', 'liftedBy', 'isFailure', 'failureReason', 'isFoul', 'foulReason', 'notes'
     ];
     for (var j = 0; j < properties.length; j++) {
