@@ -1,8 +1,10 @@
-import { TeamMatch2019Entity, DeepSpaceEvent, matches2019AreEqual, DeepSpaceGamepiece } from "../../../src/persistence";
+import { TeamMatch2019Entity, DeepSpaceEvent, matches2019AreEqual, DeepSpaceGamepiece, make2019match } from "../../../src/persistence";
 import { makePlacementMergeStates, doPrint } from "../../../src/games/deepspace/model";
+import { assignIn } from "lodash";
 
 function makeMatchInput() {
-  let a: TeamMatch2019Entity = {
+  let a = make2019match("waamv", "1258", "1");
+  assignIn(a, {
     "eventCode": "waamv",
     "teamNumber": "1258",
     "matchNumber": "1",
@@ -28,7 +30,7 @@ function makeMatchInput() {
       "sandstorm": false,
       "when": 40
     }],
-  };
+  });
   return a;
 }
 
