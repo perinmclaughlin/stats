@@ -26,40 +26,40 @@
               <th># of Teams Lifted</th>
               <th>Notes</th>
             </tr>
-            <tr repeat.for="match of matches2019">
+            <tr repeat.for="m of matchStats">
               <td>
-                <a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2019, eventCode: match.eventCode, teamNumber: team.teamNumber, matchNumber: match.matchNumber}">
-                  ${match.matchNumber}
+                <a style="display: block;" route-href="route.bind:'match-team'; params.bind: {year: 2019, eventCode: m.match.eventCode, teamNumber: team.teamNumber, matchNumber: m.match.matchNumber}">
+                  ${m.match.matchNumber}
                 </a>
               </td>
               <td>
-                <span repeat.for="a of stats.locationsPlacedCargo" show.bind='isTrue'>
+                <span repeat.for="a of m.stats.locationsPlacedCargo" show.bind='isTrue'>
                   ${a}
                   <span show.bind="!$last"><br></span>
                 </span>
               </td>
               <td>
-                <span repeat.for="b of stats.locationsPlacedHatch" show.bind='isTrue'>
+                <span repeat.for="b of m.stats.locationsPlacedHatch" show.bind='isTrue'>
                   ${b}
                   <span show.bind="!$last"><br></span>
                 </span>
               </td>
-              <td>${match.cargoPickup} </td>
-              <td>${match.hatchPanelPickup}</td>
-              <td>${match.level3ClimbSucceeded ? 3 : (match.level2ClimbSucceeded*2) }</td>
-              <td>${match.lifted.length}</td>
+              <td>${m.match.cargoPickup} </td>
+              <td>${m.match.hatchPanelPickup}</td>
+              <td>${m.match.level3ClimbSucceeded ? 3 : (m.match.level2ClimbSucceeded*2) }</td>
+              <td>${m.match.lifted.length}</td>
               <td>
-                <div show.bind="match.autoNotes">
-                ${match.autoNotes}
+                <div show.bind="m.match.autoNotes">
+                ${m.match.autoNotes}
                 </div>
-                ${match.notes}
-                <span show.bind="match.isFailure">
-                  <br show.bind="match.notes"/><b>Fail:</b> 
-                  ${match.failureReason}
+                ${m.match.notes}
+                <span show.bind="m.match.isFailure">
+                  <br show.bind="m.match.notes"/><b>Fail:</b> 
+                  ${m.match.failureReason}
                 </span>
-                <span show.bind="match.isFoul">
-                  <br show.bind="match.notes || match.isFailure"/><b>Foul:</b> 
-                  ${match.foulReason}
+                <span show.bind="m.match.isFoul">
+                  <br show.bind="m.match.notes || m.match.isFailure"/><b>Foul:</b> 
+                  ${m.match.foulReason}
                 </span>
               </td>
             </tr>

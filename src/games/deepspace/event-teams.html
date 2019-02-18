@@ -37,8 +37,8 @@
           <th class="column-large clickable" click.delegate="sortByCargoCycleHigh()">Avg Cargo Cycle Time (Rocket High)</th>
           <th class="column-large clickable" click.delegate="sortByHatchCycleHigh()">Avg Hatch Cycle Time (Rocket High)</th>
           <th class="column-medium">Avg Gamepiece Count</th>
-          <th class="column-medium">Avg Cargo Count</th>
-          <th class="column-medium">Avg Hatch Count</th>
+          <th class="column-medium clickable" click.delegate="sortByCargoCount()">Avg Cargo Count</th>
+          <th class="column-medium clickable" click.delegate="sortByHatchCount()">Avg Hatch Count</th>
           <th class="column-medium">Avg Cargo Sandstorm</th>
           <th class="column-medium">Avg Hatch Sandstorm</th>
           <th class="column-small"># of Teams Lifted</th>
@@ -120,7 +120,7 @@
             ${teamData.hatchPanelPercent | numeric:"0."}%
           </td>
           <td>
-            todo
+            <span show.bind='!showDevStuff'>${teamData.drivetrainStrength.name}</span><span show.bind='showDevStuff'>${teamData.drivetrainStrengthRaw | numeric: 0.0000}/40</span>
           </td>
         </tr>
       </table>

@@ -1,6 +1,7 @@
 import { IEventJson, IMergeState } from "..";
 import { TeamMatch2019Entity, matches2019AreEqual, make2019match, DeepSpaceEvent } from "../../persistence";
 import { ValidationRules } from "aurelia-validation";
+import { DeepSpaceTeamStatistics } from "./statistics";
 
 export interface DeepSpaceEventJson extends IEventJson {
   matches2019: TeamMatch2019Entity[];
@@ -340,4 +341,9 @@ export function makePlacementMergeStates(fromFile: TeamMatch2019Entity, fromLoca
   }
 
   return results;
+}
+
+export interface MatchAndStats {
+  match: TeamMatch2019Entity;
+  stats: DeepSpaceTeamStatistics;
 }

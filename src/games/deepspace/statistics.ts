@@ -1,5 +1,6 @@
 import { QualitativeAnswer, TeamMatch2019Entity, qualitativeAnswers, TeamEntity, DeepSpaceLocation } from "../../persistence";
 import { print } from "util";
+import { placementTime } from "./model";
 
 export class DeepSpaceTeamStatistics {
   teamName: string;
@@ -158,6 +159,8 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   let cycleHatchShip = [];
   let cycleHatchMid = [];
   let cycleHatchHigh = [];
+  let mapCargo = new Map();
+  let mapHatch = new Map();
 
   result.matchCount = 0;
   result.cargoPickupRaw = 0;
@@ -188,16 +191,16 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.hatchPanelCycleTimeRocketLowRaw = 0;
   result.hatchPanelCycleTimeRocketMidRaw = 0;
 
-  result.avgCargoCycleTime = 0;
-  result.avgCargoCycleTimeCargoShip = 0;
-  result.avgCargoCycleTimeRocketHigh = 0;
-  result.avgCargoCycleTimeRocketLow = 0;
-  result.avgCargoCycleTimeRocketMid = 0;
-  result.avgHatchPanelCycleTime = 0;
-  result.avgHatchPanelCycleTimeCargoShip = 0;
-  result.avgHatchPanelCycleTimeRocketHigh = 0;
-  result.avgHatchPanelCycleTimeRocketLow = 0;
-  result.avgHatchPanelCycleTimeRocketMid = 0;
+  result.avgCargoCycleTime = 160;
+  result.avgCargoCycleTimeCargoShip = 160;
+  result.avgCargoCycleTimeRocketHigh = 160;
+  result.avgCargoCycleTimeRocketLow = 160;
+  result.avgCargoCycleTimeRocketMid = 160;
+  result.avgHatchPanelCycleTime = 160;
+  result.avgHatchPanelCycleTimeCargoShip = 160;
+  result.avgHatchPanelCycleTimeRocketHigh = 160;
+  result.avgHatchPanelCycleTimeRocketLow = 160;
+  result.avgHatchPanelCycleTimeRocketMid = 160;
 
   result.locationsCargoString = "";
   result.locationsHatchString = "";
@@ -205,7 +208,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.hatchPanelPercent = 0;
   result.liftLevel2Count = 0;
   result.liftLevel3Count = 0;
-  result.drivetrainStrengthRaw = 0;
 
   result.cargoPlacedMatchCount = 0;
   result.hatchPanelPlacedMatchCount = 0;
@@ -213,6 +215,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.locationsPlacedCargo = [];
   result.locationsPlacedHatch = [];
   result.defenseWeaknesses = "";
+  result.drivetrainStrengthRaw = 0;
 
   result.matchCount = x.length;
 
@@ -224,9 +227,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     var alreadyAddedCargo = false;
     var alreadyAddedHatch = false;
 
-    if(x[i].didLiftLevel3 && x[i].lifted.length > 0) {
+    if((x[i].didLiftLevel3 && x[i].lifted.length > 0) && x[i].liftedSomeone) {
       result.liftLevel3Count += x[i].lifted.length;
-    } else if(!x[i].didLiftLevel3 && x[i].lifted.length > 0) {
+    } else if((!x[i].didLiftLevel3 && x[i].lifted.length > 0) && x[i].liftedSomeone) {
       result.liftLevel2Count += x[i].lifted.length;
     } else {
       result.liftLevel2Count += 0;
@@ -235,7 +238,8 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     //result.teamsLiftedCount += (result.liftLevel2Count + result.liftLevel3Count);
 
     for(var j = 0; j < x[i].placements.length; j++) {
-      if(result.locationsPlacedCargo.length > 0) {
+      let index = null;
+      /*if(result.locationsPlacedCargo.length > 0) {
         for(var k = 0; k < result.locationsPlacedCargo.length; k++) {
           if(x[i].placements[j].gamepiece == "Cargo" && (x[i].placements[j].location == result.locationsPlacedCargo[k])) {
             //console.log("Did not add ",x[i].placements[j].location , " to locationPlacedCargo");
@@ -260,45 +264,83 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
             result.locationsCargoString = string;
           }
         }
-        if(j != 0 && x[i].placements[j].gamepiece == "Cargo") {
-          if((!x[i].placements[j].sandstorm && !x[i].placements[j - 1].sandstorm) || (x[i].placements[j].sandstorm && x[i].placements[j - 1].sandstorm)) {
-            cycleCargo.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            if(x[i].placements[j].location == "Cargo Ship") {
-              cycleCargoShip.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket Low") {
-              cycleCargoLow.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket Mid") {
-              cycleCargoMid.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket High") {
-              cycleCargoHigh.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            } else {
-              console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
-            }
-          } else {
-            cycleCargo.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            if(x[i].placements[j].location == "Cargo Ship") {
-              cycleCargoShip.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket Low") {
-              cycleCargoLow.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket Mid") {
-              cycleCargoMid.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket High") {
-              cycleCargoHigh.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            } else {
-              console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
-            }
-          }
-        }
       }
       else if(result.locationsPlacedCargo.length == 0) {
         result.locationsPlacedCargo.push(x[i].placements[j].location);
         //console.log("Added ",x[i].placements[j].location , " to locationPlacedCargo");
       } else {
         //console.log("Did not add to locationsPlacedCargo.");
+      }*/
+      if(x[i].placements[j].gamepiece == "Cargo") {
+        mapCargo.set(x[i].placements[j].location, 1);
+      } else if(x[i].placements[j].gamepiece == "Hatch Panel") {
+        mapHatch.set(x[i].placements[j].location, 1);
+      } else {
+        console.log("DeepSpaceGamepiece of", x[i].placements[j].gamepiece, "is invalid.");
       }
 
-      if(result.locationsPlacedHatch.length > 0) {
-        for(var k = 0; k < result.locationsPlacedHatch.length; k++) {
+      if(j != 0 && x[i].placements[j].gamepiece == "Cargo") {
+        if((!x[i].placements[j].sandstorm && !x[i].placements[j - 1].sandstorm) || (x[i].placements[j].sandstorm && x[i].placements[j - 1].sandstorm)) {
+          cycleCargo.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          if(x[i].placements[j].location == "Cargo Ship") {
+            cycleCargoShip.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket Low") {
+            cycleCargoLow.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket Mid") {
+            cycleCargoMid.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket High") {
+            cycleCargoHigh.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else {
+            console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
+          }
+        } else {
+          cycleCargo.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          if(x[i].placements[j].location == "Cargo Ship") {
+            cycleCargoShip.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket Low") {
+            cycleCargoLow.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket Mid") {
+            cycleCargoMid.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket High") {
+            cycleCargoHigh.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else {
+            console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
+          }
+        }
+      }
+
+      if(j != 0 && x[i].placements[j].gamepiece == "Hatch Panel") {
+        if((!x[i].placements[j].sandstorm && !x[i].placements[j - 1].sandstorm) || (x[i].placements[j].sandstorm && x[i].placements[j - 1].sandstorm)) {
+          cycleHatch.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          if(x[i].placements[j].location == "Cargo Ship") {
+            cycleHatchShip.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket Low") {
+            cycleHatchLow.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket Mid") {
+            cycleHatchMid.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket High") {
+            cycleHatchHigh.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else {
+            console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
+          }
+        } else {
+          cycleHatch.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          if(x[i].placements[j].location == "Cargo Ship") {
+            cycleHatchShip.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket Low") {
+            cycleHatchLow.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket Mid") {
+            cycleHatchMid.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else if(x[i].placements[j].location == "Rocket High") {
+            cycleHatchHigh.push(placementTime(x[i].placements[j - 1]) - placementTime(x[i].placements[j]));
+          } else {
+            console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
+          }
+        }
+      }
+
+      //if(result.locationsPlacedHatch.length > 0) {
+        /*for(var k = 0; k < result.locationsPlacedHatch.length; k++) {
           if(x[i].placements[j].gamepiece == "Hatch Panel" && (x[i].placements[j].location == result.locationsPlacedHatch[k])) {
             //console.log("Did not add ",x[i].placements[j].location , " to locationPlacedHatch");
           } else if(x[i].placements[j].gamepiece == "Hatch Panel" && (x[i].placements[j].location != result.locationsPlacedHatch[k])) {
@@ -321,42 +363,15 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
             result.locationsHatchString = string;
           }
         }
-        if(j != 0 && x[i].placements[j].gamepiece == "Hatch Panel") {
-          if((!x[i].placements[j].sandstorm && !x[i].placements[j - 1].sandstorm) || (x[i].placements[j].sandstorm && x[i].placements[j - 1].sandstorm)) {
-            cycleHatch.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            if(x[i].placements[j].location == "Cargo Ship") {
-              cycleHatchShip.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket Low") {
-              cycleHatchLow.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket Mid") {
-              cycleHatchMid.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket High") {
-              cycleHatchHigh.push(x[i].placements[j - 1].when - x[i].placements[j].when);
-            } else {
-              console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
-            }
-          } else {
-            cycleHatch.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            if(x[i].placements[j].location == "Cargo Ship") {
-              cycleHatchShip.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket Low") {
-              cycleHatchLow.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket Mid") {
-              cycleHatchMid.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            } else if(x[i].placements[j].location == "Rocket High") {
-              cycleHatchHigh.push((x[i].placements[j - 1].when + 135) - x[i].placements[j].when);
-            } else {
-              console.log("Hmm, appears there is an invalid location of", x[i].placements[j].location);
-            }
-          }
-        }
+
+        
       }
       else if(result.locationsPlacedHatch.length == 0) {
         result.locationsPlacedHatch.push(x[i].placements[j].location);
         //console.log("Added ",x[i].placements[j].location , " to locationPlacedHatch");
       } else {
         //console.log("Did not add to locationsPlacedHatch.");
-      }
+      }*/
 
       if(x[i].placements[j].gamepiece == "Cargo") {
         cargoCount++;
@@ -601,12 +616,14 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       }
       if(x[i].lifted.length > 0 && x[i].lifted.length != null) {
         for(var k = 0; k < x[i].lifted.length; k++) {
-          result.liftLevel3Count++;
+          //result.liftLevel3Count++;
         }
       }
       cargoPickup += x[i].cargoPickup;
       hatchPickup += x[i].hatchPanelPickup;
-      //result.drivetrainStrengthRaw += x[i];
+      result.drivetrainStrengthRaw += x[i].defenseCapability;
+      //console.log("x[",i,"].defenseCapability for team", result.teamNumber, "is", x[i].defenseCapability);
+      //console.log("result.drivetrainStrengthRaw for team", result.teamNumber, "is", result.drivetrainStrengthRaw);
     }
 
     cargoPickup = cargoPickup / result.matchesPlayed;
@@ -615,6 +632,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.hatchPanelPickupRaw = hatchPickup;
     result.sandstormCargoCountRaw = cargoSandstorm;
     result.sandstormHatchPanelCountRaw = hatchSandstorm;
+    result.drivetrainStrengthRaw = result.drivetrainStrengthRaw / x.length;
 
     if(isNaN(result.avgCargoCycleTime)) {
       result.avgCargoCycleTime = 0;
@@ -646,6 +664,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     if(isNaN(result.avgHatchPanelCycleTimeRocketMid)) {
       result.avgHatchPanelCycleTimeRocketMid = 0;
     }
+    if(isNaN(result.drivetrainStrengthRaw)) {
+      result.drivetrainStrengthRaw = 0;
+    }
   }
 
   //result.climbLevel3Time = _some time value_;
@@ -653,22 +674,22 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   //result.liftLevel3Count = _something_;
 
   //Ahh, a lovely long if-else chain.
-  if(cargoPickup > 0 && cargoPickup <= 10) {
+  if(cargoPickup > 0 && cargoPickup <= 15) {
     result.cargoPickup = {
       numeric: 10,
       name: "Poor"
     };
-  } else if(cargoPickup > 10 && cargoPickup <= 20) {
+  } else if(cargoPickup > 15 && cargoPickup <= 25) {
     result.cargoPickup = {
       numeric: 20,
       name: "Decent"
     };
-  } else if(cargoPickup > 20 && cargoPickup <= 30) {
+  } else if(cargoPickup > 25 && cargoPickup <= 35) {
     result.cargoPickup = {
       numeric: 30,
       name: "Good"
     };
-  } else if(cargoPickup > 30) {
+  } else if(cargoPickup > 35) {
     result.cargoPickup = {
       numeric: 40,
       name: "Excellent"
@@ -685,23 +706,58 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     };
   }
 
+
+
+  //Another if-else chain
+  if(result.drivetrainStrengthRaw > 0 && result.drivetrainStrengthRaw <= 10) {
+    result.drivetrainStrength = {
+      numeric: 10,
+      name: "Poor"
+    };
+  } else if(result.drivetrainStrengthRaw > 10 && result.drivetrainStrengthRaw <= 20) {
+    result.drivetrainStrength = {
+      numeric: 20,
+      name: "Decent"
+    };
+  } else if(result.drivetrainStrengthRaw > 20 && result.drivetrainStrengthRaw <= 30) {
+    result.drivetrainStrength = {
+      numeric: 30,
+      name: "Good"
+    };
+  } else if(result.drivetrainStrengthRaw > 30) {
+    result.drivetrainStrength = {
+      numeric: 40,
+      name: "Excellent"
+    };
+  } else if(result.drivetrainStrengthRaw == 0) {
+    result.drivetrainStrength = {
+      numeric: 0,
+      name: "N/A"
+    };
+  } else {
+    result.drivetrainStrength = {
+      numeric: 0,
+      name: "INVALID"
+    };
+  }
+
   //Ahh, another lovely long if-else chain.
-  if(hatchPickup > 0 && hatchPickup <= 10) {
+  if(hatchPickup > 0 && hatchPickup <= 15) {
     result.hatchPanelPickup = {
       numeric: 10,
       name: "Poor"
     };
-  } else if(hatchPickup > 10 && hatchPickup <= 20) {
+  } else if(hatchPickup > 15 && hatchPickup <= 25) {
     result.hatchPanelPickup = {
       numeric: 20,
       name: "Decent"
     };
-  } else if(hatchPickup > 20 && hatchPickup <= 30) {
+  } else if(hatchPickup > 25 && hatchPickup <= 35) {
     result.hatchPanelPickup = {
       numeric: 30,
       name: "Good"
     };
-  } else if(hatchPickup > 30) {
+  } else if(hatchPickup > 35) {
     result.hatchPanelPickup = {
       numeric: 40,
       name: "Excellent"
@@ -716,6 +772,13 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       numeric: 0,
       name: "INVALID"
     };
+  }
+
+  if(mapCargo.size > 0) {
+    result.locationsPlacedCargo = Array.from(mapCargo.keys());
+  }
+  if(mapHatch.size > 0) {
+    result.locationsPlacedHatch = Array.from(mapHatch.keys());
   }
 
   result.teamName = team.teamName;

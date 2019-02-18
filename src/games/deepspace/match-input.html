@@ -76,7 +76,7 @@
     <div class='row'>
       <div class='col-sm-6 form-group'>
         <label>Drivetrain Strength</label>
-        <select class='form-control' value.bind='model.drivetrainStrength & validate:rules'>
+        <select class='form-control' value.bind='model.defenseCapability & validate:rules'>
           <option></option>
           <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name}</option>
         </select>

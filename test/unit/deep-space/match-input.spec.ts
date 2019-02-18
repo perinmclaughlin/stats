@@ -54,8 +54,8 @@ describe('deep space match-input', () => {
     return page;
   }
  
-  it('validates valid data', () => {
-    return page.validationController.validate({
+  it('validates valid data', async () => {
+    await page.validationController.validate({
       object: data,
       rules: page.rules
     }).then((validationResults) => {
@@ -148,8 +148,8 @@ describe('deep space match-input', () => {
     return validateSingle("liftedBy", `A team cannot lift someone that is lifting them.`);
   });
 
-  it('validates valid placement', () => {
-    page.validationController.validate({
+  it('validates valid placement', async () => {
+    await page.validationController.validate({
       object: placement,
       rules: page.placementRules
     }).then((validationResults) => {

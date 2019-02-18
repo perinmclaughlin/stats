@@ -8,6 +8,7 @@ import {
   TeamMatch2019Entity,
   EventMatchSlots
 } from "../../persistence";
+import { MatchAndStats } from "./model";
 
 @autoinject
 export class EventTeam {
@@ -20,7 +21,7 @@ export class EventTeam {
   public matchTotal: number = 0;
   public foulTotal: number = 0;
   public isTrue: boolean;
-  public stats: DeepSpaceTeamStatistics;
+  public matchStats: MatchAndStats[];
 
   constructor(private dbContext: FrcStatsContext) {
     this.matches2019 = [];
@@ -41,7 +42,16 @@ export class EventTeam {
   }
 
   getStats() {
-    this.stats = makeTeamStats(this.team, this.matches2019);
+    this.matchStats = [];
+    this.matchStats.length = this.matches2019.length;
+    for(var i = 0; i < this.matchStats.length; i++) {
+      this.matchStats[i] = {
+        match: this.matches2019[i],
+        stats: makeTeamStats(this.team, [
+          this.matches2019[i]
+        ])
+      };
+    }
   }
 
   async getEvent(params) {

@@ -321,6 +321,8 @@ export interface TeamMatch2019Entity extends IEventTeamMatch {
   notes: string;
   /**Helps determine if lifted teams were lifted to the third level of the pedestal. */
   didLiftLevel3: boolean;
+  /**Rating of defensive capability. */
+  defenseCapability: QualitativeNumeric;
 }
 
 export interface DeepSpaceEvent {
@@ -449,7 +451,8 @@ export function make2019match(eventCode: string, teamNumber: string, matchNumber
     liftedSomeone: false,
     notes: null,
     placements: [],
-    didLiftLevel3: false
+    didLiftLevel3: false,
+    defenseCapability: 0
   };
 }
 

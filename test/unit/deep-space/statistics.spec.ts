@@ -88,6 +88,8 @@ describe('make team stats', () => {
     });
 
     var stats = makeTeamStats(team, data);
+    console.log("stats.locationsPlacedCargo for team", stats.teamNumber, "is", stats.locationsPlacedCargo);
+    console.log("stats.locationsPlacedHatch for team", stats.teamNumber, "is", stats.locationsPlacedHatch);
     expect(stats.locationsPlacedCargo).toEqual(["Rocket High", "Cargo Ship"]);
     expect(stats.locationsPlacedHatch).toEqual([]);
   });
@@ -112,6 +114,8 @@ describe('make team stats', () => {
     });
 
     var stats = makeTeamStats(team, data);
+    console.log("stats.locationsPlacedCargo for team", stats.teamNumber, "is", stats.locationsPlacedCargo);
+    console.log("stats.locationsPlacedHatch for team", stats.teamNumber, "is", stats.locationsPlacedHatch);
     expect(stats.locationsPlacedHatch).toEqual(["Rocket High", "Cargo Ship"]);
     expect(stats.locationsPlacedCargo).toEqual([]);
   });
@@ -206,6 +210,8 @@ describe('make team stats', () => {
     });
 
     var stats = makeTeamStats(team, data);
+    console.log("Avg Hatch Cycle Times for team", stats.teamNumber, "are:\nCargo Ship:", stats.avgHatchPanelCycleTimeCargoShip, "\nRocket Low:", stats.avgHatchPanelCycleTimeRocketLow, "\nRocket Mid:", stats.avgHatchPanelCycleTimeRocketMid, "\nRocket High:", stats.avgHatchPanelCycleTimeRocketHigh);
+    console.log("Avg Hatch Counts for team", stats.teamNumber, "are:\nTotal:", stats.avgHatchPanelCount, "\nSandstorm:", stats.avgSandstormHatchPanelCount);
     expect(stats.avgHatchPanelCycleTimeCargoShip).toBe(5);
     expect(stats.avgHatchPanelCycleTimeRocketLow).toBe(4);
     expect(stats.avgHatchPanelCycleTimeRocketMid).toBe(16);
