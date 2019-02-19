@@ -136,10 +136,6 @@ export class DeepSpaceTeamStatistics {
   drivetrainStrengthRaw: number;
 }
 
-function onlyUnique(value, index, self) { 
-  return self.indexOf(value) === index;
-}
-
 export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepSpaceTeamStatistics {
   let result = new DeepSpaceTeamStatistics();
   //Many many vars created just for the for loop below.
@@ -161,6 +157,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   let cycleHatchHigh = [];
   let mapCargo = new Map();
   let mapHatch = new Map();
+  let level3Times = [];
 
   result.matchCount = 0;
   result.cargoPickupRaw = 0;
@@ -216,6 +213,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.locationsPlacedHatch = [];
   result.defenseWeaknesses = "";
   result.drivetrainStrengthRaw = 0;
+  result.avgClimbLevel3Time = 999;
 
   result.matchCount = x.length;
 
@@ -227,6 +225,8 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     var alreadyAddedCargo = false;
     var alreadyAddedHatch = false;
 
+    level3Times.push(x[i].level3ClimbBegin - x[i].level3ClimbEnd);
+
     if((x[i].didLiftLevel3 && x[i].lifted.length > 0) && x[i].liftedSomeone) {
       result.liftLevel3Count += x[i].lifted.length;
     } else if((!x[i].didLiftLevel3 && x[i].lifted.length > 0) && x[i].liftedSomeone) {
@@ -237,8 +237,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     }
 
     for(var j = 0; j < x[i].placements.length; j++) {
-      let index = null;
-      
       if(x[i].placements[j].gamepiece == "Cargo") {
         mapCargo.set(x[i].placements[j].location, 1);
       } else if(x[i].placements[j].gamepiece == "Hatch Panel") {
@@ -633,7 +631,13 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     };
   }
 
-
+  if(level3Times.length > 0) {
+    result.avgClimbLevel3Time = 0;
+    for(var i = 0; i < level3Times.length; i++) {
+      result.avgClimbLevel3Time += level3Times[i];
+    }
+    result.avgClimbLevel3Time = result.avgClimbLevel3Time / level3Times.length;
+  }
 
   //Another if-else chain
   if(result.drivetrainStrengthRaw > 0 && result.drivetrainStrengthRaw <= 10) {

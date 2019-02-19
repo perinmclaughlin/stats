@@ -120,6 +120,10 @@ export class EventTeamsPage {
     this.teamsData.sort((a,b) => b.hatchPanelCountRocketMidRaw - a.hatchPanelCountRocketMidRaw);
   }
 
+  public sortByClimbTime() {
+    this.teamsData.sort((a,b) => a.avgClimbLevel3Time - b.avgClimbLevel3Time);
+  }
+
   public sortByHatchCountHigh() {
     this.teamsData.sort((a,b) => b.hatchPanelCountRocketHighRaw - a.hatchPanelCountRocketHighRaw);
   }

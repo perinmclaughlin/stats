@@ -44,6 +44,7 @@
           <th class="column-small"># of Teams Lifted</th>
           <th class="column-medium">% of Matches (Cargo)</th>
           <th class="column-medium">% of Matches (Hatch)</th>
+          <th class="column-large clickable" click.delegate="sortByClimbTime()">Climb Time (LvL 3)</th>
           <th class="column-medium">Defense Rating</th>
         </tr>
         <tr repeat.for="teamData of teamsData" style="font-size: 100%">
@@ -118,6 +119,9 @@
           </td>
           <td>
             ${teamData.hatchPanelPercent | numeric:"0."}%
+          </td>
+          <td>
+            ${teamData.avgClimbLevel3Time | numeric:"0.00"} sec.
           </td>
           <td>
             <span show.bind='!showDevStuff'>${teamData.drivetrainStrength.name}</span><span show.bind='showDevStuff'>${teamData.drivetrainStrengthRaw | numeric: 0.0000}/40</span>
