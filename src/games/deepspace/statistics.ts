@@ -134,6 +134,10 @@ export class DeepSpaceTeamStatistics {
   defenseWeaknesses: string;
   /**The raw value of drivetrainStrength. */
   drivetrainStrengthRaw: number;
+  /**Foul count. */
+  foulCount: number;
+  /**Failure count. */
+  failureCount: number;
 }
 
 export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepSpaceTeamStatistics {
@@ -214,6 +218,8 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.defenseWeaknesses = "";
   result.drivetrainStrengthRaw = 0;
   result.avgClimbLevel3Time = 999;
+  result.foulCount = 0;
+  result.failureCount = 0;
 
   result.matchCount = x.length;
 
@@ -224,6 +230,13 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   for(var i = 0; i < x.length; i++) {
     var alreadyAddedCargo = false;
     var alreadyAddedHatch = false;
+
+    if(x[i].isFoul) {
+      result.foulCount++;
+    }
+    if(x[i].isFailure) {
+      result.failureCount++;
+    }
 
     level3Times.push(x[i].level3ClimbBegin - x[i].level3ClimbEnd);
 

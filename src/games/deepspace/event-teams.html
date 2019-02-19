@@ -41,11 +41,13 @@
           <th class="column-medium clickable" click.delegate="sortByHatchCount()">Avg Hatch Count</th>
           <th class="column-medium">Avg Cargo Sandstorm</th>
           <th class="column-medium">Avg Hatch Sandstorm</th>
-          <th class="column-small"># of Teams Lifted</th>
+          <th class="column-small"># of Teams Lifted (lvl2[lvl3])</th>
           <th class="column-medium">% of Matches (Cargo)</th>
           <th class="column-medium">% of Matches (Hatch)</th>
           <th class="column-large clickable" click.delegate="sortByClimbTime()">Climb Time (LvL 3)</th>
           <th class="column-medium">Defense Rating</th>
+          <th>Foul Count</th>
+          <th>Failure Count</th>
         </tr>
         <tr repeat.for="teamData of teamsData" style="font-size: 100%">
           <td>
@@ -111,8 +113,8 @@
             <span show.bind='!showDevStuff'>${teamData.avgSandstormHatchPanelCount | numeric:"0.0"}</span><span show.bind='showDevStuff'>${teamData.sandstormHatchPanelCountRaw}/${teamData.hatchPanelPlacedMatchCount}</span>
           </td>
           <td>
-            <!--${teamData.lifted.length}-->
-            ${teamData.teamsLiftedCount}
+            <!--${teamData.teamsLiftedCount}-->
+            ${teamData.liftLevel2Count}[${teamData.liftLevel3Count}]
           </td>
           <td>
             ${teamData.cargoPercent | numeric:"0."}%
@@ -125,6 +127,12 @@
           </td>
           <td>
             <span show.bind='!showDevStuff'>${teamData.drivetrainStrength.name}</span><span show.bind='showDevStuff'>${teamData.drivetrainStrengthRaw | numeric: 0.0000}/40</span>
+          </td>
+          <td>
+            ${teamData.foulCount}
+          </td>
+          <td>
+            ${teamData.failureCount}
           </td>
         </tr>
       </table>
