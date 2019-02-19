@@ -23,9 +23,7 @@
           ${event.name}
         </a>
       </b>
-      match ${model.matchNumber}, ${slots.name}
-    </h3>
-
+      match ${model.matchNumber}<span show.bind='true' click.delegate="foundIt()">,</span> ${slots.name}</h3><span show.bind='secret'><p style='font-size: 50%'>You found me.</p></span>
 
     <!--Buttons for switching pages, saving, and adding-->
     <div class='row'>
@@ -55,7 +53,7 @@
     <br>
 
     <!--Drop down menus for the cargo and hatch pickups-->
-    <h3>Grabber Capabilities</h3>
+    <h3>Grabber Capabilities (Floor)</h3>
     <div class='row'>
       <div class='col-sm-6 form-group'>
         <label>Cargo Pickup </label>

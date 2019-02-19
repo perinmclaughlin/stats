@@ -99,8 +99,13 @@ export class EventTeamsPage {
   }
 
   public sortByHatchCount() {
-    console.info(this.teamsData.map(x => x.avgCargoCycleTime));
+    //console.info(this.teamsData.map(x => x.avgCargoCycleTime));
     this.teamsData.sort((a,b) => b.avgHatchPanelCount - a.avgHatchPanelCount);
+  }
+
+  public sortByCount() {
+    //console.info(this.teamsData.map(x => x.avgCargoCycleTime));
+    this.teamsData.sort((a,b) => b.avgGamepieceCount - a.avgGamepieceCount);
   }
 
   public sortByHatchCountShip() {

@@ -235,42 +235,10 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       result.liftLevel2Count += 0;
       result.liftLevel3Count += 0;
     }
-    //result.teamsLiftedCount += (result.liftLevel2Count + result.liftLevel3Count);
 
     for(var j = 0; j < x[i].placements.length; j++) {
       let index = null;
-      /*if(result.locationsPlacedCargo.length > 0) {
-        for(var k = 0; k < result.locationsPlacedCargo.length; k++) {
-          if(x[i].placements[j].gamepiece == "Cargo" && (x[i].placements[j].location == result.locationsPlacedCargo[k])) {
-            //console.log("Did not add ",x[i].placements[j].location , " to locationPlacedCargo");
-          } else if(x[i].placements[j].gamepiece == "Cargo" && (x[i].placements[j].location != result.locationsPlacedCargo[k])) {
-            result.locationsPlacedCargo.push(x[i].placements[j].location);
-            //console.log("Added ",x[i].placements[j].location , " to locationPlacedCargo");
-          } else {
-            //console.log("Stopped adding to locationPlacedCargo");
-          }
-        }
-        //console.log(result.locationsPlacedCargo);
-        let unique = result.locationsPlacedCargo.filter( onlyUnique );
-        //Now we need to create a string that uses proper english syntax.
-        let string = "";
-        result.locationsPlacedCargo = unique;
-        for(var y = 0; y < result.locationsPlacedCargo.length; y++) {
-          if(y == result.locationsPlacedCargo.length - 1) {
-            string = result.locationsCargoString.concat(result.locationsPlacedCargo[y].toString());
-            result.locationsCargoString = string;
-          } else {
-            string = result.locationsCargoString.concat(result.locationsPlacedCargo[y].toString(), ", ");
-            result.locationsCargoString = string;
-          }
-        }
-      }
-      else if(result.locationsPlacedCargo.length == 0) {
-        result.locationsPlacedCargo.push(x[i].placements[j].location);
-        //console.log("Added ",x[i].placements[j].location , " to locationPlacedCargo");
-      } else {
-        //console.log("Did not add to locationsPlacedCargo.");
-      }*/
+      
       if(x[i].placements[j].gamepiece == "Cargo") {
         mapCargo.set(x[i].placements[j].location, 1);
       } else if(x[i].placements[j].gamepiece == "Hatch Panel") {
@@ -338,40 +306,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
           }
         }
       }
-
-      //if(result.locationsPlacedHatch.length > 0) {
-        /*for(var k = 0; k < result.locationsPlacedHatch.length; k++) {
-          if(x[i].placements[j].gamepiece == "Hatch Panel" && (x[i].placements[j].location == result.locationsPlacedHatch[k])) {
-            //console.log("Did not add ",x[i].placements[j].location , " to locationPlacedHatch");
-          } else if(x[i].placements[j].gamepiece == "Hatch Panel" && (x[i].placements[j].location != result.locationsPlacedHatch[k])) {
-            result.locationsPlacedHatch.push(x[i].placements[j].location);
-            //console.log("Added ",x[i].placements[j].location , " to locationPlacedHatch");
-          } else {
-            //console.log("Stopped adding to locationPlacedHatch");
-          }
-        }
-        //console.log(result.locationsPlacedHatch);
-        let unique = result.locationsPlacedHatch.filter( onlyUnique );
-        let string = "";
-        result.locationsPlacedHatch = unique;
-        for(var y = 0; y < result.locationsPlacedHatch.length; y++) {
-          if(y == result.locationsPlacedHatch.length - 1) {
-            string = result.locationsHatchString.concat(result.locationsPlacedHatch[y].toString());
-            result.locationsHatchString = string;
-          } else {
-            string = result.locationsHatchString.concat(result.locationsPlacedHatch[y].toString(), ", ");
-            result.locationsHatchString = string;
-          }
-        }
-
-        
-      }
-      else if(result.locationsPlacedHatch.length == 0) {
-        result.locationsPlacedHatch.push(x[i].placements[j].location);
-        //console.log("Added ",x[i].placements[j].location , " to locationPlacedHatch");
-      } else {
-        //console.log("Did not add to locationsPlacedHatch.");
-      }*/
 
       if(x[i].placements[j].gamepiece == "Cargo") {
         cargoCount++;
@@ -466,8 +400,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.avgSandstormHatchPanelCount = hatchSandstorm / result.matchesPlayed;
 
     result.teamsLiftedCount += (result.liftLevel2Count + result.liftLevel3Count);
-    //console.log("result.teamsLiftedCount for", result.teamNumber, "is", result.teamsLiftedCount);
-    //console.log("\n# of teams lifted to lvl 2: ", result.liftLevel2Count, "\n# of teams lifted to lvl 3: ", result.liftLevel3Count, "\n# of teams lifted: ", result.teamsLiftedCount);
 
     //Raw cycle times --> NOT ELLERY'S CYCLE TIMES
     result.cargoCycleTimeRaw = (result.cargoCountRaw / 160) * 60;
@@ -613,11 +545,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       }
       if(x[i].level3ClimbSucceeded) {
         result.climbLevel3Successes++;
-      }
-      if(x[i].lifted.length > 0 && x[i].lifted.length != null) {
-        for(var k = 0; k < x[i].lifted.length; k++) {
-          //result.liftLevel3Count++;
-        }
       }
       cargoPickup += x[i].cargoPickup;
       hatchPickup += x[i].hatchPanelPickup;

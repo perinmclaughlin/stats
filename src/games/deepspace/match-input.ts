@@ -46,6 +46,7 @@ export class MatchInputPage {
   public secondsStartTemp: number;
   public secondsEndTemp: number;
   public level3SucceedTemp: boolean;
+  public secret: boolean;
 
   public rules: any[];
   public placementRules: any[];
@@ -62,6 +63,7 @@ export class MatchInputPage {
   ) {
     this.validationController = validationControllerFactory.createForCurrentScope();
     this.hasSaved = false;
+    this.secret = false;
     this.slots = null;
   }
 
@@ -259,6 +261,10 @@ export class MatchInputPage {
 
   public deleteRow(index: number) {
     this.model.placements.splice(index, 1);
+  }
+
+  public foundIt() {
+    this.secret = !this.secret;
   }
 
 

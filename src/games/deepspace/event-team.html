@@ -44,8 +44,8 @@
                   <span show.bind="!$last"><br></span>
                 </span>
               </td>
-              <td>${m.match.cargoPickup} </td>
-              <td>${m.match.hatchPanelPickup}</td>
+              <td>${m.stats.cargoPickup.name} </td>
+              <td>${m.stats.hatchPanelPickup.name}</td>
               <td>${m.match.level3ClimbSucceeded ? 3 : (m.match.level2ClimbSucceeded*2) }</td>
               <td>${m.match.lifted.length}</td>
               <td>
