@@ -14,9 +14,9 @@ export class CustomValidationRules {
       (value: string, obj: any) => {
         if(value == null || value == "") {
           return true;
-        } else if(value == <any>Infinity || value == <any>-Infinity) {
+        } /*else if(value == <any>Infinity || value == <any>-Infinity) {
           return true;
-        }
+        }*/
         return /^-?\d*$/.test(value);
       }, "Your input needs to be a number."
     );
