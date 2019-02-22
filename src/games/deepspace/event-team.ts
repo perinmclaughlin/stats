@@ -68,7 +68,7 @@ export class EventTeam {
     this.eventMatches = [];
     let allEventMatches = await this.dbContext.getEventMatches(this.eventTeam.year, this.eventTeam.eventCode);
     allEventMatches.forEach(eventMatch => {
-      if (EventMatchSlots.some(slot => eventMatch[slot.name] == this.eventTeam.teamNumber)) {
+      if (EventMatchSlots.some(slot => eventMatch[slot.prop] == this.eventTeam.teamNumber)) {
         this.eventMatches.push(eventMatch);
       }
     })
