@@ -15,6 +15,8 @@ export class EventTeamsPage {
   public teamsData: DeepSpaceTeamStatistics[];
   public gameName: string;
   public showDevStuff: boolean;
+  public noCycleTime = 160.0
+  public noClimbTime = 999.0
 
   constructor(
     private dbContext: FrcStatsContext,
@@ -167,5 +169,43 @@ export class EventTeamsPage {
 
   public sortByHatchCycleHigh() {
     this.teamsData.sort((a,b) => a.avgHatchPanelCycleTimeRocketHigh - b.avgHatchPanelCycleTimeRocketHigh);
+  }
+
+  public sortByCargoCountSandstorm() {
+    this.teamsData.sort((a,b) => b.avgSandstormCargoCount - a.avgSandstormCargoCount);
+  }
+
+  public sortByHatchCountSandstorm() {
+    this.teamsData.sort((a,b) => b.avgSandstormHatchPanelCount - a.avgSandstormHatchPanelCount);
+  }
+
+  public sortByLevel2Climb() {
+    this.teamsData.sort((a,b) => {
+      let x = b.climbLevel2Successes - a.climbLevel2Successes;
+      if(x == 0) {
+        return b.climbLevel2Attempts - a.climbLevel2Attempts;
+      }else {
+        return x;
+      }
+    });
+  }
+
+  public sortByLevel3Climb() {
+    this.teamsData.sort((a,b) => {
+      let x = b.climbLevel3Successes - a.climbLevel3Successes;
+      if(x == 0) {
+        return b.climbLevel3Attempts - a.climbLevel3Attempts;
+      }else {
+        return x;
+      }
+    });
+  }
+
+  public sortByLevel2Lift() {
+    this.teamsData.sort((a,b) => b.liftLevel2Count - a.liftLevel2Count);
+  }
+
+  public sortByLevel3Lift() {
+    this.teamsData.sort((a,b) => b.liftLevel3Count - a.liftLevel3Count);
   }
 }

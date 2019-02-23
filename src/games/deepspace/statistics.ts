@@ -191,6 +191,10 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.hatchPanelCycleTimeRocketHighRaw = 0;
   result.hatchPanelCycleTimeRocketLowRaw = 0;
   result.hatchPanelCycleTimeRocketMidRaw = 0;
+  result.climbLevel2Attempts = 0;
+  result.climbLevel2Successes = 0;
+  result.climbLevel3Attempts = 0;
+  result.climbLevel3Successes = 0;
 
   result.avgCargoCycleTime = 160;
   result.avgCargoCycleTimeCargoShip = 160;
@@ -238,7 +242,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       result.failureCount++;
     }
 
-    level3Times.push(x[i].level3ClimbBegin - x[i].level3ClimbEnd);
+    if(x[i].level3ClimbAttempted && x[i].level3ClimbSucceeded && x[i].level3ClimbBegin != null && x[i].level3ClimbEnd != null) {
+      level3Times.push(x[i].level3ClimbBegin - x[i].level3ClimbEnd);
+    }
 
     if((x[i].didLiftLevel3 && x[i].lifted.length > 0) && x[i].liftedSomeone) {
       result.liftLevel3Count += x[i].lifted.length;
