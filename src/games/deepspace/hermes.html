@@ -1,0 +1,27 @@
+<template>
+    <div class='container-fluid'>
+        <h1>
+            <b>
+                <a route-href='route: event-team; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode, teamNumber: teamNumber}'>
+                    ${team.teamNumber} (${team.teamName})
+                </a>
+                at
+                <a route-href='route: event-matches; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode'}>
+                   ${event.name} (${event.year})
+                </a>
+            </a>
+            </b>
+        </h1>
+
+        <aubs-tabset active.bind='activeTab'>
+            <aubs-tab header='Matches'>
+                <table class="table table-hover">
+                    <tr>
+                        <th>Match Number</th>
+                        
+                    </tr>
+                </table>
+            </aubs-tab>
+        </aubs-tabset>
+    </div>
+</template>
