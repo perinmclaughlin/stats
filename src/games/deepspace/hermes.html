@@ -1,27 +1,195 @@
 <template>
     <div class='container-fluid'>
         <h1>
-            <b>
-                <a route-href='route: event-team; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode, teamNumber: teamNumber}'>
-                    ${team.teamNumber} (${team.teamName})
-                </a>
-                at
-                <a route-href='route: event-matches; params.bind: {year: eventTeam.year, eventCode: eventTeam.eventCode'}>
-                   ${event.name} (${event.year})
-                </a>
-            </a>
-            </b>
+            match: ${eventMatch.matchNumber}
         </h1>
-
-        <aubs-tabset active.bind='activeTab'>
-            <aubs-tab header='Matches'>
-                <table class="table table-hover">
-                    <tr>
-                        <th>Match Number</th>
-                        
-                    </tr>
-                </table>
-            </aubs-tab>
-        </aubs-tabset>
+        <h1>
+            <a route-href='route: event-matches; params.bind: {year: event.year,
+                    eventCode: event.eventCode }'>
+                ${event.name}
+            </a>
+        </h1>
+        <table class="table table-hover">
+            <tr>
+                <th>Match Number</th>
+                <th>
+                    Team Name
+                </th>
+                <th>
+                        Cargo Pickup
+                </th>
+                         Hatch Pickup
+                <th>
+                    Avg Cargo Cycle time
+                </th>
+                <th>
+                    Avg Hatch Cycle time
+                </th>
+                <th>
+                        Avg Cargo Cycle Time (Cargo Ship)
+                </th>
+                <th>
+                        Avg Hatch Cycle Time (Cargo Ship)
+                </th>
+                <th>
+                        Avg Cargo Cycle Time (Rocket Low)
+                </th>
+                <th>
+                        Avg Hatch Cycle Time (Rocket Low)
+                </th>
+                <th>
+                        Avg Cargo Cycle Time (Rocket Mid)
+                </th>
+                <th>
+                        Avg Hatch Cycle Time (Rocket Mid)
+                </th>
+                <th>
+                        Avg Cargo Cycle Time (Rocket High)
+                </th>
+                <th>
+                        Avg Hatch Cycle Time (Rocket High)
+                </th>
+                <th>
+                        Avg Gamepiece Count
+                </th>
+                <th>
+                        Avg Cargo Count
+                </th>
+                <th>
+                        Avg Hatch Count	
+                </th>
+                <th>
+                        Avg Cargo Sandstorm	
+                </th>
+                <th>
+                        Avg Hatch Sandstorm
+                </th>
+                <th>
+                        Level 2 climbs
+                </th>
+                <th>
+                        Level 3 climbs
+                </th>
+                <th>
+                        Level 2 Teams Lifted
+                </th>
+                <th>
+                        Level 3 Teams Lifted
+                </th>
+                <th>
+                        % of Matches (Cargo)
+                </th>
+                <th>
+                        % of Matches (Hatch)
+                </th>
+                <th>
+                        Climb Time (LvL 3)
+                </th>
+                <th>
+                        Defense Rating
+                </th>
+                <th>
+                        Foul Count
+                </th>
+                <th>
+                        Failure Count
+                </th>
+            </tr>
+            <tr repeat.for="team of teams">
+                <td>
+                    ${team.team.teamNumber}
+                </td>
+                <td>
+                    ${team.team.teamName}
+                </td>
+                <td>
+                        ${teamData.cargoPickup.name}
+                </td>
+                <td>
+                        ${teamData.hatchPanelPickup.name}
+                </td>
+                <td>
+                        ${team.stats.avgCargoCycleTime | numeric:"0.00"}
+                </td>
+                <td>
+                        ${team.stats.avgHatchPanelCycleTime | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgCargoCycleTimeCargoShip | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgHatchPanelCycleTimeCargoShip | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgCargoCycleTimeRocketLow | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgHatchPanelCycleTimeRocketLow | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgCargoCycleTimeRocketMid | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgHatchPanelCycleTimeRocketMid | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgCargoCycleTimeRocketHigh | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgHatchPanelCycleTimeRocketHigh | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.avgGamepieceCount | numeric:"0.0"}
+                </td>
+                <td>
+                        ${teamData.avgCargoCount | numeric:"0.0"}
+                </td>
+                <td>
+                        ${teamData.avgCargoCount | numeric:"0.0"}
+                </td>
+                <td>
+                        ${teamData.avgHatchPanelCount | numeric:"0.0"}
+                </td>
+                <td>
+                        ${teamData.avgSandstormCargoCount | numeric:"0.0"}
+                </td>
+                <td>
+                        ${teamData.avgSandstormHatchPanelCount | numeric:"0.0"}
+                </td>
+                <td>
+                    ${team.stats.climbLevel2Successes}/${team.stats.climbLevel2Attempts}
+                </td>
+                <td>
+                    ${team.stats.climbLevel3Successes}/${team.stats.climbLevel3Attempts}
+                </td>
+                <td>
+                        ${teamData.liftLevel2Count}
+                </td>
+                <td>
+                        ${teamData.liftLevel3Count}
+                </td>
+                <td>
+                        ${teamData.cargoPlacedMatchCount}/${teamData.matchCount}
+                </td>
+                <td>
+                        ${teamData.hatchPanelPlacedMatchCount}/${teamData.matchCount}
+                </td>
+                <td>
+                        ${teamData.avgClimbLevel3Time | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.drivetrainStrength.name}
+                </td>
+                <td>
+                        ${team.stats.avgClimbLevel3Time | numeric:"0.00"}
+                </td>
+                <td>
+                        ${teamData.foulCount}
+                </td>
+                <td>
+                        ${teamData.failureCount}
+                </td>
+            </tr>
+        </table>
     </div>
 </template>

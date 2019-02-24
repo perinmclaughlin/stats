@@ -68,7 +68,6 @@ export class MatchInputPage {
   }
 
   public async activate(params) {
-    let promise = Promise.resolve("yup");
     scrollToTop();
     this.observeFields();
 
