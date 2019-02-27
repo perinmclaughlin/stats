@@ -1,13 +1,9 @@
 <template>
     <div class='container-fluid'>
         <h1>
-            match: ${eventMatch.matchNumber}
-        </h1>
-        <h1>
             <a route-href='route: event-matches; params.bind: {year: event.year,
                     eventCode: event.eventCode }'>
-                ${event.name}
-            </a>
+                ${event.name}</a>: Match ${eventMatch.matchNumber}
         </h1>
         <table class="table table-hover">
             <tr>
@@ -99,7 +95,7 @@
             </tr>
             <tr repeat.for="team of teams">
                 <td>
-                  ${team.team.teamNumber}
+                  <a style="display: block;" route-href="route.bind:'event-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: team.stats.teamNumber}">${team.team.teamNumber}</a>
                 </td>
                 <td>
                   ${team.team.teamName}
