@@ -62,7 +62,9 @@ export class CustomValidationRules {
         let end = obj[endPropName];
         start = parseInt(<any>start);
         end = parseInt(<any>end);
-        if(isNaN(start) || isNaN(end)) {
+        if((isNaN(start) || isNaN(end)) && isNaN(start) != isNaN(end)) {
+          return false;
+        } else if(isNaN(start) && isNaN(end)) {
           return true;
         }
         return start > end;
