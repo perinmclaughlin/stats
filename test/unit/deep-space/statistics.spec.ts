@@ -556,4 +556,56 @@ describe('make team stats', () => {
     expect(results.liftLevel3Count).toBe(0);
 
   });
+
+  it("should calculate climb time", () => {
+    var data: TeamMatch2019Entity[] = [
+      make2019match('STUFF', team.teamNumber, '1'),
+    ];
+    data[0].level3ClimbAttempted = true;
+    data[0].level3ClimbSucceeded = true;
+    data[0].level3ClimbBegin = 20;
+    data[0].level3ClimbEnd = 5;
+
+    let results = makeTeamStats(team, data);
+    expect(results.avgClimbLevel3Time).toBe(15);
+  });
+
+  it("should ignore climb time for climb not attempted", () => {
+    var data: TeamMatch2019Entity[] = [
+      make2019match('STUFF', team.teamNumber, '1'),
+    ];
+    data[0].level3ClimbAttempted = false;
+    data[0].level3ClimbSucceeded = false;
+    data[0].level3ClimbBegin = 20;
+    data[0].level3ClimbEnd = 5;
+
+    let results = makeTeamStats(team, data);
+    expect(results.avgClimbLevel3Time).toBe(999);
+  });
+
+  it("should ignore climb time for climb not succeeded", () => {
+    var data: TeamMatch2019Entity[] = [
+      make2019match('STUFF', team.teamNumber, '1'),
+    ];
+    data[0].level3ClimbAttempted = true;
+    data[0].level3ClimbSucceeded = false;
+    data[0].level3ClimbBegin = 20;
+    data[0].level3ClimbEnd = 5;
+
+    let results = makeTeamStats(team, data);
+    expect(results.avgClimbLevel3Time).toBe(999);
+  });
+
+  it("should ignore climb time for climb times not provided", () => {
+    var data: TeamMatch2019Entity[] = [
+      make2019match('STUFF', team.teamNumber, '1'),
+    ];
+    data[0].level3ClimbAttempted = true;
+    data[0].level3ClimbSucceeded = true;
+    data[0].level3ClimbBegin = null;
+    data[0].level3ClimbEnd = null;
+
+    let results = makeTeamStats(team, data);
+    expect(results.avgClimbLevel3Time).toBe(999);
+  });
 })
