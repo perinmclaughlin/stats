@@ -482,7 +482,15 @@ export class MatchInputPage {
       }
     }
   }
+  UwU()
 
+  {
+
+      //var str = (<HTMLTextAreaElement>document.getElementById("UwU")).value;
+
+      alert("disappointment");
+
+  }   
   public async gotoMatch(matchNumber: string) {
     let eventCode = this.model.eventCode;
     let year = this.event.year;
