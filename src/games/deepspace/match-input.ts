@@ -232,14 +232,14 @@ export class MatchInputPage {
       when: null,
     };
     if (this.model.placements.length > 0) {
-      if ((this.model.placements[this.model.placements.length - 1].when - 5) <= 0) {
-        placement.when = 0;
+      if ((this.model.placements[this.model.placements.length - 1].when - 5) < 1) {
+        placement.when = 1;
       } else {
         placement.when = this.model.placements[this.model.placements.length - 1].when - 5;
       }
-      if((this.model.placements[this.model.placements.length - 1].when - 5) < 0 && this.model.placements[this.model.placements.length - 1].sandstorm) {
+      if((this.model.placements[this.model.placements.length - 1].when - 5) < 1 && this.model.placements[this.model.placements.length - 1].sandstorm) {
         placement.sandstorm = !this.model.placements[this.model.placements.length - 1].sandstorm;
-        placement.when = 135 + (this.model.placements[this.model.placements.length - 1].when);
+        placement.when = 135 + (this.model.placements[this.model.placements.length - 1].when - 5);
       } else {
         placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
       }
