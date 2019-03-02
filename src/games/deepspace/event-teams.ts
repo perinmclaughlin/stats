@@ -80,8 +80,15 @@ export class EventTeamsPage {
   }
 
   public sortByCargoCount() {
-    console.info(this.teamsData.map(x => x.avgCargoCycleTime));
     this.teamsData.sort((a,b) => b.avgCargoCount - a.avgCargoCount);
+  }
+
+  public sortByCargoPickup() {
+    this.teamsData.sort((a,b) => b.cargoPickupRaw - a.cargoPickupRaw);
+  }
+
+  public sortByHatchPickup() {
+    this.teamsData.sort((a,b) => b.hatchPanelPickupRaw - a.hatchPanelPickupRaw);
   }
 
   public sortByCargoCountShip() {
