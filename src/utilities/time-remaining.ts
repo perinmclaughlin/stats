@@ -22,7 +22,7 @@ export class TimeRemaining {
     this.id = `counter_${TimeRemaining.idCounter}`;
     this.max = 135;
     this.auto = true;
-    this.min = 0;
+    this.min = 1;
   }
 
   public get value() {
