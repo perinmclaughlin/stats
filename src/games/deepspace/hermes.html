@@ -94,12 +94,12 @@
                 Failure Count
               </th>
             </tr>
-            <tr repeat.for="team of teams">
+            <tr class="${team.slot.prop.substr(0, 1) == 'r' ? 'red' : 'blue'}" repeat.for="team of teams">
               <td>
-                <a style="display: block;" route-href="route.bind:'event-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: team.stats.teamNumber}">${team.team.teamNumber}</a>
+                <a style="display: block;" route-href="route.bind:'event-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: team.team.teamNumber}">${team.team.teamNumber}</a>
               </td>
               <td>
-                ${team.team.teamName}
+                ${team.team.teamName} (${team.slot.name})
               </td>
               <td>
                 ${team.stats.cargoPickup.name}

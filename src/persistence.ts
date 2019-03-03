@@ -738,7 +738,12 @@ export function makeBingoEntity(year: string, eventCode: string, cell: string): 
   };
 }
 
-export var EventMatchSlots = [
+export interface EventMatchSlot {
+  prop: string;
+  name: string;
+}
+
+export var EventMatchSlots: EventMatchSlot[] = [
   { prop: "red1", name: "Red 1"},
   { prop: "red2", name: "Red 2"},
   { prop: "red3", name: "Red 3"},
