@@ -1,0 +1,36 @@
+#duhTable {
+  display: grid;
+  grid-template-columns: 70px 150px 120px 120px repeat(6, 70px);
+  grid-column-gap: 10px;
+  height: 500px;
+  width: 1000px;
+  overflow-y: auto;
+
+}
+#SeedTable {
+  display: grid;
+  grid-template-columns: 120px 150px 150px;
+  grid-column-gap: 10px;
+  height: 500px;
+  width: 1000px;
+  overflow-y: auto;
+
+}
+
+.table-head, .table-row, .table-body {
+  display: contents;
+
+}
+
+.table-head > .table-row > div {
+  position: sticky;
+  top: 0;
+  background-color: white;
+
+}
+.table-head > .table-row > div.red {
+  background-color: #fee;
+}
+.table-head > .table-row > div.blue {
+  background-color: #eef;
+}

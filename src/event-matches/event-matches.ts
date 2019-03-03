@@ -98,7 +98,7 @@ export class EventMatches {
   }
 
   getEventMatches(){
-    return this.dbContext.eventMatches.where(["year", "eventCode"]).equals([this.event.year, this.event.eventCode]).toArray().then(eventMatches => {
+    return this.dbContext.getEventMatches(this.event.year, this.event.eventCode).then(eventMatches => {
       this.eventMatches = eventMatches;
       this.eventMatches.sort((a,b) => naturalSort(a.matchNumber, b.matchNumber));
      }).then(() => {

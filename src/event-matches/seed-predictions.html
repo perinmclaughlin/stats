@@ -1,0 +1,110 @@
+<template>
+  <require from="aurelia-bootstrap/tabs/aubs-tab"></require>
+  <require from="aurelia-bootstrap/tabs/aubs-tabset"></require>
+  <require from="aurelia-validation/validate-binding-behavior"></require>
+  <require from="./seed-predictions.css"></require>
+
+  <div class='container-fluid'>
+    <h1> ${event.name} * ${gameName} * ${event.calendarYear}</h1>
+
+    <!--<p> Maybe make a tab for match schedule, and make a tab for team list? </p>-->
+    <ul class='nav nav-tabs'>
+      <li class='nav-item'>
+        <a class='nav-link'
+          route-href="route: event-matches; params.bind: {year: event.year, eventCode: event.eventCode}">Matches</a>
+      </li>
+      <li class='nav-item'>
+        <a class='nav-link'
+          route-href="route: event-teams; params.bind: {year: event.year, eventCode: event.eventCode}">Teams
+          (${teamsLength})</a>
+      </li>
+      <li class='nav-item'>
+        <a class='nav-link active'
+          route-href="route: seed-predictions; params.bind: {year: event.year, eventCode: event.eventCode}">
+          Seed Predictions
+        </a>
+      </li>
+    </ul>
+    <div class='tab-content'>
+      <h1>Win Predictions</h1>
+      <div id='duhTable' role="table">
+        <div class='table-head'>
+          <div class='table-row'>
+            <div>Match</div>
+            <div>Win Prediction</div>
+            <div>other RP, Red </div>
+            <div>other RP, Blue </div>
+            <div class='red'>Red 1</div>
+            <div class='red'>Red 2</div>
+            <div class='red'>Red 3</div>
+            <div class='blue'>Blue 1</div>
+            <div class='blue'>Blue 2</div>
+            <div class='blue'>Blue 3</div>
+          </div>
+        </div>
+        <div class='table-body'>
+          <div class='table-row' repeat.for="match of eventMatches">
+            <div> ${match.matchNumber}</div>
+            <div class='form-group'>
+              <select class='form-control' value.bind='match.winPrediction & validate:rules' change.delegate='calculateSeed()'>
+                <option></option>
+                <option repeat.for="opt of winOptions" value-bind="opt">${opt}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <select class="form-control" value.bind='match.redRP & validate:rules' change.delegate='calculateSeed()'>
+                <option></option>
+                <option repeat.for="opt of rpOptions" model.bind="opt">${opt}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <select class="form-control" value.bind='match.blueRP &validate:rules' change.delegate='calculateSeed()'>
+                <option></option>
+                <option repeat.for="opt of rpOptions" model.bind="opt">${opt}</option>
+              </select>
+            </div>
+            <div class='red'>
+              ${match.red1}
+            </div>
+            <div class='red'>
+              ${match.red2}
+            </div>
+            <div class='red'>
+              ${match.red3}
+            </div>
+            <div class='blue'>
+              ${match.blue1}
+            </div>
+            <div class='blue'>
+              ${match.blue2}
+            </div>
+            <div class='blue'>
+              ${match.blue3}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class='btn btn-primary' click.delegate='save()'>Save</button>
+      </div>
+      <h1>Seed Prediction</h1>
+      <div id='SeedTable' role="table">
+        <div class='table-head'>
+          <div class='table-row'>
+            <div>Seed</div>
+            <div>Team</div>
+            <div>RP </div>
+          </div>
+        </div>
+        <div class='table-body'>
+          <div class='table-row' repeat.for="record of seedRecords">
+            <div>${record.seed}</div>
+            <div>${record.teamNumber}</div>
+            <div>${record.RP}</div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+</template>

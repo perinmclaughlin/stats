@@ -714,7 +714,13 @@ export interface EventMatchEntity {
   blue1: string;
   blue2: string;
   blue3: string;
+
+  winPrediction?: WinPrediction;
+  redRP?: number;
+  blueRP?: number;
 }
+
+export type WinPrediction = "Blue" | "Red" | "Tie";
 
 export interface BingoEntity {
   id?: number;

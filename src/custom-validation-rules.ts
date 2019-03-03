@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { ValidationRules } from "aurelia-validation";
 import { FrcStatsContext, EventMatchEntity, qualitativeAnswers, DeepSpaceGamepiece, allDeepSpaceLocations } from "./persistence";
 
-function isEmpty(z) {
+export function isEmpty(z) {
   return z == null || z == "";
 }
 
