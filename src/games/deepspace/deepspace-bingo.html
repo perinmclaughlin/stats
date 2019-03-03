@@ -1,21 +1,18 @@
 <template>
-  <require from="../../utilities/bingo-cell"></require>
+  <require from="../../utilities/bingo-cell2"></require>
   <ux-dialog>
     <ux-dialog-header>
-        <button class='btn btn-danger btn-sm float-right' click.delegate='controller.cancel()'>
-          X
-        </button>
     </ux-dialog-header>
     <ux-dialog-body>
       <div class='bingo-container'>
         <div class='bingo-item'>
-          Cubes
+          Cargo
         </div>
         <div class='bingo-item'>
-          Scale
+          Hatch Panels
         </div>
         <div class='bingo-item'>
-          Power Ups
+          ?
         </div>
         <div class='bingo-item'>
           Misc
@@ -23,94 +20,86 @@
         <div class='bingo-item'>
           Climb
         </div>
-        <bingo-cell value.bind="match.bingoSovietRussia">
-          In Soviet Russia, Power Cube pick up YOU
+        <bingo-cell m.bind="m" prop="sovietRussia" back.bind="$this">
+          In Soviet Russia, Cargo pick up YOU
         </bingo-cell>
-        <bingo-cell value.bind="match.bingoScalePlateHang">
-          Hang!
-          <div>.. from the scale plate?</div>
+        <bingo-cell m.bind="m" prop="panelInBay" back.bind="$this">
+          Hatch Panel: the other cargo
+          <div><small>srsly, how'd u get it in bay?</small></div>
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoPowerUpsExist'>
-          There's power ups?
+        <bingo-cell m.bind="m" prop="defenseRocket" back.bind="$this">
+          Oh look a rocket
+          <div>This looks like a good place to park &gt;:)</div>
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoScaleBeach'>
-          Oh look a scale.
-
-          <p> Let me beach you on it &gt;:) </p>
+        <bingo-cell m.bind="m" prop="2cargo1panel" back.bind="$this">
+          2 Cargo 1 Panel
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoSkydivingClub'>
-          Skydiving Club
+        <bingo-cell m.bind="m" prop="beRamp" back.bind="$this">
+          BE the ramp
+          <div>.. wait, that worked?</div>
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoGrunt'>
-          halo grunt <br/>
+        <bingo-cell m.bind="m" prop="sovietPop" back.bind="$this">
+          In Soviet Russia - *POP*
+        </bingo-cell>
+        <bingo-cell m.bind="m" prop="panelFits" back.bind="$this">
+          Panel! Inside the bay
+          <div>I'LL MAKE IT FIT</div>
+        </bingo-cell>
+        <bingo-cell m.bind="m" prop="tacos" back.bind="$this">
+          ?
+        </bingo-cell>
+        <bingo-cell m.bind="m" prop="tacos2" back.bind="$this">
+          ?
+        </bingo-cell>
+        <bingo-cell m.bind="m" prop="reach" back.bind="$this">
+          Reach for the sky!
+          <div>NOO! not while you're climbing!!</div>
+        </bingo-cell>
+        <bingo-cell m.bind="m" prop="haloGrunt" back.bind="$this">
           Get it off me! Get it off me!
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoDieInNull'>
-          Oh look a null territory.
-          <p>
-          This looks like a good place to die
-          </p>
-        </bingo-cell>
-        <bingo-cell value.bind='match.bingoBoost'>
-          Boost!
-          <p> Oh, I need control first? </p>
-        </bingo-cell>
-        <bingo-cell value.bind='match.bingoPyramid'>
-          Oh, we're not supposed to touch their pyramid?
-        </bingo-cell>
-        <bingo-cell value.bind='match.bingoCongaClimb'>
-          Conga Climb
-        </bingo-cell>
-        <bingo-cell value.bind="match.bingoFullHouse">
-          Full House (9+ cubes)
-        </bingo-cell>
-        <bingo-cell value.bind='match.bingoPushedInNull'>
-          Oh look a null territory.
-          <p>
-          Let me help you into it &gt;:)
-          </p>
+        <bingo-cell m.bind="m" prop="tacos4" back.bind="$this">
+          ?
         </bingo-cell>
         <div class='bingo-item red'>
           <span style='text-decoration: line-through'>Field Fault</span>
           <p> FREE </p>
         </div>
-        <bingo-cell value.bind='match.bingoTimber'>
+        <bingo-cell m.bind="m" prop="timber" back.bind="$this">
           Timber!
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoWindchimeClimb'>
-          Windchime Climb
+        <bingo-cell m.bind="m" prop="tacos5" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind="match.bingoJudges">
-          Into the judges (refs, etc)
+        <bingo-cell m.bind="m" prop="tacos6" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoClotheslined'>
-          Clotheslined
+        <bingo-cell m.bind="m" prop="tacos7" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoForceTime'>
-          Force! And Time!
+        <bingo-cell m.bind="m" prop="tacos8" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoClimbsGiven'>
-          A climb for you, and a climb for you
+        <bingo-cell m.bind="m" prop="tacos9" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoLiftlessClimb'>
-          Rampbot 2x liftless climb
+        <bingo-cell m.bind="m" prop="faceplantClimb" back.bind="$this">
+          Faceplant Climb
         </bingo-cell>
-        <bingo-cell value.bind="match.bingoYoink">
-          Yoink!
+        <bingo-cell m.bind="m" prop="tacos10" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoWedged'>
-          Wedged under the scale plate
+        <bingo-cell m.bind="m" prop="tacos11" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoClimbPlatform'>
-          Can't.. climb.. platform..
+        <bingo-cell m.bind="m" prop="tacos12" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind='match.bingoPlatformZone'>
-          Oh look a platform zone. this looks like a good place to die.
+        <bingo-cell m.bind="m" prop="tacos13" back.bind="$this">
+          ?
         </bingo-cell>
-        <bingo-cell value.bind='match.bingo3xClimb'>
-          Rampbot 3x Lift
-
-          <p> Bonus: whoops, there goes one </p>
+        <bingo-cell m.bind="m" prop="tacos14" back.bind="$this">
+          ?
         </bingo-cell>
       </div>
 

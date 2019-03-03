@@ -1,0 +1,36 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='row'>
+        <div class='col'>
+          <label>Match</label>
+          <select class='form-control' value.bind="entry.matchNumber">
+            <option></option>
+            <option repeat.for="matchNumber of matches" value.bind="matchNumber">${matchNumber}</option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col'>
+          <label>Team</label>
+          <select class='form-control' value.bind="entry.teamNumber">
+            <option></option>
+            <option repeat.for="teamNumber of teams" value.bind="teamNumber">${teamNumber}</option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col'>
+          <label>Notes</label>
+          <textarea class='form-control' value.bind="entry.notes"></textarea>
+        </div>
+      </div>
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <button class="btn btn-primary" click.delegate="controller.ok()">
+        Save
+      </button>
+    </ux-dialog-footer>
+</template>
