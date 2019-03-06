@@ -48,8 +48,7 @@
             "path": "node_modules/aurelia-cli/lib/resources/scripts/configure-bluebird.js",
             "env": "dev"
           },
-          "node_modules/requirejs/require.js",
-          "node_modules/xlsx/jszip.js"
+          "node_modules/requirejs/require.js"
         ],
         "dependencies": [
           "aurelia-binding",
@@ -114,8 +113,9 @@
           },
           {
             "name": "xlsx",
-            "path": "../node_modules/xlsx",
-            "main": "xlsx"
+            "path": "../node_modules/xlsx/dist",
+            "main": "xlsx.full.min.js",
+            "exports": "XLSX"
           },
           "javascript-natural-sort",
           "dexie",
