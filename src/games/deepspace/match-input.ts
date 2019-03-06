@@ -65,6 +65,7 @@ export class MatchInputPage {
     this.hasSaved = false;
     this.secret = false;
     this.slots = null;
+    this.liftedTemp = [];
   }
 
   public async activate(params) {
@@ -134,6 +135,8 @@ export class MatchInputPage {
     }
 
     this.pristineModel = cloneDeep(this.model);
+
+    
 
     this.observeModel();
 
@@ -264,6 +267,11 @@ export class MatchInputPage {
 
   public foundIt() {
     this.secret = !this.secret;
+  }
+
+  public clickedIt() {
+    console.log("this.pristineModel: ", this.pristineModel);
+    console.log("this.model: ", this.model);
   }
 
 
@@ -411,7 +419,7 @@ export class MatchInputPage {
   }
 
   public async save() {
-
+    
     let validationResults = await this.validateAll();
     
     if (validationResults.every(validationResult => validationResult.valid)) {
