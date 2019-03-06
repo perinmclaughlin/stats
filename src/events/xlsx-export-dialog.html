@@ -1,0 +1,47 @@
+
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='row'>
+        <div class='col form-group'>
+          <label>file name</label>
+          <input type='text' class='form-control' value.bind="fileName" />
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col'>
+          <button class='btn btn-primary' click.delegate='exportRawXLSX()'>Raw File</button>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col'>
+          <button class='btn btn-primary' click.delegate='selectGoogleDrive()'>Google Drive</button>
+        </div>
+      </div>
+      <div show.bind="showUploadToDrive">
+        <p> You want to upload to ${driveFolder.name}/${fileName} </p>
+        <p show.bind="driveFileExists.exists && !driveFileExists.manyExist">
+          <span>WARNY ICON</span> this file exists and will be replaced
+        </p>
+        <p show.bind="driveFileExists.manyExist">
+        <span>WARNY ICON</span> there are multiple ${fileName} in ${driveFolder.name}. No upload for you.
+        </p>
+
+        <div show.bind='waitingAllowUploadToDrive || waitingOnUpload' class='loader'></div>
+        <button class='btn btn-primary' click.delegate="exportGoogleDrive()" disabled.bind="waitingAllowUploadToDrive || driveFileExists.manyExist || done">Upload</button>
+      </div>
+      <div show.bind='hasErrors'>
+        <h4>Something didn't work</h4>
+        ${errorMessage}
+      </div>
+      <div show.bind="done">
+        ${doneMessage}
+        <button class='btn btn-secondary float-right' click.delegate='controller.ok()'>
+          Done
+        </button>
+      </div>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

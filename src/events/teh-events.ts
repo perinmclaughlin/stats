@@ -1,13 +1,14 @@
 import { autoinject } from "aurelia-framework";
 import { DialogService, DialogOpenResult } from "aurelia-dialog";
 
-import { FrcStatsContext, EventEntity, GameEntity } from "../persistence";
+import { FrcStatsContext, EventEntity, GameEntity, eventMatchesAreEqual } from "../persistence";
 import { TbaEventDialog } from "./tba-event-dialog";
 import { JsonImportDialog } from "./json-import-dialog";
 import { JsonExportDialog } from "./json-export-dialog";
 import { ConfirmDialog } from "../event-matches/confirm-dialog";
 import { GoogleDriveApi } from "../google-apis";
 import { gameManager, IGame } from "../games/index";
+import { XLSXExportDialog } from "./xlsx-export-dialog";
 
 @autoinject
 export class Events {
@@ -52,6 +53,15 @@ export class Events {
         event: event,
       },
       viewModel: JsonExportDialog,
+    });
+  }
+
+  public exportEventXLSX(event: EventEntity) {
+    this.dialogService.open({
+      model: {
+        event: event,
+      },
+      viewModel: XLSXExportDialog,
     });
   }
 

@@ -13,6 +13,7 @@ export interface IGame {
 
   getEventTeamMatches(eventCode: string): Promise<IEventTeamMatch[]>;
   exportEventJson(event: EventEntity): Promise<IEventJson>;
+  exportEventXLSX(event: EventEntity): Promise<IEventXLSX>;
 
   /**
    * set the json object to contain exactly one match in the game specific field
@@ -57,6 +58,13 @@ export interface IMergeState {
 }
 
 export interface IEventJson {
+  teams: TeamEntity[];
+  eventTeams: EventTeamEntity[];
+  event: EventEntity;
+  eventMatches: EventMatchEntity[];
+}
+
+export interface IEventXLSX {
   teams: TeamEntity[];
   eventTeams: EventTeamEntity[];
   event: EventEntity;

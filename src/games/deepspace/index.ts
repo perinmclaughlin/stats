@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { PLATFORM } from "aurelia-pal";
 import * as naturalSort from "javascript-natural-sort";
 
-import { IGame, gameManager, IEventJson, IMergeState } from "../index";
+import { IGame, gameManager, IEventJson, IMergeState, IEventXLSX } from "../index";
 import { validateEventTeamMatches, getTeamNumbers } from "../merge-utils";
 import { FrcStatsContext, EventMatchEntity, IEventTeamMatch, TeamMatch2019Entity, EventEntity } from "../../persistence";
 import { JsonExporter } from "./event-to-json";
@@ -35,6 +35,15 @@ class DeepSpaceGame implements IGame {
   async exportEventJson(event): Promise<DeepSpaceEventJson> {
     //throw new Error("implement");
     return await this.jsonExporter.eventToJson(event);
+  }
+
+  async exportEventXLSX(event: EventEntity): Promise<IEventXLSX> {
+    return {
+      teams: [],
+      eventTeams: [],
+      event: null,
+      eventMatches: []
+    };
   }
 
   setJsonEventTeamMatch(json: any, match) {

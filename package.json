@@ -34,7 +34,8 @@
     "uniq": "^1.0.1",
     "urijs": "^1.19.1",
     "visibilityjs": "^2.0.2",
-    "whatwg-fetch": "^2.0.3"
+    "whatwg-fetch": "^2.0.3",
+    "xlsx": "^0.14.1"
   },
   "peerDependencies": {},
   "devDependencies": {

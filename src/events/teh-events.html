@@ -74,7 +74,9 @@
             <button class='btn btn-primary' click.delegate="exportEvent(event)">
               Export json
             </button>
-
+            <button class='btn btn-primary' click.delegate="exportEventXLSX(event)">
+              Export Excel
+            </button>
             <button class='btn btn-danger' click.delegate="deleteEvent(event)">X</button>
           </td>
         </tr>
@@ -83,7 +85,9 @@
             <button class='btn btn-primary' click.delegate="exportEvent(event)">
               Export json
             </button>
-
+            <button class='btn btn-primary' click.delegate="exportEventXLSX(event)">
+              Export Excel
+            </button>
             <button class='btn btn-danger' click.delegate="deleteEvent(event)">X</button>
           </td>
           <td class='for-sm'> ${event.calendarYear} </td>
