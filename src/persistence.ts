@@ -12,6 +12,7 @@ export class FrcStatsContext extends Dexie {
   games: Dexie.Table<GameEntity, number>;
   userPrefs: Dexie.Table<UserStateEntity, number>;
   eventMatches: Dexie.Table<EventMatchEntity, number>;
+  bingos: Dexie.Table<BingoEntity, number>;
 
   constructor() {
     super('FrcStats')
@@ -44,6 +45,12 @@ export class FrcStatsContext extends Dexie {
       events: '++id, eventCode, &[year+eventCode]',
     }).upgrade(() => {
       // bugger, y I never notice this?
+    });
+
+    this.version(5).stores({
+      bingos: '++id, [year+eventCode]'
+    }).upgrade(() => {
+      // noop
     });
 
     this.games.put({
@@ -174,6 +181,10 @@ export class FrcStatsContext extends Dexie {
         });
       }
     });
+  }
+
+  getBingo(year: string, eventCode: string): Promise<BingoEntity[]> {
+    return this.bingos.where(["year", "eventCode"]).equals([year, eventCode]).toArray();
   }
   
 }
@@ -703,6 +714,34 @@ export interface EventMatchEntity {
   blue1: string;
   blue2: string;
   blue3: string;
+
+  winPrediction?: WinPrediction;
+  redRP?: number;
+  blueRP?: number;
+}
+
+export type WinPrediction = "Blue" | "Red" | "Tie";
+
+export interface BingoEntity {
+  id?: number;
+
+  year: string;
+  eventCode: string;
+  cell: string;
+  matchNumber: string;
+  teamNumber: string;
+  notes: string;
+}
+
+export function makeBingoEntity(year: string, eventCode: string, cell: string): BingoEntity {
+  return {
+    year: year,
+    eventCode: eventCode,
+    cell: cell,
+    matchNumber: null,
+    teamNumber: null,
+    notes: null,
+  };
 }
 
 export interface EventMatchSlot {

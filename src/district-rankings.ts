@@ -8,7 +8,7 @@ export class DistrictRankingsPage {
   // engineering inspiration: 9
   // rookie all star: 10
   public rankings: TeamRanking[];
-  public districtKeys = ["2014pnw", "2015pnw", "2016pnw", "2017pnw", "2018pnw"];
+  public districtKeys = ["2014pnw", "2015pnw", "2016pnw", "2017pnw", "2018pnw", "2019pnw"];
   public districtKey: string;
 
   constructor(private api: TbaApi) {

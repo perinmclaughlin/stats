@@ -1,5 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
+import * as naturalSort from "javascript-natural-sort";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { TeamMatch2019Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2019match, EventMatchSlots, DeepSpaceEvent, qualitativeAnswers, allDeepSpaceLocations, allDeepSpaceGamepieceTypes } from "../../persistence";
 import { Disposable, BindingEngine, DirtyCheckProperty } from "aurelia-binding";
@@ -47,6 +48,7 @@ export class MatchInputPage {
   public secondsEndTemp: number;
   public level3SucceedTemp: boolean;
   public secret: boolean;
+  public matchNumbers: string[];
 
   public rules: any[];
   public placementRules: any[];
@@ -188,6 +190,10 @@ export class MatchInputPage {
     if (this.model.lifted.indexOf(this.partner2) != -1) {
       this.liftedPartner2 = true;
     }
+
+    let eventMatches = await this.dbContext.getEventMatches(this.event.year, this.event.eventCode);
+    this.matchNumbers = eventMatches.map(x => x.matchNumber);
+    this.matchNumbers.sort(naturalSort);
   }
 
   public setupValidation() {
@@ -205,7 +211,12 @@ export class MatchInputPage {
 
   public showBingo() {
     DeepSpaceBingoDialog.open(this.dialogService, {
-      match: this.model,
+      event: this.event,
+      dialogService: this.dialogService,
+      matches: this.matchNumbers,
+      matchNumber: this.eventMatch.matchNumber,
+      teamNumber: this.model.teamNumber,
+      teams: [],
     });
   }
 
@@ -490,7 +501,15 @@ export class MatchInputPage {
       }
     }
   }
+  UwU()
 
+  {
+
+      //var str = (<HTMLTextAreaElement>document.getElementById("UwU")).value;
+
+      alert("disappointment");
+
+  }   
   public async gotoMatch(matchNumber: string) {
     let eventCode = this.model.eventCode;
     let year = this.event.year;

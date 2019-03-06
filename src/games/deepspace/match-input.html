@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class='row'>
-      <div class='col'>
+      <div class='col' style='padding-bottom: 10px;'>
         <div class="btn-group" role="group" aria-label="Buttons">
           <button class="btn btn-secondary" disabled.bind='model.id==null' click.delegate="exportToQrCode()">
             Show Team QR Code
@@ -43,6 +43,11 @@
           <button class="btn btn-primary" click.delegate='save()'>Save</button>
           <button class="btn btn-secondary" click.delegate='clickedIt()'>Log</button><br>
         </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col'>
+        <button class='btn btn-outline-primary' click.delegate='showBingo()'>Bingo</button>
       </div>
     </div>
 
@@ -81,7 +86,7 @@
         </select>
       </div>
       <div class='col-sm-6 form-group'>
-        <label>Weaknesses</label>
+        <label class="clickable" click.delegate="UwU()">Weaknesses</label>
         <textarea id='defenseWeaknesses' class='form-control' rows='1' value.bind="model.defenseWeaknesses"></textarea>
       </div>
     </div>

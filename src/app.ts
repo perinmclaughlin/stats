@@ -100,6 +100,12 @@ export class App {
         navigationStrategy: navToGameEventTeams
       },
       {
+        route: ["year/:year/event/:eventCode/seed-predictions"],
+        name: "seed-predictions",
+        nav: false, title: "Seed Predictions", adminRoute: false,
+        moduleId: PLATFORM.moduleName("event-matches/seed-predictions"),
+      },
+      {
         route: ["year/:year/event/:eventCode/team/:teamNumber"],
         name: "event-team",
         nav: false, title: "event-team", adminRoute: false,
