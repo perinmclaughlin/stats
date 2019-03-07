@@ -36,6 +36,9 @@
         </row-qualitative>
         <row-qualitative state.bind="state" property="hatchPanelPickup" display-name="Hatch Panel Pickup"
           rules.bind="rules"></row-qualitative>
+        <row-qualitative state.bind="state" property="defenseCapability" display-name="Drivetrain Strength" rules.bind="rules">
+        </row-qualitative>
+        <row-text state.bind="state" property="defenseWeaknesses" display-name="Weaknesses" rules.bind="rules"></row-text>
 
         <div repeat.for="p of placementMergeStates" class='placement-rows'>
           <div class='placement-rows'>

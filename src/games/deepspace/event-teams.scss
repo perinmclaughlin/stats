@@ -45,31 +45,39 @@
 
 .a-repeat > div{
   border-top: 1px solid #dee2e6;
+  padding-left: 5px;
+}
+
+.grid-border-left {
+  border-left: 1px solid #dee2e6;
+}
+
+.grid-border-right {
+  border-right: 1px solid #dee2e6;
 }
 
 .grouped-header-2 {
   grid-column: span 2;
-  border-right: solid;
-  border-left: solid;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
   text-align: center;
 }
 
 .grouped-header-3 {
   grid-column: span 3;
-  border-right: solid;
-  border-left: solid;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
   text-align: center;
 }
 
 .grouped-header-5 {
   grid-column: span 5;
-  border-right: solid;
-  border-left: solid;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
   text-align: center;
 }
 
 .grouped-header {
-  border-right: solid;
-  border-left: solid;
   text-align: center;
+  border-right: 1px solid #dee2e6;
 }

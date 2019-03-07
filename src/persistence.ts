@@ -334,6 +334,7 @@ export interface TeamMatch2019Entity extends IEventTeamMatch {
   didLiftLevel3: boolean;
   /**Rating of defensive capability. */
   defenseCapability: QualitativeNumeric;
+  defenseWeaknesses: string;
 }
 
 export interface DeepSpaceEvent {
