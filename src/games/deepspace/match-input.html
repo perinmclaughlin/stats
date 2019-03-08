@@ -6,6 +6,7 @@
   <require from="aurelia-validation/validate-binding-behavior"></require>
   <div class='container-fluid' show.bind='!errorNotScheduled'>
     <!--Team name and Event display-->
+    <button class='btn btn-outline-primary float-right' click.delegate='showSettings()'>Settings</button>
     <h1>
       <b>
         <u>
@@ -59,8 +60,8 @@
     <br>
 
     <!--Drop down menus for the cargo and hatch pickups-->
-    <h3>Grabber Capabilities (Floor)</h3>
-    <div class='row'>
+    <h3 show.bind="!mehWereNotPicking">Grabber Capabilities (Floor)</h3>
+    <div class='row' show.bind="!mehWereNotPicking">
       <div class='col-sm-6 form-group'>
         <label>Cargo Pickup </label>
         <select class='form-control' value.bind='model.cargoPickup & validate:rules'>
@@ -91,6 +92,7 @@
       </div>
     </div>
 
+    <h3>Gamepiece Placement</h3>
     <!--This is what should appear when you press the add button-->
     <div id='TacoPlacements'>
       <!--Drop down menus-->
@@ -154,7 +156,7 @@
     <!--Climbing by yourself-->
     <div id='climbing' class='row'>
       <div class='col-sm-6'>
-        <div class='row'>
+        <div class='row' show.bind="!mehWereNotPicking">
           <div class='col'>
             <label>
               <input type='checkbox' class='' checked.bind='model.level2ClimbAttempted'> Level 2 Climb Attempted</label>
@@ -195,7 +197,7 @@
       </div>
     </div>
     <!--Lifting-->
-    <div id='lifting'>
+    <div id='lifting' show.bind="!mehWereNotPicking">
       <div class='row'>
         <!--Lifted by another team-->
         <div class='col-sm-10'>
@@ -249,7 +251,7 @@
 
 
     <!--Fouls-->
-    <div class='row'>
+    <div class='row' show.bind="!mehWereNotPicking">
       <div class='col-sm-6'>
         <div class='row'>
           <div class='col-sm-2 form-group'>

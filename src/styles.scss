@@ -2,7 +2,7 @@
   background-color: #eef;
 }
 
-tr:hover .blue {
+tr:hover .blue, .table-hover tbody tr.blue:hover {
   background-color: #cbdcff;
 }
 
@@ -14,7 +14,7 @@ tr:hover .blue {
   }
 }
 
-tr:hover .red {
+tr:hover .red, .table-hover tbody tr.red:hover {
   background-color: #fadbde;
 }
 

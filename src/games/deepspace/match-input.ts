@@ -15,6 +15,7 @@ import { nextMatchNumber, previousMatchNumber } from "../../model";
 import { setupValidationRules, placementTime, PlacementMergeState } from "./model";
 import { SaveDialog } from "../../utilities/save-dialog";
 import { equals } from "../../utilities/dirty-change-checker";
+import { SettingsDialog } from "./settings-dialog";
 
 @autoinject
 export class MatchInputPage {
@@ -55,6 +56,7 @@ export class MatchInputPage {
   public validationController: ValidationController;
   private renderer: BootstrapRenderer;
   private observers: Disposable[];
+  public mehWereNotPicking = false;
 
   constructor(
     private bindingEngine: BindingEngine,
@@ -74,8 +76,14 @@ export class MatchInputPage {
     scrollToTop();
     this.observeFields();
 
+    await this.loadPrefs();
     await this.load(params);
     this.setupValidation();
+  }
+
+  public async loadPrefs() {
+    let userPrefs = await this.dbContext.getUserPrefs();
+    this.mehWereNotPicking = userPrefs.mehWereNotPicking;
   }
 
   public deactivate() {
@@ -533,5 +541,10 @@ export class MatchInputPage {
 
   public async gotoPreviousMatch() {
     await this.gotoMatch(previousMatchNumber(this.model.matchNumber));
+  }
+
+  public async showSettings() {
+    let dialogResults = await SettingsDialog.open(this.dialogService, {}).whenClosed();
+    await this.loadPrefs();
   }
 }

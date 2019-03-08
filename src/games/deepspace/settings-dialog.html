@@ -1,0 +1,22 @@
+<template>
+  <ux-dialog>
+    <ux-dialog-header>
+      Settings
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='container'>
+        <div class='row'>
+          <div class='col'>
+            <label for='MehNotPicking'>
+              <input id='MehNotPicking' type='checkbox' checked.bind='userPrefs.mehWereNotPicking' />
+              Meh, We're not picking
+            </label>
+          </div>
+        </div>
+      </div>
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <button class='btn btn-primary' click.delegate="save()">Save</button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

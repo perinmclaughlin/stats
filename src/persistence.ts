@@ -464,7 +464,8 @@ export function make2019match(eventCode: string, teamNumber: string, matchNumber
     notes: null,
     placements: [],
     didLiftLevel3: false,
-    defenseCapability: 0
+    defenseCapability: 0,
+    defenseWeaknesses: null,
   };
 }
 
@@ -701,6 +702,7 @@ export interface UserStateEntity {
   currentYear: string;
   lastMatchNumber: number;
   qrType: TypeNumber;
+  mehWereNotPicking?: boolean;
 }
 
 export interface EventMatchEntity {

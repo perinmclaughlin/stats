@@ -34,6 +34,10 @@ export class GraphTest {
         {
             key: "2018pnw",
             clazz: "line5",
+        },
+        {
+            key: "2019pnw",
+            clazz: "line6",
         }
     ]);
     public datas: Map<string, Indexed<TeamRanking>[]>;

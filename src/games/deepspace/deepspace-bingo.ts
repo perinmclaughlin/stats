@@ -17,6 +17,7 @@ export class DeepSpaceBingoDialog implements IBingoPersistence {
     "timber",
     "reach",
     "faceplantClimb",
+    "suckyClimb",
   ];
   public map: Map<string, BingoEntity>;
   public m: any;

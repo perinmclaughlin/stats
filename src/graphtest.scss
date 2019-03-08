@@ -1,0 +1,39 @@
+.line1 {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+
+.line2 {
+    fill: none;
+    stroke: rebeccapurple;
+    stroke-width: 2px;
+}
+
+.line3 {
+    fill: none;
+    stroke: orangered;
+    stroke-width: 2px;
+}
+
+.line4 {
+    fill: none;
+    stroke: maroon;
+    stroke-width: 2px;
+}
+
+.line5 {
+    fill: none;
+    stroke: darkgreen;
+    stroke-width: 2px;
+}
+.line6 {
+    fill: none;
+    stroke: slategray;
+    stroke-width: 2px;
+}
+
+.layout1 {
+    display: grid;
+    grid-template-columns: auto auto;
+}
