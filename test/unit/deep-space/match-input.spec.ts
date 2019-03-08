@@ -81,6 +81,21 @@ describe('deep space match-input', () => {
     });
   }
 
+  function validateDoesError(propertyName, errorMessage) {
+    return page.validationController.validate({
+      object: data,
+      rules: page.rules
+    }).then((validationResults) => {
+      expect(validationResults.valid).toBe(false);
+      let failedResults = validationResults.results.filter(r => !r.valid && r.propertyName == propertyName && r.message == errorMessage);
+      if(failedResults.length < 1) {
+        console.info(validationResults);
+      }
+      expect(failedResults.length).not.toBe(0);
+      
+    });
+  }
+
   it('validates null hatchPanelPickup', () => {
     data.hatchPanelPickup = <any>null; 
 
@@ -118,7 +133,7 @@ describe('deep space match-input', () => {
     it(`somebody climbed level 3 with match time of ${item.time}`, () => {
       data[item.beginOrEnd] = item.time;
   
-      return validateSingle(item.beginOrEnd, `${item.message}`);
+      return validateDoesError(item.beginOrEnd, `${item.message}`);
     });
   });
 

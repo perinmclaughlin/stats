@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { PLATFORM } from "aurelia-pal";
 import * as naturalSort from "javascript-natural-sort";
 
-import { IGame, gameManager, IMergeState } from "../index";
+import { IGame, gameManager, IMergeState, IEventXLSX } from "../index";
 import { validateEventTeamMatches } from "../merge-utils";
 import { Match2018V2MergeDialog } from "./merge-dialog";
 import { FrcStatsContext, EventMatchSlots, EventMatchEntity, EventEntity } from "../../persistence";
@@ -92,6 +92,10 @@ class PowerupV2Game implements IGame {
 
   deleteTeamMatch(eventCode: string, oldMatchNumber: string, teamNumber: string): Promise<any> {
     throw new Error("implement");
+  }
+
+  exportEventXLSX(event: EventEntity): Promise<IEventXLSX> {
+    throw new Error("Method not implemented.");
   }
 }
 

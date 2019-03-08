@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { PLATFORM } from "aurelia-pal";
 import * as naturalSort from "javascript-natural-sort";
 
-import { IGame, gameManager } from "../index";
+import { IGame, gameManager, IEventXLSX } from "../index";
 import { validateEventTeamMatches, getTeamNumbers } from "../merge-utils";
 import { Match2018MergeDialog } from "./merge-dialog";
 import { Match2018MergeState, PowerupEventJson } from "./model";
@@ -174,6 +174,9 @@ class PowerupGame implements IGame {
 
       return this.dbContext.teamMatches2018.bulkDelete(deleteMatches);
     }).then(() => "yup");
+  }
+  exportEventXLSX(event: EventEntity): Promise<IEventXLSX> {
+    throw new Error("Method not implemented.");
   }
 }
 
