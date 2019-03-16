@@ -46,7 +46,7 @@ export var qrCodeConfigurations : QrCodeConfiguration[] = [
   },
   {
     qrType: 26,
-    size: 1060,
+    size: 1059,
     errorCorrection: 'M'
   },
   {
