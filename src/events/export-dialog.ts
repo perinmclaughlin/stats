@@ -12,7 +12,7 @@ import { makeTeamStats, DeepSpaceTeamStatistics } from "../games/deepspace/stati
 
 // todo: set up validator, prevent double quotes in file names
 @autoinject
-export class XLSXExportDialog {
+export class ExportDialog {
   event: EventEntity;
   observers: Disposable[];
   done = false;
@@ -26,14 +26,15 @@ export class XLSXExportDialog {
   driveFileExists: FileExistsOutput;
   hasErrors = false;
   errorMessage: string;
+  active: number;
 
   constructor(
     private controller: DialogController,
     private dialogService: DialogService,
     private gdriveApi: GoogleDriveApi,
     private dbContext: FrcStatsContext,
-    private bindingEngine: BindingEngine
-  ) {
+    private bindingEngine: BindingEngine,
+    ) {
   }
 
   activate(model) {
@@ -42,7 +43,8 @@ export class XLSXExportDialog {
     this.controller.settings.lock = false;
     this.controller.settings.overlayDismiss = true;
     this.setupObservers();
-    this.fileName = `${this.event.year}-${this.event.eventCode}.xlsx`;
+    this.fileName = `${this.event.year}-${this.event.eventCode}`;
+    this.active = 0;
   }
 
   deactivate() {
@@ -102,7 +104,48 @@ export class XLSXExportDialog {
       this.hasErrors = false;
       this.waitingOnUpload = true;
       this.gdriveApi.uploadFile({
-        fileName: this.fileName,
+        fileName: this.fileName + ".json",
+        description: `${this.event.year} data for ${this.event.name}`,
+        content: JSON.stringify(json),
+        folderId: this.driveFolder.id,
+        fileId: fileId,
+      }).then(results => {
+        this.waitingOnUpload = false;
+        if(results.status != 200) {
+          this.hasErrors = true;
+          results.json().then(json => {
+            this.errorMessage = json.error.message;
+          });
+        }else{
+          this.doneMessage = "Success!";
+          this.done = true;
+        }
+      }, () => {
+        this.waitingOnUpload = false;
+        this.hasErrors = true;
+      });
+    }, () => {
+      this.hasErrors = true;
+    });
+  }
+
+  exportGoogleDriveXLSX() {
+    //Needs to be done
+    if(this.driveFileExists == null) {
+      return;
+    }
+    if(this.driveFileExists.manyExist) {
+      return;
+    }
+
+    let game = gameManager.getGame(this.event.year);
+
+    game.exportEventJson(this.event).then(json => {
+      let fileId = this.driveFileExists.exists? this.driveFileExists.fileId : null
+      this.hasErrors = false;
+      this.waitingOnUpload = true;
+      this.gdriveApi.uploadFile({
+        fileName: this.fileName + ".xlsx",
         description: `${this.event.year} data for ${this.event.name}`,
         content: JSON.stringify(json),
         folderId: this.driveFolder.id,
@@ -145,7 +188,8 @@ export class XLSXExportDialog {
   }
 
   private async downloadXLSX(event: EventEntity, xlsx) {
-    let name = this.fileName;
+    let name = "";
+    name += this.fileName;
     let teamStats = <DeepSpaceTeamStatistics[]>[];
     let dataTemp = [];
     let data = [["TEAM #", "TEAM NAME", "SCOUTED MATCH COUNT", "CARGO PICKUP", "HATCH PICKUP", "AVG GAMEPIECE COUNT", "AVG CARGO COUNT", "AVG HATCH COUNT", "AVG CARGO SANDSTORM", "AVG HATCH SANDSTORM", "AVG CARGO CYCLE TIME", "AVG CARGO CYCLE TIME CARGO SHIP", "AVG CARGO CYCLE TIME ROCKET LOW", "AVG CARGO CYCLE TIME ROCKET MID", "AVG CARGO CYCLE TIME ROCKET HIGH", "AVG HATCH CYCLE TIME", "AVG HATCH CYCLE TIME CARGO SHIP", "AVG HATCH CYCLE TIME ROCKET LOW", "AVG HATCH CYCLE TIME ROCKET MID", "AVG HATCH CYCLE TIME ROCKET HIGH", "LEVEL 2 CLIMBS", "LEVEL 3 CLIMBS", "LEVEL 3 TIME", "LEVEL 2 LIFTS", "LEVEL 3 LIFTS", "% OF MATCHES w/ CARGO PLACED", "% OF MATCHES w/ HATCHES PLACED", "DEFENSE RATING", "FOUL COUNT", "FAILURE COUNT"]];
@@ -211,12 +255,12 @@ export class XLSXExportDialog {
       data.push(dataTemp[g].array);
     }
     
-    let finalFileName = "";
-    finalFileName += this.fileName, ".xlsx";
+    let finalFileName = this.fileName + ".xlsx";
+    //finalFileName += this.fileName, ".xlsx";
 
     let file = XLSX.utils.book_new();
     let sheet = XLSX.utils.aoa_to_sheet(data);
-    XLSX.utils.book_append_sheet(file, sheet, this.fileName.substr(0, this.fileName.length - 5));
+    XLSX.utils.book_append_sheet(file, sheet, this.fileName);
     XLSX.writeFile(file, finalFileName);
     //console.log(XLSX.writeFile(file, "YAY.xlsx"));
   }
@@ -231,7 +275,7 @@ export class XLSXExportDialog {
   }
 
   private downloadJson(event, json) {
-    let name = this.fileName;
+    let name = this.fileName + ".json";
     let file = new Blob([JSON.stringify(json)], {type: "application/json"});
     let a = document.createElement("a");
     let url = URL.createObjectURL(file);

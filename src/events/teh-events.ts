@@ -9,6 +9,7 @@ import { ConfirmDialog } from "../event-matches/confirm-dialog";
 import { GoogleDriveApi } from "../google-apis";
 import { gameManager, IGame } from "../games/index";
 import { XLSXExportDialog } from "./xlsx-export-dialog";
+import { ExportDialog } from "./export-dialog";
 
 @autoinject
 export class Events {
@@ -52,7 +53,7 @@ export class Events {
       model: {
         event: event,
       },
-      viewModel: JsonExportDialog,
+      viewModel: ExportDialog,
     });
   }
 
@@ -61,7 +62,7 @@ export class Events {
       model: {
         event: event,
       },
-      viewModel: XLSXExportDialog,
+      viewModel: ExportDialog,
     });
   }
 

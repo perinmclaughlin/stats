@@ -151,16 +151,21 @@ export class FrcStatsContext extends Dexie {
   }
 
   getTeamMatches2019(opts: TeamMatchOpts): Promise<TeamMatch2019Entity[]> {
-    if('teamNumber' in opts) {
+    if('teamNumber' in opts && 'matchNumber' in opts) {
       return this.teamMatches2019
       .where(["eventCode", "teamNumber", "matchNumber"])
       .equals([opts.eventCode, opts.teamNumber, opts.matchNumber])
-      .toArray()
+      .toArray();
+    }else if('teamNumber' in opts && !('matchNumber' in opts)) {
+      return this.teamMatches2019
+      .where(["eventCode", "teamNumber"])
+      .equals([opts.eventCode, opts.teamNumber])
+      .toArray();
     }else if('matchNumber' in opts) {
       return this.teamMatches2019
         .where(["eventCode", "matchNumber"])
         .equals([opts.eventCode, opts.matchNumber])
-        .toArray()
+        .toArray();
     }else{
       return this.teamMatches2019
         .where("eventCode")
