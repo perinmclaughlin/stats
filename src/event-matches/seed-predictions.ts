@@ -4,7 +4,7 @@ import { FrcStatsContext, EventEntity, EventMatchEntity, EventMatchSlots, WinPre
 import { gameManager } from "../games/index";
 import { ValidationControllerFactory, ValidationController, ValidationRules } from "aurelia-validation";
 import { BootstrapRenderer } from "../utilities/bootstrap-renderer";
-import { stringify } from "querystring";
+import * as XLSX from 'xlsx';
 import { isEmpty } from "../custom-validation-rules";
 
 @autoinject
@@ -100,6 +100,22 @@ export class SeedPredictionsPage {
       rec.seed = i;
       i++;
     }
+  }
+
+  public exportPredictions() {
+    let finalFileName = `${this.event.year}-${this.event.eventCode}-predictions.xlsx`;
+
+    let data = [];
+    data.push(["Seed", "Team", "RP"]);
+    for(var item of this.seedRecords) {
+      data.push([item.seed, item.teamNumber, item.RP]);
+    }
+
+    let file = XLSX.utils.book_new();
+    let sheet = XLSX.utils.aoa_to_sheet(data);
+    XLSX.utils.book_append_sheet(file, sheet, finalFileName);
+    XLSX.writeFile(file, finalFileName);
+
   }
 }
 

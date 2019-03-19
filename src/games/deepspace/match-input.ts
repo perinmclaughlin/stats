@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import * as naturalSort from "javascript-natural-sort";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
-import { TeamMatch2019Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2019match, EventMatchSlots, DeepSpaceEvent, qualitativeAnswers, allDeepSpaceLocations, allDeepSpaceGamepieceTypes } from "../../persistence";
+import { TeamMatch2019Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2019match, EventMatchSlots, DeepSpaceEvent, qualitativeAnswers, allDeepSpaceLocations, allDeepSpaceGamepieceTypes, DeepSpaceGamepiece } from "../../persistence";
 import { Disposable, BindingEngine, DirtyCheckProperty } from "aurelia-binding";
 import { DialogService } from "aurelia-dialog";
 import { Router } from "aurelia-router";
@@ -16,6 +16,7 @@ import { setupValidationRules, placementTime, PlacementMergeState } from "./mode
 import { SaveDialog } from "../../utilities/save-dialog";
 import { equals } from "../../utilities/dirty-change-checker";
 import { SettingsDialog } from "./settings-dialog";
+import { TimeRemaining } from "../../utilities/time-remaining";
 
 @autoinject
 export class MatchInputPage {
@@ -50,6 +51,10 @@ export class MatchInputPage {
   public level3SucceedTemp: boolean;
   public secret: boolean;
   public matchNumbers: string[];
+  public timeRemaining: number = 15;
+  public timeRemainingSandstorm: boolean = true;
+  public timeRemainingModel: TimeRemaining;
+  timerIntervalId: NodeJS.Timer;
 
   public rules: any[];
   public placementRules: any[];
@@ -245,15 +250,18 @@ export class MatchInputPage {
     return result;
   }
 
-  public addPlacement() {
+  public addPlacement(gamepiece: DeepSpaceGamepiece = null) {
     let placement: DeepSpaceEvent = {
       eventType: "Gamepiece Placement",
-      gamepiece: null,
+      gamepiece: gamepiece,
       location: null,
       sandstorm: false,
       when: null,
     };
-    if (this.model.placements.length > 0) {
+    if(this.timerIntervalId != null) {
+      placement.when = this.timeRemaining;
+      placement.sandstorm = this.timeRemainingSandstorm;
+    } else if (this.model.placements.length > 0) {
       if ((this.model.placements[this.model.placements.length - 1].when - 5) < 1) {
         placement.when = 1;
       } else {
@@ -546,5 +554,23 @@ export class MatchInputPage {
   public async showSettings() {
     let dialogResults = await SettingsDialog.open(this.dialogService, {}).whenClosed();
     await this.loadPrefs();
+  }
+
+  public startTimer() {
+    this.timeRemaining = 15;
+    this.timeRemainingSandstorm = true;
+    this.timerIntervalId = setInterval(() => {
+      this.timeRemainingModel.decrement();
+      if (this.timeRemaining == 1 && !this.timeRemainingSandstorm) {
+        this.resetTimer();
+      }
+    }, 1000);
+  }
+
+  public resetTimer() {
+    this.timeRemaining = 15;
+    this.timeRemainingSandstorm = true;
+    clearInterval(this.timerIntervalId);
+    this.timerIntervalId = null;
   }
 }
