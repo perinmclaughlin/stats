@@ -59,16 +59,19 @@ export class TimeRemaining {
     }
 
     if(this.max != null && value == this.max && !this.auto) {
-        value = this.min - 1;
-        didIncrement = true;
-        this.auto = !this.auto;
+      value = this.min - 1;
+      //didIncrement = true;
+      this.auto = !this.auto;
     }
-
-    value += this.incrementBy;
 
     if(this.max != null && value > this.max) {
       value = this.max;
       didIncrement = false;
+    } else if(this.max != null && (value >= 15 && this.auto)) {
+      value = 15;
+      didIncrement = false;
+    } else {
+      value += this.incrementBy;
     }
 
     this.value = value;

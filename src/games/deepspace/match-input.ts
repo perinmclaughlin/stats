@@ -552,7 +552,7 @@ export class MatchInputPage {
   }
 
   public async showSettings() {
-    let dialogResults = await SettingsDialog.open(this.dialogService, {}).whenClosed();
+    let dialogResults = await SettingsDialog.open(this.dialogService, {}).whenClosed(() => {});
     await this.loadPrefs();
   }
 
