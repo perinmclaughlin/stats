@@ -192,21 +192,25 @@
             <th></th>
             <th></th>
             <th>Match</th>
+            <th>Cargo</th>
+            <th>Hatch Panel</th>
             <th colspan="5">Defense weaknesses</th>
             <th colspan="5">Notes</th>
             <th colspan="5">Failures</th>
             <th colspan="5">Fouls</th>
-            <th colspan="6"></th>
+            <th colspan="4"></th>
           </tr>
-          <tr show.bind="team.expanded" repeat.for="match of team.matches">
+          <tr show.bind="team.expanded" repeat.for="m of team.ms">
             <td></td>
             <td></td>
-            <td>${match.matchNumber}</td>
-            <td colspan="5">${match.defenseWeaknesses}</td>
-            <td colspan="5">${match.notes}</td>
-            <td colspan="5">${match.isFailure ? match.failureReason : ""}</td>
-            <td colspan="5">${match.isFoul ? match.foulReason : ""}</td>
-            <td colspan="6"></td>
+            <td>${m.match.matchNumber}</td>
+            <td>${m.stats.avgCargoCount}</td>
+            <td>${m.stats.avgHatchPanelCount}</td>
+            <td colspan="5">${m.match.defenseWeaknesses}</td>
+            <td colspan="5">${m.match.autoNotes}</td>
+            <td colspan="5">${m.match.isFailure ? m.match.failureReason : ""}</td>
+            <td colspan="5">${m.match.isFoul ? m.match.foulReason : ""}</td>
+            <td colspan="4"></td>
           </tr>
         </tbody>
       </table>
