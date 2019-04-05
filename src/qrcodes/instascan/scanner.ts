@@ -3,6 +3,7 @@
 import * as _ZXing from "zxing";
 import * as Visibility from "visibilityjs";
 import { Camera } from "./camera";
+import { FrcStatsContext } from "../../persistence";
 
 const ZXing = (<any>_ZXing)();
 
@@ -185,6 +186,7 @@ class Analyzer {
 }
 
 export interface ScannerOptions {
+  dbContext: FrcStatsContext;
   video: HTMLVideoElement;
   mirror?: boolean;
   continuous?: boolean;
@@ -201,6 +203,7 @@ export class Scanner {
   private _camera: Camera;
   private _scanner: ScanProvider;
   private _fsm: DerStateMachine;
+  private dbContext: FrcStatsContext;
   private onScanCallbacks: ((content, image) => any)[];
 
   constructor(opts: ScannerOptions) {
@@ -210,6 +213,10 @@ export class Scanner {
     this._continuous = (opts.continuous !== false);
     this._analyzer = new Analyzer(this.video);
     this._camera = null;
+    opts.dbContext.getUserPrefs().then(userPrefs => {
+      this.mirror = userPrefs.qrcodeMirrored;
+    });
+    this.dbContext = opts.dbContext;
 
     let captureImage = opts.captureImage || false;
     let scanPeriod = opts.scanPeriod || 1;
@@ -321,6 +328,13 @@ export class Scanner {
       (<any>this.video.style).msFilter = null;
       this.video.style.filter = null;
       this.video.style.transform = null;
+    }
+
+    if(this.dbContext) {
+      this.dbContext.getUserPrefs().then(userPrefs => {
+        userPrefs.qrcodeMirrored = mirror;
+        this.dbContext.userPrefs.put(userPrefs);
+      });
     }
   }
 

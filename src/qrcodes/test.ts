@@ -34,7 +34,7 @@ export class QrCodeImportPage {
   }
 
   attached() {
-    this.scanner = new Scanner({ video: this.videoElement, scanPeriod: 50 });
+    this.scanner = new Scanner({ video: this.videoElement, scanPeriod: 50, dbContext: this.dbContext, });
     this.scanner.onScan((content, image) => {
       this.receivePacket(content);
 
@@ -167,4 +167,5 @@ export class QrCodeImportPage {
     this.activeCameraIndex = index;
     this.setActiveCamera();
   }
+
 }

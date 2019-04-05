@@ -708,6 +708,7 @@ export interface UserStateEntity {
   lastMatchNumber: number;
   qrType: TypeNumber;
   mehWereNotPicking?: boolean;
+  qrcodeMirrored: boolean;
 }
 
 export interface EventMatchEntity {
@@ -786,6 +787,7 @@ export function makeUserPrefs(): UserStateEntity{
     qrType: 12,
     currentYear: "",
     lastMatchNumber: null,
+    qrcodeMirrored: false,
   };
 }
 
