@@ -573,4 +573,8 @@ export class MatchInputPage {
     clearInterval(this.timerIntervalId);
     this.timerIntervalId = null;
   }
+
+  public revalidatePlacement(obj: DeepSpaceEvent) {
+    this.validationController.validate({object: obj, rules: this.placementRules});
+  }
 }
