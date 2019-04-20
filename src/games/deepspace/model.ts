@@ -70,6 +70,7 @@ export function setupValidationRules() {
     .satisfiesRule("maximum", 135)
     .satisfiesRule("isNumeric")
     .satisfiesRule("isParadox", "level3ClimbBegin")
+    .when((obj:TeamMatch2019Entity) => obj.level3ClimbAttempted)
     .ensure((obj: TeamMatch2019Entity) => obj.level3ClimbSucceeded)
     .satisfiesRule("attempted", "level3ClimbAttempted")
     .ensure((obj: TeamMatch2019Entity) => obj.level2ClimbSucceeded)

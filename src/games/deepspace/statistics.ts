@@ -12,6 +12,8 @@ export class DeepSpaceTeamStatistics {
 
   /**The average number of cargo and hatch panels placed by the team's robot. */
   avgGamepieceCount: number;
+  /**The average number of cargo and hatch panels placed by the team's robot in a match. */
+  maxGamepieceCount: number;
   /**The average number of cargo placed by the team's robot. */
   avgCargoCount: number;
   /**The average number of hatch panels placed by the team's robot. */
@@ -226,6 +228,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.failureCount = 0;
 
   result.matchCount = x.length;
+  result.maxGamepieceCount = 0;
 
   result.teamNumber = team.teamNumber;
   result.teamName = team.teamName;
@@ -255,6 +258,8 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       result.liftLevel3Count += 0;
     }
 
+    let matchCargoCount = 0;
+    let matchHatchPanelCount = 0;
     for(var j = 0; j < x[i].placements.length; j++) {
       if(x[i].placements[j].gamepiece == "Cargo") {
         mapCargo.set(x[i].placements[j].location, 1);
@@ -326,6 +331,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
 
       if(x[i].placements[j].gamepiece == "Cargo") {
         cargoCount++;
+        matchCargoCount++;
         //console.log(cargoCount);
         if(!alreadyAddedCargo) {
           result.cargoPlacedMatchCount++;
@@ -354,6 +360,7 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       }
       if(x[i].placements[j].gamepiece == "Hatch Panel") {
         hatchCount++;
+        matchHatchPanelCount++;
         //console.log(hatchCount);
         if(!alreadyAddedHatch) {
           result.hatchPanelPlacedMatchCount++;
@@ -389,6 +396,10 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
           result.hatchPanelPlacedMatchCount++;
           alreadyAddedHatch = !alreadyAddedHatch;
         }
+      }
+
+      if(matchHatchPanelCount + matchCargoCount > result.maxGamepieceCount) {
+        result.maxGamepieceCount = matchHatchPanelCount + matchCargoCount;
       }
     }
   }

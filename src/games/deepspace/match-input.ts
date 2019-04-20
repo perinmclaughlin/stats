@@ -262,14 +262,15 @@ export class MatchInputPage {
       placement.when = this.timeRemaining;
       placement.sandstorm = this.timeRemainingSandstorm;
     } else if (this.model.placements.length > 0) {
-      if ((this.model.placements[this.model.placements.length - 1].when - 5) < 1) {
+      let incTime = 10;
+      if ((this.model.placements[this.model.placements.length - 1].when - incTime) < 1) {
         placement.when = 1;
       } else {
-        placement.when = this.model.placements[this.model.placements.length - 1].when - 5;
+        placement.when = this.model.placements[this.model.placements.length - 1].when - incTime;
       }
-      if((this.model.placements[this.model.placements.length - 1].when - 5) < 1 && this.model.placements[this.model.placements.length - 1].sandstorm) {
+      if((this.model.placements[this.model.placements.length - 1].when - incTime) < 1 && this.model.placements[this.model.placements.length - 1].sandstorm) {
         placement.sandstorm = !this.model.placements[this.model.placements.length - 1].sandstorm;
-        placement.when = 135 + (this.model.placements[this.model.placements.length - 1].when - 5);
+        placement.when = 135 + (this.model.placements[this.model.placements.length - 1].when - incTime);
       } else {
         placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
       }
