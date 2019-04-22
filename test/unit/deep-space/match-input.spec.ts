@@ -139,10 +139,12 @@ describe('deep space match-input', () => {
 
   //Because end time can't be BEFORE start time
   it('somehow a team climbed before they started', () => {
+    data.level3ClimbAttempted = true;
+    data.level3ClimbSucceeded = true;
     data.level3ClimbBegin = 30;
     data.level3ClimbEnd = 60;
 
-    return validateSingle("level3ClimbBegin", `you can't finish something BEFORE you start it!`);
+    return validateSingle("level3ClimbEnd", `you can't finish something BEFORE you start it!`);
   });
 
   it('\"you cannot succeed if you don\'t try!\" level 2', () => {

@@ -214,7 +214,7 @@ export class ExportDialog {
       let hatchPickupScore = "";
       hatchPickupScore += teamStats[k].hatchPanelPickup.name, "(", teamStats[k].hatchPanelPickupRaw, " / 40)";
       let defenseScore = "";
-      defenseScore += teamStats[k].drivetrainStrength.name, "(", teamStats[k].drivetrainStrengthRaw, " / 40)";
+      defenseScore += teamStats[k].drivetrainStrength.name;
       let cargoPercent = teamStats[k].cargoPlacedMatchCount / teamStats[k].matchCount;
       let hatchPercent = teamStats[k].hatchPanelPlacedMatchCount / teamStats[k].matchCount;
 
