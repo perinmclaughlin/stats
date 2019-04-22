@@ -512,9 +512,7 @@ export class MatchInputPage {
     }
     for (var placement of model.placements) {
       for (var prop of numericPlacementProperties) {
-      console.info(`fixup placement ${prop} before: `, placement[prop]);
         fixupProperty(placement, prop)
-      console.info(`fixup placement ${prop} after: `, placement[prop]);
       }
     }
   }

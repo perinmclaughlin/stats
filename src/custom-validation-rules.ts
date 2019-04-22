@@ -60,6 +60,7 @@ export class CustomValidationRules {
     ValidationRules.customRule(
       "isParadox", (end: number, obj: any, startPropName: string) => {
         let start = obj[startPropName];
+        start = parseInt(start);
         end = parseInt(<any>end);
         if((isNaN(start) || isNaN(end)) && isNaN(start) != isNaN(end)) {
           return false;

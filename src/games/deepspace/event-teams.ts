@@ -84,11 +84,11 @@ export class EventTeamsPage {
   }
 
   public sortByCargoPickup() {
-    this.teamsData.sort((a,b) => b.cargoPickupRaw - a.cargoPickupRaw);
+    this.teamsData.sort((a,b) => b.cargoPickup.numeric - a.cargoPickup.numeric);
   }
 
   public sortByHatchPickup() {
-    this.teamsData.sort((a,b) => b.hatchPanelPickupRaw - a.hatchPanelPickupRaw);
+    this.teamsData.sort((a,b) => b.hatchPanelPickup.numeric - a.hatchPanelPickup.numeric);
   }
 
   public sortByCargoCountShip() {

@@ -63,14 +63,14 @@
     <h3 show.bind="!mehWereNotPicking">Grabber Capabilities (Floor)</h3>
     <div class='row' show.bind="!mehWereNotPicking">
       <div class='col-sm-6 form-group'>
-        <label>Cargo Pickup </label>
+        <label>Floor Cargo Pickup </label>
         <select class='form-control' value.bind='model.cargoPickup & validate:rules'>
           <option></option>
           <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name} </option>
         </select>
       </div>
       <div class='col-sm-6 form-group'>
-        <label>Hatch Panel Pickup</label>
+        <label>Floor Hatch Panel Pickup</label>
         <select class='form-control' value.bind='model.hatchPanelPickup & validate:rules'>
           <option></option>
           <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name}</option>

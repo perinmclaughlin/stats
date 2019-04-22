@@ -1,4 +1,4 @@
-import { QualitativeAnswer, TeamMatch2019Entity, qualitativeAnswers, TeamEntity, DeepSpaceLocation } from "../../persistence";
+import { QualitativeAnswer, TeamMatch2019Entity, qualitativeAnswers, TeamEntity, DeepSpaceLocation, QualitativeNumeric } from "../../persistence";
 import { print } from "util";
 import { placementTime } from "./model";
 
@@ -134,8 +134,6 @@ export class DeepSpaceTeamStatistics {
   drivetrainStrength: QualitativeAnswer;
   /**Notes on the vulnerabilities of a robot's drivetrain. */
   defenseWeaknesses: string;
-  /**The raw value of drivetrainStrength. */
-  drivetrainStrengthRaw: number;
   /**Foul count. */
   foulCount: number;
   /**Failure count. */
@@ -149,8 +147,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   let cargoSandstorm = 0;
   let hatchCount = 0;
   let hatchSandstorm = 0;
-  let cargoPickup = 0;
-  let hatchPickup = 0;
+  let cargoPickupRatings = [];
+  let hatchPickupRatings = [];
+  let drivetrainStrengthRatings = [];
   let cycleCargo = [];
   let cycleHatch = [];
   let cycleCargoLow = [];
@@ -222,7 +221,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
   result.locationsPlacedCargo = [];
   result.locationsPlacedHatch = [];
   result.defenseWeaknesses = "";
-  result.drivetrainStrengthRaw = 0;
   result.avgClimbLevel3Time = 999;
   result.foulCount = 0;
   result.failureCount = 0;
@@ -411,7 +409,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.avgGamepieceCount = 0;
     result.avgSandstormCargoCount = 0;
     result.avgSandstormHatchPanelCount = 0;
-    cargoPickup = 0;
     result.drivetrainStrength = {
       numeric: 0,
       name: "N/A"
@@ -574,20 +571,20 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
       if(x[i].level3ClimbSucceeded) {
         result.climbLevel3Successes++;
       }
-      cargoPickup += x[i].cargoPickup;
-      hatchPickup += x[i].hatchPanelPickup;
-      result.drivetrainStrengthRaw += x[i].defenseCapability;
+      if(x[i].cargoPickup != 0) {
+        cargoPickupRatings.push(x[i].cargoPickup);
+      }
+      if(x[i].hatchPanelPickup != 0) {
+        hatchPickupRatings.push(x[i].hatchPanelPickup);
+      }
+      if(x[i].defenseCapability != 0) {
+        drivetrainStrengthRatings.push(x[i].defenseCapability);
+      }
       //console.log("x[",i,"].defenseCapability for team", result.teamNumber, "is", x[i].defenseCapability);
-      //console.log("result.drivetrainStrengthRaw for team", result.teamNumber, "is", result.drivetrainStrengthRaw);
     }
 
-    cargoPickup = cargoPickup / result.matchesPlayed;
-    result.cargoPickupRaw = cargoPickup;
-    hatchPickup = hatchPickup / result.matchesPlayed;
-    result.hatchPanelPickupRaw = hatchPickup;
     result.sandstormCargoCountRaw = cargoSandstorm;
     result.sandstormHatchPanelCountRaw = hatchSandstorm;
-    result.drivetrainStrengthRaw = result.drivetrainStrengthRaw / x.length;
 
     if(isNaN(result.avgCargoCycleTime)) {
       result.avgCargoCycleTime = 0;
@@ -619,46 +616,6 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     if(isNaN(result.avgHatchPanelCycleTimeRocketMid)) {
       result.avgHatchPanelCycleTimeRocketMid = 0;
     }
-    if(isNaN(result.drivetrainStrengthRaw)) {
-      result.drivetrainStrengthRaw = 0;
-    }
-  }
-
-  //result.climbLevel3Time = _some time value_;
-  //result.liftLevel2Count = _something_;
-  //result.liftLevel3Count = _something_;
-
-  //Ahh, a lovely long if-else chain.
-  if(cargoPickup > 0 && cargoPickup <= 15) {
-    result.cargoPickup = {
-      numeric: 10,
-      name: "Poor"
-    };
-  } else if(cargoPickup > 15 && cargoPickup <= 25) {
-    result.cargoPickup = {
-      numeric: 20,
-      name: "Decent"
-    };
-  } else if(cargoPickup > 25 && cargoPickup <= 35) {
-    result.cargoPickup = {
-      numeric: 30,
-      name: "Good"
-    };
-  } else if(cargoPickup > 35) {
-    result.cargoPickup = {
-      numeric: 40,
-      name: "Excellent"
-    };
-  } else if(cargoPickup == 0) {
-    result.cargoPickup = {
-      numeric: 0,
-      name: "N/A"
-    };
-  } else {
-    result.cargoPickup = {
-      numeric: 0,
-      name: "INVALID"
-    };
   }
 
   if(level3Times.length > 0) {
@@ -669,71 +626,9 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
     result.avgClimbLevel3Time = result.avgClimbLevel3Time / level3Times.length;
   }
 
-  //Another if-else chain
-  if(result.drivetrainStrengthRaw > 0 && result.drivetrainStrengthRaw <= 10) {
-    result.drivetrainStrength = {
-      numeric: 10,
-      name: "Poor"
-    };
-  } else if(result.drivetrainStrengthRaw > 10 && result.drivetrainStrengthRaw <= 20) {
-    result.drivetrainStrength = {
-      numeric: 20,
-      name: "Decent"
-    };
-  } else if(result.drivetrainStrengthRaw > 20 && result.drivetrainStrengthRaw <= 30) {
-    result.drivetrainStrength = {
-      numeric: 30,
-      name: "Good"
-    };
-  } else if(result.drivetrainStrengthRaw > 30) {
-    result.drivetrainStrength = {
-      numeric: 40,
-      name: "Excellent"
-    };
-  } else if(result.drivetrainStrengthRaw == 0) {
-    result.drivetrainStrength = {
-      numeric: 0,
-      name: "N/A"
-    };
-  } else {
-    result.drivetrainStrength = {
-      numeric: 0,
-      name: "INVALID"
-    };
-  }
-
-  //Ahh, another lovely long if-else chain.
-  if(hatchPickup > 0 && hatchPickup <= 15) {
-    result.hatchPanelPickup = {
-      numeric: 10,
-      name: "Poor"
-    };
-  } else if(hatchPickup > 15 && hatchPickup <= 25) {
-    result.hatchPanelPickup = {
-      numeric: 20,
-      name: "Decent"
-    };
-  } else if(hatchPickup > 25 && hatchPickup <= 35) {
-    result.hatchPanelPickup = {
-      numeric: 30,
-      name: "Good"
-    };
-  } else if(hatchPickup > 35) {
-    result.hatchPanelPickup = {
-      numeric: 40,
-      name: "Excellent"
-    };
-  } else if(hatchPickup == 0) {
-    result.hatchPanelPickup = {
-      numeric: 0,
-      name: "N/A"
-    };
-  } else {
-    result.hatchPanelPickup = {
-      numeric: 0,
-      name: "INVALID"
-    };
-  }
+  result.drivetrainStrength = calculateAvgQualitative(drivetrainStrengthRatings);
+  result.cargoPickup = calculateAvgQualitative(cargoPickupRatings);
+  result.hatchPanelPickup = calculateAvgQualitative(hatchPickupRatings)
 
   if(mapCargo.size > 0) {
     result.locationsPlacedCargo = Array.from(mapCargo.keys());
@@ -747,3 +642,41 @@ export function makeTeamStats(team: TeamEntity, x: TeamMatch2019Entity[]): DeepS
 
   return result;
 } 
+
+function calculateAvgQualitative(ratings: QualitativeNumeric[]): QualitativeAnswer {
+  let sum = ratings.reduce((a, b) => a + b, 0);
+  let count = ratings.length;
+  let hatchPickup = count == 0 ? 0 : sum / count;
+  if(hatchPickup > 0 && hatchPickup <= 15) {
+    return {
+      numeric: 10,
+      name: "Poor"
+    };
+  } else if(hatchPickup > 15 && hatchPickup <= 25) {
+    return {
+      numeric: 20,
+      name: "Decent"
+    };
+  } else if(hatchPickup > 25 && hatchPickup <= 35) {
+    return  {
+      numeric: 30,
+      name: "Good"
+    };
+  } else if(hatchPickup > 35) {
+    return {
+      numeric: 40,
+      name: "Excellent"
+    };
+  } else if(hatchPickup == 0) {
+    return {
+      numeric: 0,
+      name: "N/A"
+    };
+  } else {
+    console.info("invalid: ", hatchPickup);
+    return {
+      numeric: 0,
+      name: "INVALID"
+    };
+  }
+}
