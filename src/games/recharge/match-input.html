@@ -1,0 +1,322 @@
+<template>
+  <!--page formating-->
+  <require from="../../utilities/counter"></require>
+  <require from="../../utilities/time-remaining"></require>
+  <require from="./match-input.css"></require>
+  <require from="aurelia-validation/validate-binding-behavior"></require>
+  <div class='container-fluid' show.bind='!errorNotScheduled'>
+    <!--Team name and Event display-->
+    <button class='btn btn-outline-primary float-right' click.delegate='showSettings()'>Settings</button>
+    <h1>
+      <b>
+        <u>
+          <a route-href='route: event-team; params.bind: {year: event.year,
+            eventCode: event.eventCode, teamNumber: team.teamNumber}'>
+            ${team.teamNumber} (${team.teamName})
+          </a>
+        </u>
+      </b>
+    </h1>
+    <h3>
+      <b>
+        <a route-href='route: event-matches; params.bind: {year: event.year,
+          eventCode: event.eventCode }'>
+          ${event.name}
+        </a>
+      </b>
+      match ${model.matchNumber}<span show.bind='true' click.delegate="foundIt()">,</span> ${slots.name}</h3><span show.bind='secret'><p style='font-size: 50%'>You found me.</p></span>
+
+    <!--Buttons for switching pages, saving, and adding-->
+    <div class='row'>
+      <div class='col' style='padding-bottom: 10px;'>
+        <div class="btn-group" role="group" aria-label="Buttons">
+          <button class="btn btn-secondary" click.delegate='gotoPreviousMatch()'>Previous Match</button>
+          <button class="btn btn-secondary" click.delegate='gotoNextMatch()'>Next Match</button>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col' style='padding-bottom: 10px;'>
+        <div class="btn-group" role="group" aria-label="Buttons">
+          <button class="btn btn-secondary" disabled.bind='model.id==null' click.delegate="exportToQrCode()">
+            Show Team QR Code
+          </button>
+          <button class="btn btn-primary" click.delegate='save()'>Save</button>
+          <button class="btn btn-secondary" click.delegate='clickedIt()'>Log</button><br>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col'>
+        <button class='btn btn-outline-primary' click.delegate='showBingo()'>Bingo</button>
+      </div>
+    </div>
+
+    <div class="Pop-Ups">
+      <span show.bind="hasSaved != false">Saved</span>
+      <span class='error-message' show.bind="errorMessage != null"> ${errorMessage} </span><br>
+    </div>
+
+    <br>
+
+    <!--Drop down menus for the cargo and hatch pickups-->
+    <h3 show.bind="!mehWereNotPicking">Grabber Capabilities (Floor)</h3>
+    <div class='row' show.bind="!mehWereNotPicking">
+      <div class='col-sm-6 form-group'>
+        <label>Floor Cargo Pickup </label>
+        <select class='form-control' value.bind='model.cargoPickup & validate:rules'>
+          <option></option>
+          <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name} </option>
+        </select>
+      </div>
+      <div class='col-sm-6 form-group'>
+        <label>Floor Hatch Panel Pickup</label>
+        <select class='form-control' value.bind='model.hatchPanelPickup & validate:rules'>
+          <option></option>
+          <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name}</option>
+        </select>
+      </div>
+    </div>
+    <h3>Defensive Capabilities</h3>
+    <div class='row'>
+      <div class='col-sm-6 form-group'>
+        <label>Drivetrain Strength</label>
+        <select class='form-control' value.bind='model.defenseCapability & validate:rules'>
+          <option></option>
+          <option repeat.for='a of qualifiedAnswers' model.bind="a.numeric">${a.name}</option>
+        </select>
+      </div>
+      <div class='col-sm-6 form-group'>
+        <label class="clickable" click.delegate="UwU()">Weaknesses</label>
+        <textarea id='defenseWeaknesses' class='form-control' rows='1' value.bind="model.defenseWeaknesses"></textarea>
+      </div>
+    </div>
+
+    <h3>Gamepiece Placement</h3>
+    <!--This is what should appear when you press the add button-->
+    <div id='TacoPlacements'>
+      <!--Drop down menus-->
+      <!--The labels that go above the columns-->
+      <div class='gamePieceLabel header' show.bind='model.placements.length !=0'>
+        <label>Game Piece</label>
+      </div>
+      <div class='goalLabel header' show.bind='model.placements.length !=0'>
+        <label>Location</label>
+      </div>
+      <div class='secondsLabel header' show.bind='model.placements.length !=0'>
+        <label>Seconds Left</label>
+      </div>
+      <div class='sandStormLabel header' show.bind='model.placements.length !=0'>
+        <label>Sand Storm</label>
+      </div>
+      <div>
+      </div>
+      <template class='row' repeat.for='p of model.placements'>
+        <div class='form-group'>
+          <label class='inline-header'>Game Piece</label>
+          <select class='form-control' value.bind='p.gamepiece & validate:placementRules'>
+            <option></option>
+            <option repeat.for='r of gamepieceArray'>${r}</option>
+          </select>
+        </div>
+        <div class='form-group'>
+          <label class='inline-header'>Location</label>
+          <select class='form-control' value.bind='p.location & validate:placementRules'>
+            <option></option>
+            <option repeat.for='m of locationArray'>${m}</option>
+          </select>
+        </div>
+        <div class='form-group'>
+          <label class='inline-header'>Seconds Left</label>
+          <time-remaining placeholder='seconds left' show-label.bind='false' model.bind='p' property="when" auto.bind="p.sandstorm" max.bind="maxWhen"
+            rules.bind="placementRules"></time-remaining>
+        </div>
+        <div class='form-group'>
+          <label>
+            <input type='checkbox' class='' checked.bind='p.sandstorm' change.delegate='revalidatePlacement(p)'/>Sandstorm
+          </label>
+        </div>
+        <div class=''>
+          <button type='button' click.delegate='deleteRow($index)' class="btn btn-danger">X</button>
+        </div>
+      </template>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div>
+      </div>
+    </div>
+
+    <div>
+
+        <button class="btn btn-secondary" click.delegate='addPlacement("Cargo")'>Add Cargo</button>
+        <button class="btn btn-secondary" click.delegate='addPlacement("Hatch Panel")'>Add Hatch Panel</button>
+        <span style="width: 200px; display: inline-block">
+        <time-remaining 
+          show-label.bind="false" model.bind="$this" property="timeRemaining" 
+          auto.bind="timeRemainingSandstorm" max.bind="maxWhen" 
+          view-model.ref="timeRemainingModel">
+        </time-remaining></span>
+        <span style='width: 100px; display: inline-block;'>${timeRemainingSandstorm ? 'Sandstorm' : 'Teleop'}</span>
+        <button class='btn btn-secondary' disabled.bind='timerIntervalId != null' click.delegate='startTimer()'>Start Timer</button>
+        <button class='btn btn-secondary' show.bind='timerIntervalId != null' click.delegate='resetTimer()'>Reset Timer</button>
+    </div>
+
+    <h3>End Game</h3>
+    <!--Climbing by yourself-->
+    <div id='climbing' class='row'>
+      <div class='col-sm-6'>
+        <div class='row' show.bind="!mehWereNotPicking">
+          <div class='col'>
+            <label>
+              <input type='checkbox' class='' checked.bind='model.level2ClimbAttempted'> Level 2 Climb Attempted</label>
+            </label>
+          </div>
+          <div class='col form-group'>
+            <label show.bind='model.level2ClimbAttempted'>
+              <input type='checkbox' class='' checked.bind='model.level2ClimbSucceeded & validate:rules'> Level 2
+              Climb Succeeded</label>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class='col-sm-6'>
+        <div class='row'>
+          <div class='col'>
+            <label>
+              <input type='checkbox' class='' change.delegate='syncLevel3Entries()' checked.bind='model.level3ClimbAttempted'> Level 3 Climb Attempted</label>
+            </label>
+          </div>
+          <div class='col' show.bind='model.level3ClimbAttempted'>
+            <div class='col form-group'>
+              <label>Seconds Left When Started</label>
+              <input type='text' class='form-control' value.bind='model.level3ClimbBegin & validate:rules' />
+            </div>
+            <div class='col form-group'>
+              <label>Seconds Left When Finished</label>
+              <input type='text' class='form-control' value.bind='model.level3ClimbEnd & validate:rules' />
+            </div>
+            <div class='col form-group'>
+              <label>
+                <input type='checkbox' class='' checked.bind='model.level3ClimbSucceeded & validate:rules'> Level 3
+                Climb Succeeded</label>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Lifting-->
+    <div id='lifting' show.bind="!mehWereNotPicking">
+      <div class='row'>
+        <!--Lifted by another team-->
+        <div class='col-sm-10'>
+          <label>
+            <input type='checkbox' class='' change.delegate='wasLiftedReset()' checked.bind='model.wasLifted'>Was Lifted</label>
+          </label>
+        </div>
+        <!--Asking what team lifted them-->
+        <div class='col-sm-10 form-group' show.bind='model.wasLifted'>
+          <label>Lifted By:</label>
+          <select class='form-control' value.bind='model.liftedBy & validate:rules'>
+            <option></option>
+            <option value.bind="partner1">
+              ${partner1}
+            </option>
+            <option value.bind="partner2">
+              ${partner2}
+            </option>
+          </select>
+
+        </div>
+        <!--Lifted other teams-->
+        <div class='col-sm-7'>
+          <label>
+            <input type='checkbox' class='' change.delegate='syncLiftedAndEntries()' checked.bind='model.liftedSomeone'>Lifted Another Team</label>
+        </div>
+        <!--What teams they lifted-->
+        <div class='col-sm-7 form-group' show.bind='model.liftedSomeone'>
+          <label>
+            Lifted ${partner1}
+            <input type='checkbox' class='form-control' checked.bind='liftedPartner1' />
+          </label>
+          <label>
+            Lifted ${partner2}
+            <input type='checkbox' class='form-control' checked.bind='liftedPartner2' />
+          </label>
+          <input type='hidden' value.one-way='model.lifted & validate:rules' />
+        </div>
+        <div class='col-sm-7' show.bind='model.liftedSomeone'>
+          <label>
+            Level 2
+            <input type='radio' class='form-control' checked.bind='model.didLiftLevel3' model.bind='false' />
+          </label>
+          <label>
+            Level 3
+            <input type='radio' class='form-control' checked.bind='model.didLiftLevel3' model.bind='true' />
+          </label>
+        </div>
+      </div>
+    </div>
+
+
+    <!--Fouls-->
+    <div class='row' show.bind="!mehWereNotPicking">
+      <div class='col-sm-6'>
+        <div class='row'>
+          <div class='col-sm-2 form-group'>
+            <label class='form-control-label'>Robot Failure?</label>
+            <div>
+              <label>
+                <input change.delegate='syncBoolAndReason()' type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="true">
+                Yes</label>
+              <br>
+              <label>
+                <input change.delegate='syncBoolAndReason()' type="radio" class='form-control' name="robot_failure" checked.bind="model.isFailure" model.bind="false">
+                No</label>
+              <br>
+            </div>
+          </div>
+          <div class='col-sm-10 form-group' show.bind='model.isFailure'>
+            <label class='form-control-label' for='failureReason'>Failure Reasons: </label>
+            <textarea id='failureReason' class='form-control' rows='5' value.bind="model.failureReason"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class='col-sm-6'>
+        <div class='row'>
+          <div class='col-sm-2'>
+
+            <label class='form-control-label'>Fouls?</label>
+            <div>
+              <label>
+                <input change.delegate='syncBoolAndReason2()' type='radio' class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="true">
+                Yes
+              </label>
+              <br>
+              <br>
+              <label>
+                <input change.delegate='syncBoolAndReason2()' type='radio' class='form-control' name="fouls" checked.bind="model.isFoul" model.bind="false">
+                No
+              </label>
+              <br>
+            </div>
+          </div>
+          <div class='col-sm-10' show.bind='model.isFoul'>
+            <label class='form-control-label' for='foulReason'>Foul Reason:</label>
+            <textarea id='foulReason' class='form-control' rows='5' value.bind='model.foulReason'></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Notes-->
+    <div class='row'>
+      <div class='col'>
+        <h5>Notes</h5>
+        <textarea id='areaNotes' class='form-control' rows='5' value.bind='model.autoNotes'></textarea>
+      </div>
+    </div>
+  </div>
+</template>

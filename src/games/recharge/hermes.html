@@ -1,0 +1,219 @@
+<template>
+  <div class='container-fluid'>
+    <h1>
+      <a route-href='route: event-matches; params.bind: {year: event.year,
+                    eventCode: event.eventCode }'>
+        ${event.name}</a>: Match ${eventMatch.matchNumber}
+    </h1>
+    <div class='' style="overflow: scroll;">
+      <table class="table table-hover">
+        <tr>
+          <th>Team Number</th>
+          <th>
+            Team Name
+          </th>
+          <th>
+            Avg Cargo Sandstorm
+          </th>
+          <th>
+            Avg Hatch Sandstorm
+          </th>
+          <th>
+            Drivetrain strength
+          </th>
+          <th>
+            Level 2 climbs
+          </th>
+          <th>
+            Level 3 climbs
+          </th>
+          <th>
+            Climb Time (LvL 3)
+          </th>
+          <th>
+            Level 2 Teams Lifted
+          </th>
+          <th>
+            Level 3 Teams Lifted
+          </th>
+          <th>
+            Cargo Pickup
+          </th>
+          <th>
+            Hatch Pickup
+          </th>
+          <th>
+            Avg Cargo Cycle time
+          </th>
+          <th>
+            Avg Hatch Cycle time
+          </th>
+          <th>
+            Avg Cargo Cycle Time (Cargo Ship)
+          </th>
+          <th>
+            Avg Hatch Cycle Time (Cargo Ship)
+          </th>
+          <th>
+            Avg Cargo Cycle Time (Rocket Low)
+          </th>
+          <th>
+            Avg Hatch Cycle Time (Rocket Low)
+          </th>
+          <th>
+            Avg Cargo Cycle Time (Rocket Mid)
+          </th>
+          <th>
+            Avg Hatch Cycle Time (Rocket Mid)
+          </th>
+          <th>
+            Avg Cargo Cycle Time (Rocket High)
+          </th>
+          <th>
+            Avg Hatch Cycle Time (Rocket High)
+          </th>
+          <th>
+            Avg Gamepiece Count
+          </th>
+          <th>
+            Avg Cargo Count
+          </th>
+          <th>
+            Avg Hatch Count
+          </th>
+          <th>
+            % of Matches (Cargo)
+          </th>
+          <th>
+            % of Matches (Hatch)
+          </th>
+          <th>
+            Foul Count
+          </th>
+          <th>
+            Failure Count
+          </th>
+        </tr>
+        <tbody class="${team.slot.prop.substr(0, 1) == 'r' ? 'red' : 'blue'}" repeat.for="team of teams">
+          <tr>
+            <td>
+              <a style="display: block;"
+                route-href="route.bind:'event-team'; params.bind: {year: event.year, eventCode: event.eventCode, teamNumber: team.team.teamNumber}">
+                ${team.team.teamNumber}
+              </a>
+              <button class='btn btn-outline-info' click.delegate='team.expanded=!team.expanded'>expand</button>
+            </td>
+            <td>
+              ${team.team.teamName} (${team.slot.name})
+            </td>
+            <td>
+              ${team.stats.avgSandstormCargoCount | numeric:"0.0"}
+            </td>
+            <td>
+              ${team.stats.avgSandstormHatchPanelCount | numeric:"0.0"}
+            </td>
+            <td>
+              ${team.stats.drivetrainStrength.name}
+            </td>
+            <td>
+              ${team.stats.climbLevel2Successes}/${team.stats.climbLevel2Attempts}
+            </td>
+            <td>
+              ${team.stats.climbLevel3Successes}/${team.stats.climbLevel3Attempts}
+            </td>
+            <td>
+              ${team.stats.avgClimbLevel3Time | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.liftLevel2Count}
+            </td>
+            <td>
+              ${team.stats.liftLevel3Count}
+            </td>
+            <td>
+              ${team.stats.cargoPickup.name}
+            </td>
+            <td>
+              ${team.stats.hatchPanelPickup.name}
+            </td>
+            <td>
+              ${team.stats.avgCargoCycleTime | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgHatchPanelCycleTime | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgCargoCycleTimeCargoShip | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgHatchPanelCycleTimeCargoShip | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgCargoCycleTimeRocketLow | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgHatchPanelCycleTimeRocketLow | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgCargoCycleTimeRocketMid | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgHatchPanelCycleTimeRocketMid | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgCargoCycleTimeRocketHigh | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgHatchPanelCycleTimeRocketHigh | numeric:"0.00"}
+            </td>
+            <td>
+              ${team.stats.avgGamepieceCount | numeric:"0.0"}
+            </td>
+            <td>
+              ${team.stats.avgCargoCount | numeric:"0.0"}
+            </td>
+            <td>
+              ${team.stats.avgHatchPanelCount | numeric:"0.0"}
+            </td>
+            <td>
+              ${team.stats.cargoPlacedMatchCount}/${team.stats.matchCount}
+            </td>
+            <td>
+              ${team.stats.hatchPanelPlacedMatchCount}/${team.stats.matchCount}
+            </td>
+            <td>
+              ${team.stats.foulCount}
+            </td>
+            <td>
+              ${team.stats.failureCount}
+            </td>
+          </tr>
+          <tr show.bind="team.expanded">
+            <th></th>
+            <th></th>
+            <th>Match</th>
+            <th>Cargo</th>
+            <th>Hatch Panel</th>
+            <th colspan="5">Defense weaknesses</th>
+            <th colspan="5">Notes</th>
+            <th colspan="5">Failures</th>
+            <th colspan="5">Fouls</th>
+            <th colspan="4"></th>
+          </tr>
+          <tr show.bind="team.expanded" repeat.for="m of team.ms">
+            <td></td>
+            <td></td>
+            <td>${m.match.matchNumber}</td>
+            <td>${m.stats.avgCargoCount}</td>
+            <td>${m.stats.avgHatchPanelCount}</td>
+            <td colspan="5">${m.match.defenseWeaknesses}</td>
+            <td colspan="5">${m.match.autoNotes}</td>
+            <td colspan="5">${m.match.isFailure ? m.match.failureReason : ""}</td>
+            <td colspan="5">${m.match.isFoul ? m.match.foulReason : ""}</td>
+            <td colspan="4"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>

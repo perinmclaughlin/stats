@@ -299,6 +299,12 @@ export interface PowerupBingo {
   bingo3xClimb: boolean;
 }
 
+export interface TeamMatch2020Entity extends IEventTeamMatch {
+  id?: number;
+
+  //throw collected stuff here
+
+}
 export interface TeamMatch2019Entity extends IEventTeamMatch {
   id?: number;
   /** */
@@ -443,7 +449,14 @@ export function make2018match(eventCode, teamNumber, matchNumber): TeamMatch2018
 
 }
 
-
+export function make2020match(eventCode: string, teamNumber: string, matchNumber: string): TeamMatch2020Entity {
+  return {
+    // init variables
+    eventCode: eventCode,
+    teamNumber: teamNumber,
+    matchNumber: matchNumber
+  }
+}
 export function make2019match(eventCode: string, teamNumber: string, matchNumber: string): TeamMatch2019Entity {
   return {
     eventCode: eventCode,

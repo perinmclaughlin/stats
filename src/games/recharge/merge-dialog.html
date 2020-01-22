@@ -1,0 +1,123 @@
+<template>
+  <require from="../../events/event-match-merge/row-text"></require>
+  <require from="../../events/event-match-merge/row-bool"></require>
+  <require from="../../events/event-match-merge/row-textarea"></require>
+  <require from="../../events/event-match-merge/row-qualitative"></require>
+  <require from="../../events/event-match-merge/row-dropdown"></require>
+  <require from="./merge-dialog.css"></require>
+  <ux-dialog>
+    <ux-dialog-header>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class='grid-container'>
+        <div class='grid-item'>
+          Field
+        </div>
+        <div class='grid-item'>
+          Local Saved
+        </div>
+        <div class='grid-item'>
+          <button class='btn btn-secondary btn-sm' click.delegate='takeAllFromDb()'>
+            Take All
+          </button>
+        </div>
+        <div class='grid-item'>
+          From File
+        </div>
+        <div class='grid-item'>
+          <button class='btn btn-secondary btn-sm' click.delegate='takeAllFromFile()'>
+            Take All
+          </button>
+        </div>
+        <div class='grid-item'>
+          To Save
+        </div>
+        <row-qualitative state.bind="state" property="cargoPickup" display-name="Cargo Pickup" rules.bind="rules">
+        </row-qualitative>
+        <row-qualitative state.bind="state" property="hatchPanelPickup" display-name="Hatch Panel Pickup"
+          rules.bind="rules"></row-qualitative>
+        <row-qualitative state.bind="state" property="defenseCapability" display-name="Drivetrain Strength" rules.bind="rules">
+        </row-qualitative>
+        <row-text state.bind="state" property="defenseWeaknesses" display-name="Weaknesses" rules.bind="rules"></row-text>
+
+        <div repeat.for="p of placementMergeStates" class='placement-rows'>
+          <div class='placement-rows'>
+            <div class='grid-item'>${p.merged.eventType}</div>
+            <div class='grid-item'> </div>
+            <div class='grid-item'> <button class='btn btn-secondary' click.delegate='takeLocalPlacement(p)'>Take Row</button> </div>
+            <div class='grid-item'> </div>
+            <div class='grid-item'> <button class='btn btn-secondary' click.delegate='takeFilePlacement(p)'>Take Row</button> </div>
+            <div class='grid-item'>
+              <label>include <input type='checkbox' checked.bind="p.include" /></label>
+            </div>
+          </div>
+
+          <div class='placement-rows' show.bind='p.include'>
+            <row-dropdown state.bind='p' property='gamepiece' display-name="Gamepiece" choices.bind="gamepieces" rules.bind="placementRules" if.bind='p.merged.eventType==gamepiecePlacement'></row-dropdown>
+            <row-dropdown state.bind='p' property='location' display-name="Location" choices.bind="locations" rules.bind="placementRules" if.bind='p.merged.eventType==gamepiecePlacement'></row-dropdown>
+            <row-text state.bind="p" property="when" display-name="when" rules.bind="placementRules"></row-text>
+            <row-bool state.bind="p" property="sandstorm" display-name="Sandstorm" rules.bind="placementRules" if.bind='p.merged.eventType==gamepiecePlacement'></row-bool>
+          </div>
+
+        </div>
+
+        <row-bool state.bind="state" property="level2ClimbAttempted" display-name="Level 2 Climb Attempted"></row-bool>
+        <row-bool state.bind="state" property="level2ClimbSucceeded" display-name="Level 2 Climb Succeeded"></row-bool>
+        <row-bool state.bind="state" property="level3ClimbAttempted" display-name="Level 3 Climb Attempted"></row-bool>
+        <row-bool state.bind="state" property="level3ClimbSucceeded" display-name="Level 3 Climb Succeeded"></row-bool>
+        <row-text state.bind="state" property="level3ClimbBegin" display-name="Level 3 Climb Begin" rules.bind="rules">
+        </row-text>
+        <row-text state.bind="state" property="level3ClimbEnd" display-name="Level 3 Climb End" rules.bind="rules">
+        </row-text>
+        <row-text state.bind="state" property="liftedBy" display-name="Lifted By" rules.bind="rules"></row-text>
+
+        <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+          Lifted
+        </div>
+        <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+          <span repeat.for="teamNumber of state.localSaved.lifted">
+            ${teamNumber}
+            <br />
+          </span>
+        </div>
+        <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+          <button class='btn btn-secondary btn-sm' click.delegate='state.merged.lifted=state.localSaved.lifted'>
+            Take
+          </button>
+        </div>
+        <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+          <span repeat.for="teamNumber of state.fromFile.lifted">
+            ${teamNumber}
+            <br />
+          </span>
+        </div>
+        <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+          <button class='btn btn-secondary btn-sm' click.delegate='state.merged.lifted=state.fromFile.lifted'>
+            Take
+          </button>
+        </div>
+        <div class='grid-item ${liftedEqual() ? "green" : "red" }'>
+          <span repeat.for="teamNumber of state.merged.lifted">
+            ${teamNumber}
+            <br />
+          </span>
+        </div>
+
+        <row-bool state.bind="state" property="isFailure" display-name="Robot failure?"></row-bool>
+        <row-textarea state.bind="state" property="failureReason" display-name="Failure reason"
+          shown.bind='state.merged.isFailure'></row-textarea>
+        <row-bool state.bind="state" property="isFoul" display-name="Fouls?"></row-bool>
+        <row-textarea state.bind="state" property="foulReason" display-name="Foul reason"
+          shown.bind='state.merged.isFoul'></row-textarea>
+        <row-textarea state.bind="state" property="notes" display-name="General Notes" shown.bind='true'></row-textarea>
+      </div>
+
+      <button class='btn btn-primary' click.delegate='resolve()'>
+        Mark Resolved
+      </button>
+      <span show.bind='!validationController.valid'>
+        ${errorMessage}
+      </span>
+    </ux-dialog-body>
+  </ux-dialog>
+</template>

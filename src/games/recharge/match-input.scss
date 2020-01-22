@@ -1,0 +1,32 @@
+#TacoPlacements {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  @media (max-width: 576px) {
+    grid-template-columns: auto;
+    .btn-danger {
+      float: right;
+    }
+    .header {
+      display: none;
+    }
+    .inline-header {
+      display: block;
+    }
+  }
+  @media (min-width: 576px) {
+    grid-template-columns: auto auto auto auto auto;
+
+    .header {
+      display: block;
+    }
+    .inline-header {
+      display: none;
+    }
+  }
+}
+
+.error-message {
+  color: red;
+  font-size: 250%;
+}
