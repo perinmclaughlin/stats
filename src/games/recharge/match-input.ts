@@ -2,13 +2,12 @@ import { autoinject } from "aurelia-framework";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
 import * as naturalSort from "javascript-natural-sort";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
-import { TeamMatch2019Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2019match, EventMatchSlots, DeepSpaceEvent, qualitativeAnswers, allDeepSpaceLocations, allDeepSpaceGamepieceTypes, DeepSpaceGamepiece } from "../../persistence";
+import { TeamMatch2020Entity, TeamEntity, EventEntity, EventMatchEntity, FrcStatsContext, make2020match, EventMatchSlots, RechargeEvent, qualitativeAnswers, allRechargeLocations, allRechargeGamepieceTypes, RechargeGamepiece } from "../../persistence";
 import { Disposable, BindingEngine, DirtyCheckProperty } from "aurelia-binding";
 import { DialogService } from "aurelia-dialog";
 import { Router } from "aurelia-router";
 import { scrollToTop } from "../../utilities/scroll";
 import { getTeamNumbers } from "../merge-utils";
-import { DeepSpaceBingoDialog } from "./deepspace-bingo";
 import { QrCodeDisplayDialog } from "../../qrcodes/display-dialog";
 import { cloneDeep } from "lodash";
 import { nextMatchNumber, previousMatchNumber } from "../../model";
@@ -20,8 +19,8 @@ import { TimeRemaining } from "../../utilities/time-remaining";
 
 @autoinject
 export class MatchInputPage {
-  public model: TeamMatch2019Entity;
-  public pristineModel: TeamMatch2019Entity;
+  public model: TeamMatch2020Entity;
+  public pristineModel: TeamMatch2020Entity;
   public team: TeamEntity;
   public event: EventEntity;
   public eventMatch: EventMatchEntity;
@@ -36,8 +35,8 @@ export class MatchInputPage {
   public hasNextMatch = false;
   public hasPreviousMatch = false;
   public qualifiedAnswers = qualitativeAnswers;
-  public locationArray = allDeepSpaceLocations;
-  public gamepieceArray = allDeepSpaceGamepieceTypes;
+  public locationArray = allRechargeLocations;
+  public gamepieceArray = allRechargeGamepieceTypes;
   public maxWhen = 135;
   public hasSaved: boolean;
   public slots: any;
@@ -138,13 +137,13 @@ export class MatchInputPage {
   }
 
   public async load(params) {
-    let matches = await this.dbContext.getTeamMatches2019({
+    let matches = await this.dbContext.getTeamMatches2020({
       eventCode: params.eventCode,
       teamNumber: params.teamNumber,
       matchNumber: params.matchNumber,
     });
     if (matches.length == 0) {
-      this.model = make2019match(params.eventCode, params.teamNumber, params.matchNumber);
+      this.model = make2020match(params.eventCode, params.teamNumber, params.matchNumber);
     } else {
       this.model = matches[0];
     }
@@ -222,17 +221,6 @@ export class MatchInputPage {
     this.validationController.removeRenderer(this.renderer);
   }
 
-  public showBingo() {
-    DeepSpaceBingoDialog.open(this.dialogService, {
-      event: this.event,
-      dialogService: this.dialogService,
-      matches: this.matchNumbers,
-      matchNumber: this.eventMatch.matchNumber,
-      teamNumber: this.model.teamNumber,
-      teams: [],
-    });
-  }
-
   public exportToQrCode() {
     if (this.model.id == null) {
       return;
@@ -250,44 +238,6 @@ export class MatchInputPage {
     return result;
   }
 
-  public addPlacement(gamepiece: DeepSpaceGamepiece = null) {
-    let placement: DeepSpaceEvent = {
-      eventType: "Gamepiece Placement",
-      gamepiece: gamepiece,
-      location: null,
-      sandstorm: false,
-      when: null,
-    };
-    if(this.timerIntervalId != null) {
-      placement.when = this.timeRemaining;
-      placement.sandstorm = this.timeRemainingSandstorm;
-    } else if (this.model.placements.length > 0) {
-      let incTime = 10;
-      if ((this.model.placements[this.model.placements.length - 1].when - incTime) < 1) {
-        placement.when = 1;
-      } else {
-        placement.when = this.model.placements[this.model.placements.length - 1].when - incTime;
-      }
-      if((this.model.placements[this.model.placements.length - 1].when - incTime) < 1 && this.model.placements[this.model.placements.length - 1].sandstorm) {
-        placement.sandstorm = !this.model.placements[this.model.placements.length - 1].sandstorm;
-        placement.when = 135 + (this.model.placements[this.model.placements.length - 1].when - incTime);
-      } else {
-        placement.sandstorm = this.model.placements[this.model.placements.length - 1].sandstorm;
-      }
-    }
-    else if (this.model.placements.length == 0) {
-      placement.when = 10;
-      placement.sandstorm = true;
-    }
-    //This is basically a joke. Good luck making this happen!
-    else {
-      placement.when = Infinity;
-      placement.sandstorm = <any>'FileNotFound';
-      placement.location = <any>"Fifth Dimension";
-      placement.gamepiece = <any>"Cake";
-    }
-    this.model.placements.push(placement);
-  }
 
   public deleteRow(index: number) {
     this.model.placements.splice(index, 1);
@@ -451,7 +401,7 @@ export class MatchInputPage {
     let validationResults = await this.validateAll();
     
     if (validationResults.every(validationResult => validationResult.valid)) {
-      let savedMatches = await this.dbContext.getTeamMatches2019({
+      let savedMatches = await this.dbContext.getTeamMatches2020({
         eventCode: this.model.eventCode,
         teamNumber: this.model.teamNumber,
         matchNumber: this.model.matchNumber,
@@ -466,7 +416,7 @@ export class MatchInputPage {
       if (savedMatches.length != 0) {
         modelToSave.id = savedMatches[0].id;
       }
-      await this.dbContext.teamMatches2019.put(modelToSave);
+      await this.dbContext.teamMatches2020.put(modelToSave);
       await this.load({
         year: this.event.year,
         eventCode: this.model.eventCode,
@@ -555,25 +505,3 @@ export class MatchInputPage {
     await this.loadPrefs();
   }
 
-  public startTimer() {
-    this.timeRemaining = 15;
-    this.timeRemainingSandstorm = true;
-    this.timerIntervalId = setInterval(() => {
-      this.timeRemainingModel.decrement();
-      if (this.timeRemaining == 1 && !this.timeRemainingSandstorm) {
-        this.resetTimer();
-      }
-    }, 1000);
-  }
-
-  public resetTimer() {
-    this.timeRemaining = 15;
-    this.timeRemainingSandstorm = true;
-    clearInterval(this.timerIntervalId);
-    this.timerIntervalId = null;
-  }
-
-  public revalidatePlacement(obj: DeepSpaceEvent) {
-    this.validationController.validate({object: obj, rules: this.placementRules});
-  }
-}

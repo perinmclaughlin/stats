@@ -5,6 +5,7 @@ export class FrcStatsContext extends Dexie {
   teamMatches2018: Dexie.Table<TeamMatch2018Entity, number>;
   teamMatches2018V2: Dexie.Table<TeamMatch2018V2Entity, number>;
   teamMatches2019: Dexie.Table<TeamMatch2019Entity, number>;
+  teamMatches2020: Dexie.Table<TeamMatch2020Entity, number>;
   teams: Dexie.Table<TeamEntity, number>;
   districts: Dexie.Table<DistrictEntity, number>;
   events: Dexie.Table<EventEntity, number>;
@@ -53,6 +54,12 @@ export class FrcStatsContext extends Dexie {
       // noop
     });
 
+    this.version(6).stores({
+      teamMatches2020: '++id, eventCode, teamNumber, matchNumber, [eventCode+matchNumber], [eventCode+teamNumber], &[eventCode+teamNumber+matchNumber]'
+    }).upgrade(() => {
+      // rip numberin schemes..
+    });
+
     this.games.put({
       year: '2018',
       name: 'FIRST POWER UP',
@@ -74,6 +81,18 @@ export class FrcStatsContext extends Dexie {
       }
       throw error;
     });
+
+    this.games.put({
+      year: '2020',
+      name: 'FIRST INFINITE RECHARGE',
+    }).catch(error => {
+      if(error.name == 'ConstraintError') {
+        // u weird, chrome
+        return;
+      }
+      throw error;
+    });
+
   }
 
   getTeam(teamNumber: string|number) {
@@ -302,7 +321,28 @@ export interface PowerupBingo {
 export interface TeamMatch2020Entity extends IEventTeamMatch {
   id?: number;
 
-  //throw collected stuff here
+  cycles: number;
+  // number of cycles
+  climbed: boolean;
+  // whether or not the robot climbed
+  levelOne: number;
+  // balls in lower ring
+  levelTwo: number;
+  // balls in upper ring
+  levelThree: number;
+  // balls in inner upper ring
+  missed: number;
+  // number sf balls missed
+  firstWheel: number;
+  // 0 is default 1 is fail 2 is success
+  secondwheel: number;
+  // 0 is default 1 is fail 2 is success
+
+  rip: boolean;
+  // rest in pieces; for when the robot dies on field
+  
+  notes: string;
+  //vars go here
 
 }
 export interface TeamMatch2019Entity extends IEventTeamMatch {
@@ -454,7 +494,18 @@ export function make2020match(eventCode: string, teamNumber: string, matchNumber
     // init variables
     eventCode: eventCode,
     teamNumber: teamNumber,
-    matchNumber: matchNumber
+    matchNumber: matchNumber,
+
+    cycles: 0,
+    climbed: false,
+    levelOne: 0,
+    levelTwo: 0,
+    levelThree: 0,
+    missed: 0, 
+    firstWheel: 0,
+    secondwheel: 0,
+    rip: false,
+    notes: null
   }
 }
 export function make2019match(eventCode: string, teamNumber: string, matchNumber: string): TeamMatch2019Entity {
@@ -553,6 +604,11 @@ export function matches2018AreEqual(a: TeamMatch2018Entity, b: TeamMatch2018Enti
   );
 }
 
+export function matches2020AreEqual(a: TeamMatch2020Entity, b: TeamMatch2020Entity) {
+  if(a == null && b != null || a != null && b == null) return false; 
+  
+  return (true); // check if variables are equal
+}
 export function matches2019AreEqual(a: TeamMatch2019Entity, b: TeamMatch2019Entity) {
   if(a == null && b != null || a != null && b == null) return false;
 

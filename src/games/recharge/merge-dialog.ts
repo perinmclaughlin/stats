@@ -2,12 +2,12 @@ import { autoinject } from "aurelia-framework";
 import { DialogController, DialogService } from "aurelia-dialog";
 import { ValidationController, ValidationControllerFactory, ValidationRules } from "aurelia-validation";
 import { BootstrapRenderer } from "../../utilities/bootstrap-renderer";
-import { Match2019MergeState, MergeDialogModel, setupValidationRules, makePlacementMergeStates, PlacementMergeState } from "./model";
+import { Match2020MergeState, MergeDialogModel, setupValidationRules, makePlacementMergeStates, PlacementMergeState } from "./model";
 import { allDeepSpaceGamepieceTypes, allDeepSpaceLocations, DeepSpaceEventType } from "../../persistence";
 
 @autoinject
-export class Match2019MergeDialog {
-  state: Match2019MergeState;
+export class Match2020MergeDialog {
+  state: Match2020MergeState;
   private validationController: ValidationController;
   private renderer: BootstrapRenderer;
   public rules: any[];
@@ -45,7 +45,7 @@ export class Match2019MergeDialog {
     this.controller.settings.lock = false;
     this.controller.settings.overlayDismiss = true;
 
-    for (var prop of Match2019MergeDialog.properties) {
+    for (var prop of Match2020MergeDialog.properties) {
       if(this.state.localSaved[prop] == this.state.fromFile[prop]) {
         this.state.merged[prop] = this.state.localSaved[prop];
       }
@@ -93,13 +93,13 @@ export class Match2019MergeDialog {
   }
 
   public takeAllFromDb() {
-    for (var prop of Match2019MergeDialog.properties) {
+    for (var prop of Match2020MergeDialog.properties) {
       this.state.merged[prop] = this.state.localSaved[prop];
     }
   }
 
   public takeAllFromFile() {
-    for (var prop of Match2019MergeDialog.properties) {
+    for (var prop of Match2020MergeDialog.properties) {
       this.state.merged[prop] = this.state.fromFile[prop];
     }
   }
@@ -144,7 +144,7 @@ export class Match2019MergeDialog {
       p.include = false;
     }else{
       p.include = true;
-      for(var prop of Match2019MergeDialog.placementProperties) {
+      for(var prop of Match2020MergeDialog.placementProperties) {
         p.merged[prop] = p.localSaved[prop];
       }
     }
@@ -155,7 +155,7 @@ export class Match2019MergeDialog {
       p.include = false;
     }else{
       p.include = true;
-      for(var prop of Match2019MergeDialog.placementProperties) {
+      for(var prop of Match2020MergeDialog.placementProperties) {
         p.merged[prop] = p.fromFile[prop];
       }
     }
@@ -163,6 +163,6 @@ export class Match2019MergeDialog {
   }
 
   public static open(dialogService: DialogService, model: MergeDialogModel) {
-    return dialogService.open({model: model, viewModel: Match2019MergeDialog});
+    return dialogService.open({model: model, viewModel: Match2020MergeDialog});
   }
 }

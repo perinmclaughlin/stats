@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { FrcStatsContext, TeamEntity, EventTeamEntity, EventMatchSlots, TeamMatch2019Entity, EventMatchEntity, EventEntity, EventMatchSlot } from "../../persistence";
 import * as naturalSort from "javascript-natural-sort";
-import { DeepSpaceTeamStatistics, makeTeamStats } from "./statistics";
+import { RechargeTeamStatistics, makeTeamStats } from "./statistics";
 import { MatchAndStats } from "./model";
 
 @autoinject
@@ -10,7 +10,7 @@ export class viewPage {
     public eventMatch: EventMatchEntity;
     public teams: {
         team: TeamEntity, slot: EventMatchSlot,
-        ms: MatchAndStats[], stats: DeepSpaceTeamStatistics
+        ms: MatchAndStats[], stats: RechargeTeamStatistics
     }[];
     constructor(private dbContext: FrcStatsContext) {
     }

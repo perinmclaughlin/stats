@@ -14,7 +14,7 @@ export class JsonExporter {
       eventTeams: [],
       event: event,
       eventMatches: [],
-      matches2019: [],
+      matches2020: [],
     };
 
     let eventTeams = await this.dbContext.getEventTeams(event.year, event.eventCode);
@@ -25,10 +25,10 @@ export class JsonExporter {
     let eventMatches = await this.dbContext.getEventMatches(event.year, event.eventCode);
     json.eventMatches = eventMatches;
 
-    let matches2019Promise = Promise.resolve("yup");
-    if(event.year == "2019") {
-        let matches2019 = await this.dbContext.getTeamMatches2019({eventCode: event.eventCode});
-        json.matches2019 = matches2019;
+    let matches2020Promise = Promise.resolve("yup");
+    if(event.year == "2020") {
+        let matches2020 = await this.dbContext.getTeamMatches2019({eventCode: event.eventCode});
+        json.matches2020 = matches2020;
     }
     return json;
   }
