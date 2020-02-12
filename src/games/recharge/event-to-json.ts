@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { FrcStatsContext, EventEntity, GameEntity } from "../../persistence";
-import { DeepSpaceEventJson } from "./model";
+import { RechargeEventJson } from "./model";
 
 @autoinject
 export class JsonExporter {
@@ -8,7 +8,7 @@ export class JsonExporter {
     private dbContext: FrcStatsContext) {
   }
 
-  public async eventToJson(event: EventEntity): Promise<DeepSpaceEventJson> {
+  public async eventToJson(event: EventEntity): Promise<RechargeEventJson> {
     let json = {
       teams: [],
       eventTeams: [],
@@ -27,7 +27,7 @@ export class JsonExporter {
 
     let matches2020Promise = Promise.resolve("yup");
     if(event.year == "2020") {
-        let matches2020 = await this.dbContext.getTeamMatches2019({eventCode: event.eventCode});
+        let matches2020 = await this.dbContext.getTeamMatches2020({eventCode: event.eventCode});
         json.matches2020 = matches2020;
     }
     return json;

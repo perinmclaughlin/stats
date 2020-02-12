@@ -19,20 +19,20 @@
         <table class="table table-hover">
           <tr>
             <th>Match Number</th>
-            <th>Placement Areas (Cargo)</th>
-            <th>Placement Areas (Hatch)</th>
-            <th>Placement Count (Cargo)</th>
-            <th>Placement Count (Hatch)</th>
-            <th>Cargo Pickup Rating</th>
-            <th>Hatch Pickup Rating</th>
-            <th>Highest Level Reached</th>
-            <th># of Teams Lifted</th>
+            <th>Cycles per Match</th>
+            <th>Placement Areas (Low)</th>
+            <th>Placement Count (Mid)</th>
+            <th>Placement Count (High)</th>
+            <th>Climbs</th>
+            <th>Missed</th>
+            <th>Spinny?</th>
+            <th>Failures per Match</th>
             <th>Notes</th>
           </tr>
           <tr repeat.for="m of matchStats">
             <td>
               <a style="display: block;"
-                route-href="route.bind:'match-team'; params.bind: {year: 2019, eventCode: m.match.eventCode, teamNumber: team.teamNumber, matchNumber: m.match.matchNumber}">
+                route-href="route.bind:'match-team'; params.bind: {year: 2020, eventCode: m.match.eventCode, teamNumber: team.teamNumber, matchNumber: m.match.matchNumber}">
                 ${m.match.matchNumber}
               </a>
             </td>

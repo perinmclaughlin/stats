@@ -77,7 +77,7 @@ export class EventTeam {
 
   async getMatchData() {
     if (this.eventTeam.year == "2020") {
-      this.matches2020 = await this.dbContext.teamMatches2019
+      this.matches2020 = await this.dbContext.teamMatches2020
         .where(["eventCode", "teamNumber"])
         .equals([this.eventTeam.eventCode, this.eventTeam.teamNumber]).toArray();
       this.matches2020.sort((a, b) => naturalSort(a.matchNumber, b.matchNumber));

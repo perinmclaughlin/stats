@@ -191,6 +191,28 @@ export class FrcStatsContext extends Dexie {
         .equals(opts.eventCode).toArray();
     }
   }
+  getTeamMatches2020(opts: TeamMatchOpts): Promise<TeamMatch2020Entity[]> {
+    if('teamNumber' in opts && 'matchNumber' in opts) {
+      return this.teamMatches2020
+      .where(["eventCode", "teamNumber", "matchNumber"])
+      .equals([opts.eventCode, opts.teamNumber, opts.matchNumber])
+      .toArray();
+    }else if('teamNumber' in opts && !('matchNumber' in opts)) {
+      return this.teamMatches2020
+      .where(["eventCode", "teamNumber"])
+      .equals([opts.eventCode, opts.teamNumber])
+      .toArray();
+    }else if('matchNumber' in opts) {
+      return this.teamMatches2020
+        .where(["eventCode", "matchNumber"])
+        .equals([opts.eventCode, opts.matchNumber])
+        .toArray();
+    }else{
+      return this.teamMatches2020
+        .where("eventCode")
+        .equals(opts.eventCode).toArray();
+    }
+  }
 
   getUserPrefs(): Promise<UserStateEntity>{
     return this.userPrefs.toArray().then(userPrefs => {

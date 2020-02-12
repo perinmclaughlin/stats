@@ -1,5 +1,5 @@
 import { IEventJson, IMergeState } from "..";
-import { TeamMatch2020Entity, matches2020AreEqual, make2020match, RechargeEvent } from "../../persistence";
+import { TeamMatch2020Entity, matches2020AreEqual, make2020match } from "../../persistence"; // RechargeEvent removed
 import { ValidationRules } from "aurelia-validation";
 import { RechargeTeamStatistics } from "./statistics";
 
@@ -100,97 +100,6 @@ export function setupValidationRules() {
    / *istanbul ignore next */
 
   return { };
-}
-
-export class MergeState implements IMergeState {
-  localSaved: RechargeEvent;
-  fromFile: RechargeEvent;
-  merged: RechargeEvent;
-  same: boolean;
-  resolved: boolean;
-  takeFromFile: boolean;
-  takeLocal: boolean;
-  include: boolean = true;
-
-  constructor(public matchNumber: string, public teamNumber: string) {
-  }
-
-  public setSameFields() {
-    if (this.fromFile != null && this.localSaved != null) {
-      if (this.fromFile.when == this.localSaved.when) {
-        this.merged.when = this.fromFile.when;
-      }
-    }
-  }
-
-  public static makeFromDb(matchNumber: string, teamNumber: string, entity: RechargeEvent): MergeState {
-    let state = new MergeState(matchNumber, teamNumber);
-    state.localSaved = entity;
-    state.merged = {
-      eventType: entity.eventType,
-    }
-    return state;
-  }
-
-  public static makeFromFile(matchNumber: string, teamNumber: string, entity: RechargeEvent): MergeState {
-    let state = new MergeState(matchNumber, teamNumber);
-    state.fromFile = entity;
-    state.merged = {
-      eventType: entity.eventType,
-    }
-    return state;
-  }
-
-}
-
-
-
-
-var print = false;
-export function doPrint(val: boolean) {
-  print = val;
-}
-
-export function makeMergeStates(fromFile: TeamMatch2020Entity, fromLocal: TeamMatch2020Entity): MergeState[] {
-
-  let teamNumber = fromFile.teamNumber;
-  let matchNumber = fromFile.matchNumber;
-  let fromFileI = 0;
-  let fromLocalI = 0;
-  let fromFileUsed: boolean[] = [];
-  let fromLocalUsed: boolean[] = [];
-  let results: MergeState[] = [];
-
-
-  for (var i = fromFileI; i < fromFileUsed.length; i++) {
-    if (fromFileUsed[i]) {
-      continue;
-    }
-
-    let mergeState = MergeState.makeFromFile(matchNumber, teamNumber);
-    results.push(mergeState);
-  }
-
-  for (var i = fromLocalI; i < fromLocalUsed.length; i++) {
-    if (fromLocalUsed[i]) {
-      continue;
-    }
-
-    let mergeState = MergeState.makeFromDb(matchNumber, teamNumber);
-    results.push(mergeState);
-  }
-
-  results.sort((a, b) => {
-    let aTime = placementTime(a.fromFile != null ? a.fromFile : a.localSaved)
-    let bTime = placementTime(b.fromFile != null ? b.fromFile : b.localSaved);
-    return bTime - aTime;
-  });
-
-  if (print) {
-    console.info("returning ", results);
-  }
-
-  return results;
 }
 
 export interface MatchAndStats {
